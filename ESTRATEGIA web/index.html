@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Dental SaaS - Gestión Clínica</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Noto+Sans:wght@100..900&display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <!-- Chart.js for Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#027dc5",
+                        "primary-dark": "#026aa0",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1c23",
+                        "medical-blue": "#027dc5",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Utility to hide/show views */
+        .view-content {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        .view-content.active {
+            display: flex;
+        }
+
+        /* Mobile specific padding for chat to avoid keyboard overlay issues */
+        @media (max-width: 768px) {
+            #view-chat {
+                padding-bottom: 6rem;
+                /* pb-24 equivalent */
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-100 overflow-hidden h-screen w-full flex">
+
+    <!-- SIDEBAR (Desktop Only: hidden on mobile, flex on md) -->
+    <aside
+        class="hidden md:flex flex-col w-[280px] border-r border-slate-200 bg-white dark:bg-[#1a2c35] dark:border-slate-800 h-full flex-shrink-0 transition-all z-20">
+        <div class="flex h-full flex-col justify-between p-6">
+            <div class="flex flex-col gap-8">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-center rounded-lg bg-primary/10 p-2 h-12 w-12 text-primary">
+                        <span class="material-symbols-outlined filled text-3xl">dentistry</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <h1 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Clínica Lobato</h1>
+                        <p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Gestión Dental</p>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="flex flex-col gap-2">
+                    <button onclick="switchTab('view-dashboard')" id="nav-desktop-dashboard"
+                        class="nav-item group flex items-center gap-3 rounded-lg bg-primary px-4 py-3 text-white shadow-md shadow-primary/20 transition-all text-left">
+                        <span class="material-symbols-outlined filled">grid_view</span>
+                        <span class="text-sm font-semibold">Dashboard</span>
+                    </button>
+
+                    <button onclick="switchTab('view-team')" id="nav-desktop-team"
+                        class="nav-item group flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left">
+                        <span class="material-symbols-outlined">groups</span>
+                        <span class="text-sm font-medium">Equipo</span>
+                    </button>
+
+                    <button onclick="switchTab('view-finance')" id="nav-desktop-finance"
+                        class="nav-item group flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left">
+                        <span class="material-symbols-outlined">payments</span>
+                        <span class="text-sm font-medium">Finanzas</span>
+                    </button>
+
+                    <button onclick="switchTab('view-chat')" id="nav-desktop-chat"
+                        class="nav-item group flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left">
+                        <span class="material-symbols-outlined">smart_toy</span>
+                        <span class="text-sm font-medium">IA (Chat)</span>
+                    </button>
+
+                    <button onclick="switchTab('view-analytics')" id="nav-desktop-analytics"
+                        class="nav-item group flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left">
+                        <span class="material-symbols-outlined">analytics</span>
+                        <span class="text-sm font-medium">Analítica</span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- User Footer -->
+            <div class="flex flex-col gap-4 border-t border-slate-100 dark:border-slate-800 pt-6">
+                <button onclick="switchTab('view-settings')"
+                    class="flex items-center gap-3 px-2 text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-left">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="text-sm font-medium">Configuración</span>
+                </button>
+                <div class="flex items-center gap-3 px-2">
+                    <div class="h-8 w-8 rounded-full bg-slate-200 bg-cover bg-center shrink-0"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB-E9taHyLsWFW6WpLd22sYFn0f7uwSNaanMTwKISPUir_BPMS9PjeOi10EN_WC_W983TqpLXF2YoGRRvVXfm1aFk3dTqPzaVaa4vFWB42uxb5TllkGeGFUnYy0gmQQjL3PYOxTzhvfn8Kix34LQH_EXSX4gmDFF5ZnGizFdhv6SOmaLFU8rZyxrQkP1MsTlDYuU_dPyfMi1vETLpaBPC8imIKk9NuCjqyxC4FT76oSP5UhU2PhUsTk5NWv4-u_603sHOapzYY_N9U");'>
+                    </div>
+                    <div class="flex flex-col">
+                        <p class="text-xs font-bold text-slate-900 dark:text-white">Dr. Lobato</p>
+                        <p class="text-[10px] text-slate-500">Administrador</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 overflow-hidden relative bg-background-light dark:bg-background-dark w-full h-full">
+
+        <!-- DASHBOARD VIEW -->
+        <div id="view-dashboard" class="view-content active overflow-y-auto h-full scroll-smooth w-full">
+            <div class="container mx-auto max-w-7xl p-6 md:p-10 flex flex-col gap-8 pb-24 md:pb-10">
+                <!-- Header -->
+                <header class="flex flex-col gap-1">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+                                Hola, Clínica Lobato</h2>
+                            <p class="text-slate-500 dark:text-slate-400 mt-1">Aquí tienes el resumen financiero de hoy.
+                            </p>
+                        </div>
+                        <button
+                            class="hidden md:flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors">
+                            <span class="material-symbols-outlined text-lg">calendar_today</span>
+                            <span>Octubre 2023</span>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Cards -->
+                <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div
+                        class="flex flex-col gap-4 rounded-xl bg-white dark:bg-[#1a2c35] p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center justify-between">
+                            <div
+                                class="rounded-full bg-green-50 dark:bg-green-900/20 p-3 text-green-600 dark:text-green-400">
+                                <span class="material-symbols-outlined filled">account_balance_wallet</span>
+                            </div>
+                            <span
+                                class="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-1 text-xs font-bold text-green-700 dark:text-green-400">+12%</span>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Ingresos Totales</p>
+                            <p class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight" id="kpi-income">
+                                ---</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex flex-col gap-4 rounded-xl bg-white dark:bg-[#1a2c35] p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center justify-between">
+                            <div class="rounded-full bg-red-50 dark:bg-red-900/20 p-3 text-red-600 dark:text-red-400">
+                                <span class="material-symbols-outlined filled">credit_card</span>
+                            </div>
+                            <span
+                                class="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-1 text-xs font-bold text-green-700 dark:text-green-400">-5%</span>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Gastos Operativos</p>
+                            <p class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight"
+                                id="kpi-expenses">---</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex flex-col gap-4 rounded-xl bg-white dark:bg-[#1a2c35] p-6 shadow-sm border border-slate-100 dark:border-slate-800 relative overflow-hidden group">
+                        <div
+                            class="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-primary/10 transition-transform group-hover:scale-110">
+                        </div>
+                        <div class="flex items-center justify-between relative z-10">
+                            <div class="rounded-full bg-primary/10 dark:bg-primary/20 p-3 text-primary">
+                                <span class="material-symbols-outlined filled">trending_up</span>
+                            </div>
+                            <span
+                                class="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-1 text-xs font-bold text-green-700 dark:text-green-400">+8%</span>
+                        </div>
+                        <div class="relative z-10">
+                            <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Beneficio Neto</p>
+                            <p class="text-3xl font-bold text-primary tracking-tight" id="kpi-profit">---</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- AI Alert -->
+                <section class="w-full">
+                    <div
+                        class="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#027dc5] to-[#36a6e0] shadow-lg shadow-primary/20 dark:shadow-none">
+                        <div class="absolute -right-10 -top-10 h-64 w-64 rounded-full bg-white opacity-10 blur-3xl">
+                        </div>
+                        <div class="absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-white opacity-10 blur-2xl">
+                        </div>
+                        <div
+                            class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 p-6">
+                            <div class="flex items-start gap-4">
+                                <div
+                                    class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm shadow-inner text-white">
+                                    <span class="material-symbols-outlined filled text-2xl">auto_awesome</span>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <h3 class="text-lg font-bold text-white">Alertas IA (Gemini)</h3>
+                                    <p class="text-blue-50 text-base font-medium max-w-2xl leading-relaxed">
+                                        He detectado un sobrecoste inusual en la partida de <span
+                                            class="font-bold text-white underline decoration-white/30 underline-offset-4">Laboratorio
+                                            (+20%)</span> comparado con la media trimestral.
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                class="shrink-0 whitespace-nowrap rounded-lg bg-white px-5 py-2.5 text-sm font-bold text-primary shadow-sm hover:bg-blue-50 transition-colors cursor-pointer">
+                                Ver análisis detallado
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Charts -->
+                <section
+                    class="flex flex-col gap-4 rounded-xl bg-white dark:bg-[#1a2c35] p-6 shadow-sm border border-slate-100 dark:border-slate-800 flex-1 min-h-[400px]">
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Balance Semestral</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Ingresos vs Gastos (Últimos 6 meses)
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-4 text-sm">
+                            <div class="flex items-center gap-2">
+                                <span class="h-3 w-3 rounded-full bg-primary"></span>
+                                <span class="font-medium text-slate-600 dark:text-slate-300">Ingresos</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="h-3 w-3 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+                                <span class="font-medium text-slate-600 dark:text-slate-300">Gastos</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Chart Grid Simulation -->
+                    <div class="flex-1 w-full flex flex-col justify-end">
+                        <div
+                            class="relative grid grid-cols-6 gap-2 md:gap-8 h-[200px] md:h-[300px] items-end px-1 md:px-6 border-b border-slate-200 dark:border-slate-700 pb-2">
+                            <!-- Background Lines -->
+                            <div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-2 z-0">
+                                <div class="w-full border-t border-dashed border-slate-200 dark:border-slate-700 h-0">
+                                </div>
+                                <div class="w-full border-t border-dashed border-slate-200 dark:border-slate-700 h-0">
+                                </div>
+                                <div class="w-full border-t border-dashed border-slate-200 dark:border-slate-700 h-0">
+                                </div>
+                                <div class="w-full border-t border-dashed border-slate-200 dark:border-slate-700 h-0">
+                                </div>
+                                <div class="w-full h-0"></div>
+                            </div>
+                            <!-- Bars (Simplified) -->
+                            <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
+                                <div class="flex items-end justify-center gap-1 h-full">
+                                    <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 65%;"></div>
+                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-600 rounded-t-sm"
+                                        style="height: 45%;"></div>
+                                </div>
+                            </div>
+                            <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
+                                <div class="flex items-end justify-center gap-1 h-full">
+                                    <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 72%;"></div>
+                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-600 rounded-t-sm"
+                                        style="height: 48%;"></div>
+                                </div>
+                            </div>
+                            <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
+                                <div class="flex items-end justify-center gap-1 h-full">
+                                    <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 55%;"></div>
+                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-600 rounded-t-sm"
+                                        style="height: 40%;"></div>
+                                </div>
+                            </div>
+                            <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
+                                <div class="flex items-end justify-center gap-1 h-full">
+                                    <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 45%;"></div>
+                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-600 rounded-t-sm"
+                                        style="height: 35%;"></div>
+                                </div>
+                            </div>
+                            <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
+                                <div class="flex items-end justify-center gap-1 h-full">
+                                    <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 85%;"></div>
+                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-600 rounded-t-sm"
+                                        style="height: 50%;"></div>
+                                </div>
+                            </div>
+                            <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
+                                <div class="flex items-end justify-center gap-1 h-full">
+                                    <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 92%;"></div>
+                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-600 rounded-t-sm"
+                                        style="height: 38%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-6 gap-2 md:gap-8 px-1 md:px-6 pt-3">
+                            <div class="text-center text-[10px] md:text-xs font-semibold text-slate-500">May</div>
+                            <div class="text-center text-[10px] md:text-xs font-semibold text-slate-500">Jun</div>
+                            <div class="text-center text-[10px] md:text-xs font-semibold text-slate-500">Jul</div>
+                            <div class="text-center text-[10px] md:text-xs font-semibold text-slate-500">Ago</div>
+                            <div class="text-center text-[10px] md:text-xs font-semibold text-slate-500">Sep</div>
+                            <div class="text-center text-[10px] md:text-xs font-bold text-primary">Oct</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- TEAM VIEW -->
+        <div id="view-team" class="view-content overflow-y-auto h-full w-full">
+            <!-- Header Team -->
+            <header
+                class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/90 px-6 py-5 backdrop-blur-md dark:border-slate-800 dark:bg-[#15232d]/90">
+                <div class="flex flex-col gap-1">
+                    <h2 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white">Equipo Médico</h2>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Gestión de rendimiento</p>
+                </div>
+                <button onclick="openDoctorModal()"
+                    class="flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-white shadow-md shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95">
+                    <span class="material-symbols-outlined text-[20px]">add</span>
+                    <span class="hidden md:inline">Añadir</span>
+                </button>
+            </header>
+
+            <div class="flex flex-col gap-6 p-6 md:p-8 w-full pb-24 md:pb-10">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <!-- Left: Cards -->
+                    <div id="doctors-container" class="xl:col-span-2 flex flex-col gap-4">
+                        <!-- JS RENDERED DOCTORS HERE -->
+                    </div>
+
+                    <!-- ADD DOCTOR MODAL -->
+                    <div id="doctor-modal" class="fixed inset-0 z-50 hidden">
+                        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"
+                            onclick="closeDoctorModal()"></div>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-[#1a2c35] rounded-2xl shadow-xl p-6 border border-slate-100 dark:border-slate-700 md:scale-100 scale-95 opacity-0 transition-all duration-200"
+                            id="doctor-modal-content">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">Nuevo Doctor</h3>
+                                <button onclick="closeDoctorModal()"
+                                    class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                                    <span class="material-symbols-outlined">close</span>
+                                </button>
+                            </div>
+                            <form onsubmit="handleAddDoctor(event)" class="flex flex-col gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nombre</label>
+                                    <input name="name" required type="text" placeholder="Ej: Dr. Smith"
+                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold text-slate-500 uppercase mb-1">Especialidad</label>
+                                    <select name="role"
+                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                                        <option value="General">Odontología General</option>
+                                        <option value="Ortodoncia">Ortodoncia</option>
+                                        <option value="Implantes">Implantes</option>
+                                        <option value="Estética">Estética</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Objetivo
+                                        Mensual (€)</label>
+                                    <input name="goal" required type="number" placeholder="10000"
+                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                                </div>
+                                <button type="submit"
+                                    class="mt-2 w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-dark transition-colors">Guardar
+                                    Doctor</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Right: Logic Donut -->
+                    <div class="flex flex-col gap-6">
+                        <div
+                            class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-100 dark:bg-[#1c2e3a] dark:ring-slate-800">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Distribución</h3>
+                            <div class="relative flex items-center justify-center py-4">
+                                <div class="relative h-48 w-48 rounded-full"
+                                    style="background: conic-gradient(#027dc5 0% 41%, #a855f7 41% 73%, #14b8a6 73% 100%);">
+                                    <div
+                                        class="absolute inset-4 rounded-full bg-white dark:bg-[#1c2e3a] flex flex-col items-center justify-center z-10">
+                                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Total</p>
+                                        <p class="text-2xl font-black text-slate-900 dark:text-white">30.7k€</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex flex-col gap-2">
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="flex items-center gap-2">
+                                        <div class="h-2 w-2 rounded-full bg-primary"></div> Fernando
+                                    </span>
+                                    <span class="font-bold">41%</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="flex items-center gap-2">
+                                        <div class="h-2 w-2 rounded-full bg-purple-500"></div> Carla
+                                    </span>
+                                    <span class="font-bold">32%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FINANCE VIEW -->
+        <div id="view-finance" class="view-content overflow-y-auto h-full w-full">
+            <div class="p-6 md:p-8 flex flex-col gap-6 pb-24 md:pb-10 max-w-6xl mx-auto">
+                <header class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+                            Finanzas</h2>
+                        <input id="search-input" onkeyup="renderTable()" type="text" placeholder="Buscar..."
+                            class="mt-2 w-full md:w-64 rounded-lg border-slate-200 bg-white px-3 py-2 text-sm">
+                    </div>
+                    <button onclick="openExportModal()"
+                        class="hidden md:flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">download</span>
+                        Exportar CSV
+                    </button>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div
+                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Entradas</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">€25,000</p>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Salidas</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">€12,500</p>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Neto</p>
+                        <p class="text-2xl font-bold text-emerald-600 mt-1">€12,500</p>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-[#1a2c35] rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-50 dark:bg-slate-800/50">
+                                <tr>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Fecha</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Concepto</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Importe
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="finance-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
+                                <!-- JS WILL RENDER ROWS HERE -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- FAB Mobile only -->
+            <!-- FAB Mobile -->
+            <button onclick="openModal()"
+                class="fixed bottom-28 right-6 md:hidden size-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center z-30">
+                <span class="material-symbols-outlined text-[32px]">add</span>
+            </button>
+            <!-- FAB Desktop (Absolute in View) -->
+            <button onclick="openModal()"
+                class="hidden md:flex absolute bottom-10 right-10 size-16 bg-primary text-white rounded-full shadow-xl items-center justify-center z-30 hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-[36px]">add</span>
+            </button>
+        </div>
+
+        <!-- ADD TRANSACTION MODAL -->
+        <div id="transaction-modal" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity" onclick="closeModal()">
+            </div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-[#1a2c35] rounded-2xl shadow-xl p-6 border border-slate-100 dark:border-slate-700 scale-95 opacity-0 transition-all duration-200"
+                id="modal-content">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Nuevo Movimiento</h3>
+                    <button onclick="closeModal()"
+                        class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <form onsubmit="handleAddTransaction(event)" class="flex flex-col gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Tipo</label>
+                        <div class="flex gap-2">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="type" value="ingreso" class="peer hidden" checked
+                                    onchange="toggleCostField(false)">
+                                <div
+                                    class="text-center py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 peer-checked:bg-green-50 peer-checked:text-green-700 peer-checked:border-green-200 transition-all font-medium">
+                                    Ingreso</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="type" value="gasto" class="peer hidden"
+                                    onchange="toggleCostField(true)">
+                                <div
+                                    class="text-center py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 peer-checked:bg-red-50 peer-checked:text-red-700 peer-checked:border-red-200 transition-all font-medium">
+                                    Gasto</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Selection -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Doctor Asignado</label>
+                        <select id="tx-doctor" name="doctorId"
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                            <option value="">-- Sin asignar / Clínica --</option>
+                            <!-- JS WILL POPULATE DOCTORS -->
+                        </select>
+                    </div>
+
+                    <!-- Category/Treatment -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Categoría /
+                            Tratamiento</label>
+                        <select name="category"
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                            <option value="General">Odontología General</option>
+                            <option value="Ortodoncia">Ortodoncia</option>
+                            <option value="Implantes">Implantes</option>
+                            <option value="Estética">Estética</option>
+                            <option value="Cirugía">Cirugía</option>
+                            <option value="Periodoncia">Periodoncia</option>
+                            <option value="Otros">Otros (Alquiler, Luz, etc.)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Concepto</label>
+                        <input name="concept" required type="text" placeholder="Ej: Implante Unitario"
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Importe (€)</label>
+                            <input name="amount" required type="number" step="0.01" placeholder="0.00"
+                                class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Fecha</label>
+                            <input name="date" required type="date"
+                                class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                        </div>
+                    </div>
+
+                    <!-- Cost Field (Hidden for Expenses, Optional for Income) -->
+                    <div id="cost-field-container">
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Coste Asociado (€) <span
+                                class="text-[10px] lowercase font-normal text-slate-400">(Lab,
+                                Materiales...)</span></label>
+                        <input name="cost" type="number" step="0.01" placeholder="0.00"
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                    </div>
+
+                    <button type="submit"
+                        class="mt-2 w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-dark transition-colors">Guardar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ANALYTICS VIEW (Managers Only) -->
+        <div id="view-analytics" class="view-content overflow-y-auto h-full w-full">
+            <div class="p-6 md:p-8 flex flex-col gap-6 pb-24 md:pb-10 max-w-7xl mx-auto">
+                <header>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Analítica
+                        Avanzada</h2>
+                    <p class="text-slate-500 dark:text-slate-400 mt-1">Visión estratégica de rentabilidad y márgenes.
+                    </p>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Profit per Doctor Chart -->
+                    <div
+                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Rentabilidad por Doctor (Neto)
+                        </h3>
+                        <canvas id="chart-profit-doctor"></canvas>
+                    </div>
+
+                    <!-- Margin per Treatment Chart -->
+                    <div
+                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Margen por Tratamiento (%)
+                        </h3>
+                        <canvas id="chart-margin-treatment"></canvas>
+                    </div>
+                </div>
+
+                <!-- Integration Status -->
+                <div
+                    class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-100 dark:border-blue-800 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-blue-900 dark:text-white">Google Sheets Sync</h3>
+                        <p class="text-xs text-blue-600 dark:text-blue-300">Conectado a:
+                            <code>contabilidad_master_2025.csv</code>
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="relative flex h-3 w-3">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                        </span>
+                        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">Sincronizado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS VIEW -->
+        <div id="view-settings" class="view-content overflow-y-auto h-full w-full">
+            <div class="p-6 md:p-10 max-w-4xl mx-auto flex flex-col gap-8">
+                <header>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Configuración</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Personaliza tu experiencia dental.</p>
+                </header>
+
+                <section class="flex flex-col gap-4">
+                    <div
+                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-slate-900 dark:text-white">Modo Oscuro</h3>
+                            <p class="text-xs text-slate-500">Alternar entre tema claro y oscuro.</p>
+                        </div>
+                        <button onclick="document.documentElement.classList.toggle('dark')"
+                            class="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-200 dark:bg-primary transition-colors">
+                            <span
+                                class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1 dark:translate-x-6"></span>
+                        </button>
+                    </div>
+
+                    <div
+                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-red-600">Restablecer Datos</h3>
+                            <p class="text-xs text-slate-500">Borrar todos los movimientos y empezar de cero.</p>
+                        </div>
+                        <button onclick="resetApp()"
+                            class="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-sm font-bold transition-colors">
+                            Borrar Todo
+                        </button>
+                    </div>
+                </section>
+
+                <div class="text-center text-xs text-slate-400 mt-10">
+                    Versión 1.0.0 • Clínica Lobato
+                </div>
+            </div>
+        </div>
+
+        <!-- EXPORT MODAL -->
+        <div id="export-modal" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"
+                onclick="closeExportModal()"></div>
+            <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white dark:bg-[#1a2c35] rounded-2xl shadow-xl p-6 border border-slate-100 dark:border-slate-700">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Exportar a CSV</h3>
+                <form onsubmit="handleExportCSV(event)" class="flex flex-col gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Desde</label>
+                        <input name="startDate" required type="date"
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Hasta</label>
+                        <input name="endDate" required type="date"
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                    </div>
+                    <div class="flex gap-2 mt-2">
+                        <button type="button" onclick="closeExportModal()"
+                            class="flex-1 py-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">Cancelar</button>
+                        <button type="submit"
+                            class="flex-1 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary-dark transition-colors shadow-lg shadow-primary/20">Descargar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- CHAT VIEW -->
+        <div id="view-chat" class="view-content h-full w-full">
+            <!-- Header Chat -->
+            <header
+                class="h-16 bg-white dark:bg-[#1a2c35] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 shrink-0">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-2xl">smart_toy</span>
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white">Asistente IA</h2>
+                    <span
+                        class="hidden md:inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">Online</span>
+                </div>
+            </header>
+
+            <!-- Chat Area -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 bg-slate-50 dark:bg-[#15232b]">
+                <!-- AI Message -->
+                <div class="flex justify-start items-end gap-3 max-w-2xl">
+                    <div class="size-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-white">
+                        <span class="material-symbols-outlined text-[18px]">smart_toy</span>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-[#233540] p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700">
+                        <p class="text-sm leading-relaxed text-slate-800 dark:text-white">Hola Dr. Lobato. He agrupado
+                            los tratamientos realizados del 1 al 24 de Octubre. Tienes un <strong
+                                class="text-emerald-600">margen del 73%</strong> en Implantes.</p>
+                    </div>
+                </div>
+
+                <!-- User Message -->
+                <div class="flex justify-end items-end gap-3">
+                    <div class="bg-primary text-white p-4 rounded-2xl rounded-tr-none shadow-md max-w-xl">
+                        <p class="text-sm leading-relaxed">¿Cuál es el gasto de electricidad?</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="bg-white dark:bg-[#1a2c35] p-4 border-t border-slate-200 dark:border-slate-800">
+                <div class="flex gap-2 max-w-4xl mx-auto relative">
+                    <input id="chat-input" type="text" placeholder="Escribe o decídselo a la IA..."
+                        class="w-full rounded-full border-slate-200 bg-slate-50 pl-5 pr-24 py-3 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white transition-all shadow-sm">
+
+                    <!-- Voice & Send Buttons Container -->
+                    <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1 pr-1">
+                        <!-- Microphone Button -->
+                        <button id="mic-btn" onclick="toggleVoiceInput()"
+                            class="p-2 rounded-full text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors relative group">
+                            <span class="material-symbols-outlined" id="mic-icon">mic</span>
+                            <!-- Tooltip -->
+                            <span
+                                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Dictar
+                                nota</span>
+                        </button>
+
+                        <!-- Send Button -->
+                        <button onclick="handleSend()"
+                            class="bg-primary text-white p-2 rounded-full hover:bg-primary-dark transition-colors shadow-sm flex items-center justify-center h-9 w-9">
+                            <span class="material-symbols-outlined text-[18px]">send</span>
+                        </button>
+                    </div>
+                </div>
+                <p id="voice-status"
+                    class="text-center text-[10px] text-emerald-600 font-bold mt-2 opacity-0 transition-opacity">
+                    Escuchando... 🎤</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- BOTTOM NAVIGATION (Mobile Only: fixed bottom, hidden on md) -->
+    <nav
+        class="md:hidden fixed bottom-0 w-full bg-white dark:bg-[#1a2c35] border-t border-slate-200 dark:border-slate-800 flex justify-around p-2 z-40 pb-safe">
+        <button onclick="switchTab('view-dashboard')" id="nav-mobile-dashboard"
+            class="flex flex-col items-center gap-1 p-2 rounded-lg text-primary w-full transition-colors">
+            <span class="material-symbols-outlined filled">grid_view</span>
+            <span class="text-[10px] font-medium">Home</span>
+        </button>
+        <button onclick="switchTab('view-team')" id="nav-mobile-team"
+            class="flex flex-col items-center gap-1 p-2 rounded-lg text-slate-400 w-full transition-colors hover:text-slate-600 dark:hover:text-slate-300">
+            <span class="material-symbols-outlined">groups</span>
+            <span class="text-[10px] font-medium">Equipo</span>
+        </button>
+        <button onclick="switchTab('view-finance')" id="nav-mobile-finance"
+            class="flex flex-col items-center gap-1 p-2 rounded-lg text-slate-400 w-full transition-colors hover:text-slate-600 dark:hover:text-slate-300">
+            <span class="material-symbols-outlined">payments</span>
+            <span class="text-[10px] font-medium">Finanzas</span>
+        </button>
+        <button onclick="switchTab('view-chat')" id="nav-mobile-chat"
+            class="flex flex-col items-center gap-1 p-2 rounded-lg text-slate-400 w-full transition-colors hover:text-slate-600 dark:hover:text-slate-300">
+            <span class="material-symbols-outlined">smart_toy</span>
+            <span class="text-[10px] font-medium">IA</span>
+        </button>
+        <button onclick="switchTab('view-analytics')" id="nav-mobile-analytics"
+            class="flex flex-col items-center gap-1 p-2 rounded-lg text-slate-400 w-full transition-colors hover:text-slate-600 dark:hover:text-slate-300">
+            <span class="material-symbols-outlined">analytics</span>
+            <span class="text-[10px] font-medium">Datos</span>
+        </button>
+    </nav>
+
+    <!-- Safe Area Padding for iPhone Home Indicator -->
+    <style>
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+    </style>
+
+    <script>
+        // --- GEMINI API CONFIGURATION ---
+        // ⚠️ IMPORTANTE: Reemplaza esto con tu API Key real de Google AI Studio
+        const GEMINI_API_KEY = "TU_API_KEY_AQUI";
+
+        const CHAT_HISTORY = [
+            { role: "user", parts: [{ text: "Hola soy el Dr. Lobato." }] },
+            { role: "model", parts: [{ text: "Hola Dr. Lobato. Soy tu asistente financiero dental. ¿En qué puedo ayudarte hoy?" }] }
+        ];
+
+        // --- UI LOGIC ---
+        function switchTab(viewId) {
+            // 1. Hide all views
+            document.querySelectorAll('.view-content').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // 2. Show target view
+            const target = document.getElementById(viewId);
+            if (target) target.classList.add('active');
+
+            // 3. Update Desktop Navigation State
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.className = "nav-item group flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left";
+                const icon = btn.querySelector('.material-symbols-outlined');
+                if (icon) icon.classList.remove('filled');
+            });
+            const type = viewId.replace('view-', '');
+            const activeDesktopBtn = document.getElementById(`nav-desktop-${type}`);
+            if (activeDesktopBtn) {
+                activeDesktopBtn.className = "nav-item group flex items-center gap-3 rounded-lg bg-primary px-4 py-3 text-white shadow-md shadow-primary/20 transition-all text-left";
+                const icon = activeDesktopBtn.querySelector('.material-symbols-outlined');
+                if (icon) icon.classList.add('filled');
+            }
+
+            // 4. Update Mobile Navigation State
+            ['dashboard', 'team', 'finance', 'chat'].forEach(t => {
+                const btn = document.getElementById(`nav-mobile-${t}`);
+                if (btn) {
+                    btn.classList.remove('text-primary');
+                    btn.classList.add('text-slate-400');
+                    const icon = btn.querySelector('.material-symbols-outlined');
+                    if (icon) icon.classList.remove('filled');
+                }
+            });
+            const activeMobileBtn = document.getElementById(`nav-mobile-${type}`);
+            if (activeMobileBtn) {
+                activeMobileBtn.classList.remove('text-slate-400');
+                activeMobileBtn.classList.add('text-primary');
+                const icon = activeMobileBtn.querySelector('.material-symbols-outlined');
+                if (icon) icon.classList.add('filled');
+            }
+        }
+
+        // --- VOICE INPUT LOGIC (Web Speech API) ---
+        let recognition;
+        let isRecording = false;
+
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'es-ES'; // Detect Spanish
+
+            recognition.onstart = function () {
+                isRecording = true;
+                document.getElementById('voice-status').style.opacity = '1';
+                document.getElementById('mic-icon').classList.add('text-red-500', 'animate-pulse');
+                document.getElementById('mic-icon').innerText = 'mic_off';
+            };
+
+            recognition.onend = function () {
+                isRecording = false;
+                document.getElementById('voice-status').style.opacity = '0';
+                document.getElementById('mic-icon').classList.remove('text-red-500', 'animate-pulse');
+                document.getElementById('mic-icon').innerText = 'mic';
+            };
+
+            recognition.onresult = function (event) {
+                const transcript = event.results[0][0].transcript;
+                const input = document.getElementById('chat-input');
+                // Append or set text
+                input.value = input.value ? input.value + " " + transcript : transcript;
+                input.focus();
+            };
+        } else {
+            console.log("Web Speech API not supported in this browser.");
+            document.getElementById('mic-btn').style.display = 'none'; // Hide if not supported
+        }
+
+        function toggleVoiceInput() {
+            if (!recognition) return alert("Tu navegador no soporta dictado por voz 😢. Usa Chrome.");
+            if (isRecording) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
+
+        // --- CHAT LOGIC ---
+        async function handleSend() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            // 1. Add User Message to UI
+            addMessageToUI(text, 'user');
+            input.value = '';
+
+            // 2. Mock or Call API
+            addLoadingIndicator();
+
+            try {
+                // If API Key is placeholder, show simulated response
+                if (GEMINI_API_KEY === "TU_API_KEY_AQUI") {
+                    await new Promise(r => setTimeout(r, 1500)); // Simulate delay
+                    removeLoadingIndicator();
+                    addMessageToUI("⚠️ <b>Modo Demo:</b> Para que te responda de verdad, abre el archivo `03_index.html` con un editor de texto y pega tu API Key de Google (Gemini) en la línea 480 donde dice `const GEMINI_API_KEY = ...`", 'model');
+                    addMessageToUI("🤖 <b>Respuesta Simulada:</b> Basado en tus datos, el Dr. Fernando ha facturado 12.500€ este mes.", 'model');
+                } else {
+                    // REAL CALL TO GEMINI API
+                    const response = await callGeminiAPI(text);
+                    removeLoadingIndicator();
+                    addMessageToUI(response, 'model');
+                }
+            } catch (error) {
+                removeLoadingIndicator();
+                addMessageToUI("Error al conectar con la IA. Revisa tu conexión.", 'model');
+                console.error(error);
+            }
+        }
+
+        function addMessageToUI(text, role) {
+            const chatContainer = document.querySelector("#view-chat .flex-1");
+            const isUser = role === 'user';
+
+            const div = document.createElement('div');
+            div.className = isUser ? "flex justify-end items-end gap-3" : "flex justify-start items-end gap-3 max-w-2xl";
+
+            const avatar = isUser ? '' : `
+                <div class="size-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-white">
+                    <span class="material-symbols-outlined text-[18px]">smart_toy</span>
+                </div>`;
+
+            const bubbleStyle = isUser
+                ? "bg-primary text-white p-4 rounded-2xl rounded-tr-none shadow-md max-w-xl"
+                : "bg-white dark:bg-[#233540] p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700";
+
+            const textColor = isUser ? "" : "text-slate-800 dark:text-white";
+
+            div.innerHTML = `
+                ${isUser ? '' : avatar}
+                <div class="${bubbleStyle}">
+                    <p class="text-sm leading-relaxed ${textColor}">${text}</p>
+                </div>
+            `;
+
+            chatContainer.appendChild(div);
+            // Auto scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function addLoadingIndicator() {
+            const chatContainer = document.querySelector("#view-chat .flex-1");
+            const div = document.createElement('div');
+            div.id = "loading-indicator";
+            div.className = "flex justify-start items-end gap-3 mt-4 opacity-70";
+            div.innerHTML = `
+                <div class="size-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center shrink-0 animate-pulse">
+                    <span class="material-symbols-outlined text-[18px] text-slate-400">more_horiz</span>
+                </div>
+                <span class="text-xs text-slate-400">Pensando...</span>
+            `;
+            chatContainer.appendChild(div);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function removeLoadingIndicator() {
+            const loader = document.getElementById('loading-indicator');
+            if (loader) loader.remove();
+        }
+
+        async function callGeminiAPI(prompt) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+
+            const payload = {
+                contents: [
+                    ...CHAT_HISTORY, // Send history (simplified)
+                    { role: "user", parts: [{ text: prompt }] }
+                ]
+            };
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            const text = data.candidates[0].content.parts[0].text;
+
+            // Add to local history
+            CHAT_HISTORY.push({ role: "user", parts: [{ text: prompt }] });
+            CHAT_HISTORY.push({ role: "model", parts: [{ text: text }] });
+
+            return text; // Markdown parsed roughly
+        }
+
+        // Allow Enter key to send
+        document.getElementById('chat-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                handleSend();
+            }
+        });
+
+        // --- APP LOGIC (FULL - v2 ANALYTICS) ---
+        let APP_DATA = {
+            transactions: [],
+            doctors: []
+        };
+
+        let profitChart = null;
+        let marginChart = null;
+
+        // 1. STATE MANAGEMENT
+        function loadData() {
+            const saved = localStorage.getItem('DENTAL_APP_DATA_V2'); // New key for V2 structure
+            if (saved) {
+                APP_DATA = JSON.parse(saved);
+            } else {
+                initializeMockData(); // Fresh Start with rich data
+            }
+            populateDoctorDropdown();
+        }
+
+        function initializeMockData() {
+            APP_DATA.doctors = [
+                { id: 1, name: "Dr. Fernando", role: "Implantes", goal: 15000, color: "blue" },
+                { id: 2, name: "Dra. Carla", role: "Ortodoncia", goal: 14000, color: "purple" }
+            ];
+
+            // Hybrid Data: Manual + "Sheet"
+            APP_DATA.transactions = [
+                // Manual Entries
+                { id: 101, date: "2023-10-24", concept: "Implante Unitario", amount: 1200.00, cost: 300.00, type: "ingreso", doctorId: 1, category: "Implantes", source: "manual" },
+                { id: 102, date: "2023-10-23", concept: "Ortodoncia Invisible (Pago 1)", amount: 4500.00, cost: 1200.00, type: "ingreso", doctorId: 2, category: "Ortodoncia", source: "manual" },
+
+                // Mock "Google Sheet" Imports
+                { id: 201, date: "2023-10-22", concept: "[SHEET] Compra Material Quirúrgico", amount: 1500.00, cost: 0, type: "gasto", doctorId: null, category: "Otros", source: "sheet" },
+                { id: 202, date: "2023-10-20", concept: "[SHEET] Factura Luz Endesa", amount: 250.00, cost: 0, type: "gasto", doctorId: null, category: "Otros", source: "sheet" },
+                { id: 203, date: "2023-10-18", concept: "[SHEET] Limpieza Bucal", amount: 60.00, cost: 10.00, type: "ingreso", doctorId: 1, category: "General", source: "sheet" }
+            ];
+            saveData();
+        }
+
+        function saveData() {
+            localStorage.setItem('DENTAL_APP_DATA_V2', JSON.stringify(APP_DATA));
+            updateDashboard();
+            renderTeam();
+            renderAnalytics();
+        }
+
+        // 2. FINANCE LOGIC
+        function renderTable() {
+            const tbody = document.getElementById('finance-table-body');
+            const searchVal = document.getElementById('search-input')?.value.toLowerCase() || "";
+            tbody.innerHTML = '';
+
+            const filtered = APP_DATA.transactions.filter(t =>
+                t.concept.toLowerCase().includes(searchVal) ||
+                (t.category && t.category.toLowerCase().includes(searchVal))
+            ).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            filtered.forEach(t => {
+                const isIngreso = t.type === 'ingreso';
+                const color = isIngreso ? 'text-emerald-600' : 'text-red-500';
+                const sign = isIngreso ? '+' : '-';
+                const sourceIcon = t.source === 'sheet' ? '<span class="material-symbols-outlined text-[14px] text-blue-500" title="Importado de Sheets">table_view</span>' : '';
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white">${new Date(t.date).toLocaleDateString()}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300 flex items-center gap-2">
+                             ${sourceIcon}
+                             <div>
+                                <p>${t.concept}</p>
+                                <p class="text-[10px] text-slate-400">${t.category || 'General'} • ${getDoctorName(t.doctorId)}</p>
+                             </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold ${color}">${sign} ${parseFloat(t.amount).toFixed(2)}€</td>
+                        <td class="px-6 py-4 text-center">
+                            <button onclick="deleteTransaction(${t.id})" class="text-slate-400 hover:text-red-500"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function handleAddTransaction(e) {
+            e.preventDefault();
+            const form = e.target;
+            APP_DATA.transactions.unshift({
+                id: Date.now(),
+                type: form.type.value,
+                concept: form.concept.value,
+                amount: parseFloat(form.amount.value),
+                date: form.date.value,
+                doctorId: form.doctorId.value ? parseInt(form.doctorId.value) : null,
+                category: form.category.value,
+                cost: form.cost.value ? parseFloat(form.cost.value) : 0,
+                source: "manual"
+            });
+            saveData();
+            renderTable();
+            closeModal();
+            form.reset();
+            form.date.value = new Date().toISOString().split('T')[0];
+            toggleCostField(false); // Reset UI
+        }
+
+        function toggleCostField(isExpense) {
+            const container = document.getElementById('cost-field-container');
+            if (isExpense) {
+                container.style.display = 'none'; // Expenses don't have "costs" in this simple model, they ARE the cost.
+            } else {
+                container.style.display = 'block';
+            }
+        }
+
+        function deleteTransaction(id) {
+            if (confirm("¿Eliminar este movimiento?")) {
+                APP_DATA.transactions = APP_DATA.transactions.filter(t => t.id !== id);
+                saveData();
+                renderTable();
+            }
+        }
+
+        // Helper
+        function getDoctorName(id) {
+            if (!id) return 'Clínica';
+            const doc = APP_DATA.doctors.find(d => d.id === id);
+            return doc ? doc.name : 'Desconocido';
+        }
+
+        function populateDoctorDropdown() {
+            const select = document.getElementById('tx-doctor');
+            if (!select) return;
+            select.innerHTML = '<option value="">-- Sin asignar / Clínica --</option>';
+            APP_DATA.doctors.forEach(d => {
+                select.innerHTML += `<option value="${d.id}">${d.name}</option>`;
+            });
+        }
+
+        // 3. TEAM LOGIC (UPDATED V2)
+        function renderTeam() {
+            const container = document.getElementById('doctors-container');
+            if (!container) return;
+            container.innerHTML = `
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">Doctores Activos</h3>
+                    <p class="text-sm text-slate-400">Datos basados en asignación directa.</p>
+                </div>
+            `;
+
+            APP_DATA.doctors.forEach(doc => {
+                // Calculate performance based on Doctor ID
+                const docTransactions = APP_DATA.transactions.filter(t => t.doctorId === doc.id && t.type === 'ingreso');
+                const generated = docTransactions.reduce((acc, t) => acc + t.amount, 0);
+
+                const progress = Math.min((generated / doc.goal) * 100, 100).toFixed(0);
+                const colorClass = doc.color === 'purple' ? 'text-purple-700 bg-purple-50 dark:text-purple-400 dark:bg-purple-900/30' : 'text-blue-700 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/30';
+                const barColor = doc.color === 'purple' ? 'bg-purple-500' : 'bg-primary';
+
+                container.innerHTML += `
+                    <div class="flex flex-col gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-100 dark:bg-[#1c2e3a] dark:ring-slate-800">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="h-12 w-12 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-xl">${doc.name[0]}</div>
+                                <div>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white">${doc.name}</h4>
+                                    <span class="inline-flex items-center rounded-md px-2 py-1 text-[10px] font-medium ${colorClass} ring-1 ring-inset ring-blue-700/10">${doc.role}</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-black tracking-tight text-slate-900 dark:text-white">${(generated / 1000).toFixed(1)}k€</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between text-xs font-medium">
+                                <span class="text-slate-500">Objetivo ${(doc.goal / 1000).toFixed(1)}k€</span>
+                                <span class="text-slate-900 dark:text-white">${progress}%</span>
+                            </div>
+                            <div class="relative h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+                                <div class="absolute left-0 top-0 h-full rounded-full ${barColor}" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                         <button onclick="deleteDoctor(${doc.id})" class="self-end text-xs text-red-400 hover:text-red-500 mt-2">Eliminar</button>
+                    </div>
+                `;
+            });
+        }
+
+        function handleAddDoctor(e) {
+            e.preventDefault();
+            const form = e.target;
+            const colors = ['blue', 'purple', 'emerald', 'amber'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+            APP_DATA.doctors.push({
+                id: Date.now(),
+                name: form.name.value,
+                role: form.role.value,
+                goal: parseFloat(form.goal.value),
+                color: randomColor
+            });
+            saveData();
+            closeDoctorModal();
+            form.reset();
+        }
+
+        function deleteDoctor(id) {
+            if (confirm("¿Eliminar doctor?")) {
+                APP_DATA.doctors = APP_DATA.doctors.filter(d => d.id !== id);
+                saveData();
+            }
+        }
+
+        function openDoctorModal() {
+            const m = document.getElementById('doctor-modal');
+            m.classList.remove('hidden');
+            setTimeout(() => document.getElementById('doctor-modal-content').classList.remove('scale-95', 'opacity-0'), 10);
+        }
+        function closeDoctorModal() {
+            const m = document.getElementById('doctor-modal');
+            const c = document.getElementById('doctor-modal-content');
+            c.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => m.classList.add('hidden'), 200);
+        }
+
+        // 4. DASHBOARD LOGIC
+        function updateDashboard() {
+            let income = 0; let expenses = 0;
+            APP_DATA.transactions.forEach(t => {
+                if (t.type === 'ingreso') income += parseFloat(t.amount);
+                if (t.type === 'gasto') expenses += parseFloat(t.amount);
+            });
+
+            const kpiIncome = document.getElementById('kpi-income');
+            const kpiExpenses = document.getElementById('kpi-expenses');
+            const kpiProfit = document.getElementById('kpi-profit');
+
+            if (kpiIncome) kpiIncome.innerText = income.toLocaleString('de-DE') + "€";
+            if (kpiExpenses) kpiExpenses.innerText = expenses.toLocaleString('de-DE') + "€";
+            if (kpiProfit) {
+                const p = income - expenses;
+                kpiProfit.innerText = p.toLocaleString('de-DE') + "€";
+                kpiProfit.className = p >= 0 ? "text-3xl font-bold text-primary tracking-tight" : "text-3xl font-bold text-red-500 tracking-tight";
+            }
+        }
+
+        // 5. EXPORT & SETTINGS LOGIC
+        function openExportModal() {
+            const modal = document.getElementById('export-modal');
+            modal.classList.remove('hidden');
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+            document.querySelector('#export-modal input[name="startDate"]').value = firstDay.toISOString().split('T')[0];
+            document.querySelector('#export-modal input[name="endDate"]').value = today.toISOString().split('T')[0];
+        }
+
+        function closeExportModal() {
+            document.getElementById('export-modal').classList.add('hidden');
+        }
+
+        function handleExportCSV(e) {
+            e.preventDefault();
+            const start = new Date(e.target.startDate.value);
+            const end = new Date(e.target.endDate.value);
+
+            const dataToExport = APP_DATA.transactions.filter(t => {
+                const d = new Date(t.date);
+                return d >= start && d <= end;
+            });
+
+            if (dataToExport.length === 0) return alert("No hay movimientos en esas fechas.");
+
+            let csvContent = "data:text/csv;charset=utf-8,ID,Fecha,Concepto,Tipo,Importe\n";
+            dataToExport.forEach(row => {
+                csvContent += `${row.id},${row.date},"${row.concept}",${row.type},${row.amount}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `contabilidad_dental_${e.target.endDate.value}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            closeExportModal();
+        }
+
+        function resetApp() {
+            if (confirm("⚠️ ¿BORRAR TODO? Esta acción no se puede deshacer.")) {
+                localStorage.removeItem('DENTAL_APP_DATA');
+                location.reload();
+            }
+        }
+
+        function openModal() {
+            const modal = document.getElementById('transaction-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('modal-content').classList.remove('scale-95', 'opacity-0');
+                document.getElementById('modal-content').classList.add('scale-100', 'opacity-100');
+            }, 10);
+            const dateInput = document.querySelector('input[name="date"]');
+            if (dateInput && !dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('transaction-modal');
+            document.getElementById('modal-content').classList.remove('scale-100', 'opacity-100');
+            document.getElementById('modal-content').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        // 6. INITIALIZATION
+        window.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            renderTable();
+            renderTeam();
+            updateDashboard();
+        });
+
+    </script>
+
+</body>
+
+</html>
