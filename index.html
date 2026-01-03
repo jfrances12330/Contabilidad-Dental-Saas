@@ -14,44 +14,68 @@
     <!-- Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
-    <!-- Chart.js for Graphs -->
+    <!-- Fonts: Manrope (Sans) & Playfair Display (Serif for Premium Feel) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <!-- Tailwind Config -->
-    <script id="tailwind-config">
+    <!-- Tailwind CSS (Configured via JS for Custom Colors) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
         tailwind.config = {
-            darkMode: "class",
+            darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        "primary": "#027dc5",
-                        "primary-dark": "#026aa0",
-                        "background-light": "#f5f7f8",
-                        "background-dark": "#0f1c23",
-                        "medical-blue": "#027dc5",
-                    },
                     fontFamily: {
-                        "display": ["Manrope", "sans-serif"],
-                        "body": ["Noto Sans", "sans-serif"]
+                        sans: ['Manrope', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'], // New Premium Font
                     },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "2xl": "1rem",
-                        "full": "9999px"
-                    },
-                },
-            },
+                    colors: {
+                        // Lobato Brand Colors extracted from image
+                        primary: '#C69C6D', // Gold/Amber accent
+                        'primary-dark': '#A87F55',
+                        'dark-bg': '#0B0C10', // Deep Black/Charcoal
+                        'dark-surface': '#15171E', // Slightly lighter storage
+                    }
+                }
+            }
         }
     </script>
     <style>
-        /* Custom scrollbar */
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        .brand-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Apply Serif to headers */
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dark .glass-panel {
+            background: rgba(21, 23, 30, 0.85);
+            /* Matches dark-surface */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* CustomScrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
 
         ::-webkit-scrollbar-track {
@@ -60,7 +84,17 @@
 
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
-            border-radius: 4px;
+            border-radius: 3px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+
+        .lobato-gradient-text {
+            background: linear-gradient(135deg, #F3E7D7 0%, #C69C6D 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         ::-webkit-scrollbar-thumb:hover {
@@ -97,58 +131,67 @@
 </head>
 
 <body
-    class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-100 overflow-hidden h-screen w-full flex">
+    class="bg-gray-50 text-slate-900 transition-colors duration-300 dark:bg-dark-bg dark:text-slate-100 font-sans antialiased overflow-hidden">
 
-    <!-- SIDEBAR (Desktop Only: hidden on mobile, flex on md) -->
-    <aside
-        class="hidden md:flex flex-col w-[280px] border-r border-slate-200 bg-white dark:bg-[#1a2c35] dark:border-slate-800 h-full flex-shrink-0 transition-all z-20">
-        <div class="flex h-full flex-col justify-between p-6">
-            <div class="flex flex-col gap-8">
-                <!-- Logo -->
-                <div class="flex items-center gap-3">
-                    <div class="flex items-center justify-center rounded-lg bg-primary/10 p-2 h-12 w-12 text-primary">
-                        <span class="material-symbols-outlined filled text-3xl">dentistry</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <h1 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Clínica Lobato</h1>
-                        <p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Gestión Dental</p>
-                    </div>
+    <!-- MAIN APP CONTAINER -->
+    <div class="flex h-screen overflow-hidden bg-gray-50 dark:bg-dark-bg">
+
+        <!-- SIDEBAR (Desktop) - PREMIUM DARK -->
+        <aside
+            class="hidden md:flex w-72 flex-col border-r border-slate-200 bg-white dark:border-white/5 dark:bg-dark-surface z-20">
+            <!-- Brand -->
+            <div class="flex h-20 items-center gap-3 px-6 border-b border-slate-100 dark:border-white/5">
+                <div
+                    class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-primary/30">
+                    <span class="material-symbols-outlined text-2xl">dentistry</span>
                 </div>
-
-                <!-- Navigation -->
-                <nav class="flex flex-col gap-2">
-                    <button onclick="switchTab('view-dashboard')" id="nav-desktop-dashboard"
-                        class="nav-item group flex items-center gap-3 rounded-lg bg-primary px-4 py-3 text-white shadow-md shadow-primary/20 transition-all text-left">
-                        <span class="material-symbols-outlined filled">grid_view</span>
-                        <span class="text-sm font-semibold">Dashboard</span>
-                    </button>
-
-                    <button onclick="switchTab('view-team')" id="nav-desktop-team"
-                        class="nav-item group flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left">
-                        <span class="material-symbols-outlined">groups</span>
-                        <span class="text-sm font-medium">Equipo</span>
-                    </button>
-
-                    <button onclick="switchTab('view-finance')" id="nav-desktop-finance"
-                        class="nav-item group flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left">
-                        <span class="material-symbols-outlined">payments</span>
-                        <span class="text-sm font-medium">Finanzas</span>
-                    </button>
-
-                    <button onclick="switchTab('view-chat')" id="nav-desktop-chat"
-                        class="nav-item group flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left">
-                        <span class="material-symbols-outlined">smart_toy</span>
-                        <span class="text-sm font-medium">IA (Chat)</span>
-                    </button>
-
-                    <button onclick="switchTab('view-analytics')" id="nav-desktop-analytics"
-                        class="nav-item group flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left">
-                        <span class="material-symbols-outlined">analytics</span>
-                        <span class="text-sm font-medium">Analítica</span>
-                    </button>
-                </nav>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white font-serif">Lobato<span
+                            class="text-primary">Dental</span></h1>
+                    <p class="text-[10px] font-medium uppercase tracking-widest text-slate-400">Alta Precisión</p>
+                </div>
             </div>
 
+            <!-- Nav Links -->
+            <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1">
+                <!-- Dashboard -->
+                <button onclick="switchTab('dashboard')" id="nav-dashboard"
+                    class="nav-item group flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-medium transition-all duration-200 bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-dark ring-1 ring-primary/20">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </button>
+
+                <!-- Analytics (NEW) -->
+                <button onclick="switchTab('analytics')" id="nav-analytics"
+                    class="nav-item group flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white transition-all">
+                    <span class="material-symbols-outlined">monitoring</span>
+                    Analítica
+                </button>
+
+                <!-- Finance -->
+                <button onclick="switchTab('finance')" id="nav-finance"
+                    class="nav-item group flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white transition-all">
+                    <span class="material-symbols-outlined">payments</span>
+                    Finanzas
+                </button>
+
+                <!-- Team -->
+                <button onclick="switchTab('team')" id="nav-team"
+                    class="nav-item group flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white transition-all">
+                    <span class="material-symbols-outlined">groups</span>
+                    Equipo
+                </button>
+
+                <!-- Chat AI -->
+                <button onclick="switchTab('chat')" id="nav-chat"
+                    class="nav-item group flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white transition-all">
+                    <div class="relative">
+                        <span class="material-symbols-outlined">smart_toy</span>
+                        <span class="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+                    </div>
+                    Asistente IA
+                </button>
+            </nav>
             <!-- User Footer -->
             <div class="flex flex-col gap-4 border-t border-slate-100 dark:border-slate-800 pt-6">
                 <button onclick="switchTab('view-settings')"
@@ -166,7 +209,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+    </div>
     </aside>
 
     <!-- MAIN CONTENT AREA -->
@@ -179,13 +222,14 @@
                 <header class="flex flex-col gap-1">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+                            <h2
+                                class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif">
                                 Hola, Clínica Lobato</h2>
                             <p class="text-slate-500 dark:text-slate-400 mt-1">Aquí tienes el resumen financiero de hoy.
                             </p>
                         </div>
                         <button
-                            class="hidden md:flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors">
+                            class="hidden md:flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm hover:bg-slate-50 dark:bg-dark-surface dark:border-white/10 dark:text-slate-300 dark:hover:bg-white/5 transition-colors">
                             <span class="material-symbols-outlined text-lg">calendar_today</span>
                             <span>Octubre 2023</span>
                         </button>
@@ -195,7 +239,7 @@
                 <!-- Cards -->
                 <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div
-                        class="flex flex-col gap-4 rounded-xl bg-white dark:bg-[#1a2c35] p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+                        class="flex flex-col gap-4 rounded-xl bg-white dark:bg-dark-surface p-6 shadow-sm border border-slate-100 dark:border-white/5">
                         <div class="flex items-center justify-between">
                             <div
                                 class="rounded-full bg-green-50 dark:bg-green-900/20 p-3 text-green-600 dark:text-green-400">
@@ -206,12 +250,13 @@
                         </div>
                         <div>
                             <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Ingresos Totales</p>
-                            <p class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight" id="kpi-income">
+                            <p class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif"
+                                id="kpi-income">
                                 ---</p>
                         </div>
                     </div>
                     <div
-                        class="flex flex-col gap-4 rounded-xl bg-white dark:bg-[#1a2c35] p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+                        class="flex flex-col gap-4 rounded-xl bg-white dark:bg-dark-surface p-6 shadow-sm border border-slate-100 dark:border-white/5">
                         <div class="flex items-center justify-between">
                             <div class="rounded-full bg-red-50 dark:bg-red-900/20 p-3 text-red-600 dark:text-red-400">
                                 <span class="material-symbols-outlined filled">credit_card</span>
@@ -221,12 +266,12 @@
                         </div>
                         <div>
                             <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Gastos Operativos</p>
-                            <p class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight"
+                            <p class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif"
                                 id="kpi-expenses">---</p>
                         </div>
                     </div>
                     <div
-                        class="flex flex-col gap-4 rounded-xl bg-white dark:bg-[#1a2c35] p-6 shadow-sm border border-slate-100 dark:border-slate-800 relative overflow-hidden group">
+                        class="flex flex-col gap-4 rounded-xl bg-white dark:bg-dark-surface p-6 shadow-sm border border-slate-100 dark:border-white/5 relative overflow-hidden group">
                         <div
                             class="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-primary/10 transition-transform group-hover:scale-110">
                         </div>
@@ -239,15 +284,15 @@
                         </div>
                         <div class="relative z-10">
                             <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Beneficio Neto</p>
-                            <p class="text-3xl font-bold text-primary tracking-tight" id="kpi-profit">---</p>
+                            <p class="text-3xl font-bold text-primary tracking-tight font-serif" id="kpi-profit">---</p>
                         </div>
                     </div>
                 </section>
 
-                <!-- AI Alert -->
+                <!-- AI Alert (Updated to Gold Gradient) -->
                 <section class="w-full">
                     <div
-                        class="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#027dc5] to-[#36a6e0] shadow-lg shadow-primary/20 dark:shadow-none">
+                        class="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#A87F55] to-[#C69C6D] shadow-lg shadow-primary/20 dark:shadow-none">
                         <div class="absolute -right-10 -top-10 h-64 w-64 rounded-full bg-white opacity-10 blur-3xl">
                         </div>
                         <div class="absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-white opacity-10 blur-2xl">
@@ -260,8 +305,8 @@
                                     <span class="material-symbols-outlined filled text-2xl">auto_awesome</span>
                                 </div>
                                 <div class="flex flex-col gap-1">
-                                    <h3 class="text-lg font-bold text-white">Alertas IA (Gemini)</h3>
-                                    <p class="text-blue-50 text-base font-medium max-w-2xl leading-relaxed">
+                                    <h3 class="text-lg font-bold text-white font-serif">Alertas IA (Gemini)</h3>
+                                    <p class="text-white/90 text-base font-medium max-w-2xl leading-relaxed">
                                         He detectado un sobrecoste inusual en la partida de <span
                                             class="font-bold text-white underline decoration-white/30 underline-offset-4">Laboratorio
                                             (+20%)</span> comparado con la media trimestral.
@@ -269,7 +314,7 @@
                                 </div>
                             </div>
                             <button
-                                class="shrink-0 whitespace-nowrap rounded-lg bg-white px-5 py-2.5 text-sm font-bold text-primary shadow-sm hover:bg-blue-50 transition-colors cursor-pointer">
+                                class="shrink-0 whitespace-nowrap rounded-lg bg-white/10 backdrop-blur-md border border-white/20 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-white/20 transition-colors cursor-pointer">
                                 Ver análisis detallado
                             </button>
                         </div>
@@ -278,10 +323,11 @@
 
                 <!-- Charts -->
                 <section
-                    class="flex flex-col gap-4 rounded-xl bg-white dark:bg-[#1a2c35] p-6 shadow-sm border border-slate-100 dark:border-slate-800 flex-1 min-h-[400px]">
+                    class="flex flex-col gap-4 rounded-xl bg-white dark:bg-dark-surface p-6 shadow-sm border border-slate-100 dark:border-white/5 flex-1 min-h-[400px]">
                     <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
                         <div>
-                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Balance Semestral</h3>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">Balance Semestral
+                            </h3>
                             <p class="text-sm text-slate-500 dark:text-slate-400">Ingresos vs Gastos (Últimos 6 meses)
                             </p>
                         </div>
@@ -316,42 +362,42 @@
                             <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
                                 <div class="flex items-end justify-center gap-1 h-full">
                                     <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 65%;"></div>
-                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-600 rounded-t-sm"
+                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-700 rounded-t-sm"
                                         style="height: 45%;"></div>
                                 </div>
                             </div>
                             <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
                                 <div class="flex items-end justify-center gap-1 h-full">
                                     <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 72%;"></div>
-                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-600 rounded-t-sm"
+                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-700 rounded-t-sm"
                                         style="height: 48%;"></div>
                                 </div>
                             </div>
                             <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
                                 <div class="flex items-end justify-center gap-1 h-full">
                                     <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 55%;"></div>
-                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-600 rounded-t-sm"
+                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-700 rounded-t-sm"
                                         style="height: 40%;"></div>
                                 </div>
                             </div>
                             <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
                                 <div class="flex items-end justify-center gap-1 h-full">
                                     <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 45%;"></div>
-                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-600 rounded-t-sm"
+                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-700 rounded-t-sm"
                                         style="height: 35%;"></div>
                                 </div>
                             </div>
                             <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
                                 <div class="flex items-end justify-center gap-1 h-full">
                                     <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 85%;"></div>
-                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-600 rounded-t-sm"
+                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-700 rounded-t-sm"
                                         style="height: 50%;"></div>
                                 </div>
                             </div>
                             <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
                                 <div class="flex items-end justify-center gap-1 h-full">
                                     <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 92%;"></div>
-                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-600 rounded-t-sm"
+                                    <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-700 rounded-t-sm"
                                         style="height: 38%;"></div>
                                 </div>
                             </div>
@@ -373,13 +419,14 @@
         <div id="view-team" class="view-content overflow-y-auto h-full w-full">
             <!-- Header Team -->
             <header
-                class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/90 px-6 py-5 backdrop-blur-md dark:border-slate-800 dark:bg-[#15232d]/90">
+                class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/90 px-6 py-5 backdrop-blur-md dark:border-white/5 dark:bg-dark-surface/90">
                 <div class="flex flex-col gap-1">
-                    <h2 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white">Equipo Médico</h2>
+                    <h2 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white font-serif">Equipo
+                        Médico</h2>
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Gestión de rendimiento</p>
                 </div>
                 <button onclick="openDoctorModal()"
-                    class="flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-white shadow-md shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95">
+                    class="flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-white shadow-md shadow-primary/20 hover:bg-primary-dark transition-all active:scale-95">
                     <span class="material-symbols-outlined text-[20px]">add</span>
                     <span class="hidden md:inline">Añadir</span>
                 </button>
@@ -396,10 +443,11 @@
                     <div id="doctor-modal" class="fixed inset-0 z-50 hidden">
                         <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"
                             onclick="closeDoctorModal()"></div>
-                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-[#1a2c35] rounded-2xl shadow-xl p-6 border border-slate-100 dark:border-slate-700 md:scale-100 scale-95 opacity-0 transition-all duration-200"
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-6 border border-slate-100 dark:border-white/10 md:scale-100 scale-95 opacity-0 transition-all duration-200"
                             id="doctor-modal-content">
                             <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">Nuevo Doctor</h3>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white font-serif">Nuevo Doctor
+                                </h3>
                                 <button onclick="closeDoctorModal()"
                                     class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                                     <span class="material-symbols-outlined">close</span>
@@ -409,13 +457,13 @@
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nombre</label>
                                     <input name="name" required type="text" placeholder="Ej: Dr. Smith"
-                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white dark:placeholder-slate-600">
                                 </div>
                                 <div>
                                     <label
                                         class="block text-xs font-bold text-slate-500 uppercase mb-1">Especialidad</label>
                                     <select name="role"
-                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
                                         <option value="General">Odontología General</option>
                                         <option value="Ortodoncia">Ortodoncia</option>
                                         <option value="Implantes">Implantes</option>
@@ -426,7 +474,7 @@
                                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Objetivo
                                         Mensual (€)</label>
                                     <input name="goal" required type="number" placeholder="10000"
-                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white dark:placeholder-slate-600">
                                 </div>
                                 <button type="submit"
                                     class="mt-2 w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-dark transition-colors">Guardar
@@ -438,15 +486,17 @@
                     <!-- Right: Logic Donut -->
                     <div class="flex flex-col gap-6">
                         <div
-                            class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-100 dark:bg-[#1c2e3a] dark:ring-slate-800">
-                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Distribución</h3>
+                            class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-100 dark:bg-dark-surface dark:ring-white/5">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 font-serif">Distribución
+                            </h3>
                             <div class="relative flex items-center justify-center py-4">
                                 <div class="relative h-48 w-48 rounded-full"
-                                    style="background: conic-gradient(#027dc5 0% 41%, #a855f7 41% 73%, #14b8a6 73% 100%);">
+                                    style="background: conic-gradient(#C69C6D 0% 41%, #A87F55 41% 73%, #F3E7D7 73% 100%);">
                                     <div
-                                        class="absolute inset-4 rounded-full bg-white dark:bg-[#1c2e3a] flex flex-col items-center justify-center z-10">
+                                        class="absolute inset-4 rounded-full bg-white dark:bg-dark-surface flex flex-col items-center justify-center z-10">
                                         <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Total</p>
-                                        <p class="text-2xl font-black text-slate-900 dark:text-white">30.7k€</p>
+                                        <p class="text-2xl font-black text-slate-900 dark:text-white font-serif">30.7k€
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -455,13 +505,13 @@
                                     <span class="flex items-center gap-2">
                                         <div class="h-2 w-2 rounded-full bg-primary"></div> Fernando
                                     </span>
-                                    <span class="font-bold">41%</span>
+                                    <span class="font-bold text-slate-700 dark:text-slate-300">41%</span>
                                 </div>
                                 <div class="flex items-center justify-between text-sm">
                                     <span class="flex items-center gap-2">
-                                        <div class="h-2 w-2 rounded-full bg-purple-500"></div> Carla
+                                        <div class="h-2 w-2 rounded-full bg-primary-dark"></div> Carla
                                     </span>
-                                    <span class="font-bold">32%</span>
+                                    <span class="font-bold text-slate-700 dark:text-slate-300">32%</span>
                                 </div>
                             </div>
                         </div>
@@ -475,13 +525,14 @@
             <div class="p-6 md:p-8 flex flex-col gap-6 pb-24 md:pb-10 max-w-6xl mx-auto">
                 <header class="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
-                        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+                        <h2
+                            class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif">
                             Finanzas</h2>
                         <input id="search-input" onkeyup="renderTable()" type="text" placeholder="Buscar..."
-                            class="mt-2 w-full md:w-64 rounded-lg border-slate-200 bg-white px-3 py-2 text-sm">
+                            class="mt-2 w-full md:w-64 rounded-lg border-slate-200 bg-white px-3 py-2 text-sm dark:bg-dark-surface dark:border-white/10 dark:text-white dark:placeholder-slate-500">
                     </div>
                     <button onclick="openExportModal()"
-                        class="hidden md:flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors">
+                        class="hidden md:flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors dark:bg-dark-surface dark:border-white/10 dark:text-slate-300 dark:hover:bg-white/5">
                         <span class="material-symbols-outlined text-[18px]">download</span>
                         Exportar CSV
                     </button>
@@ -489,27 +540,27 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div
-                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm">
-                        <p class="text-slate-500 text-sm font-medium">Entradas</p>
-                        <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">€25,000</p>
+                        class="bg-white dark:bg-dark-surface rounded-xl p-5 border border-slate-100 dark:border-white/5 shadow-sm">
+                        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Entradas</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1 font-serif">€25,000</p>
                     </div>
                     <div
-                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm">
-                        <p class="text-slate-500 text-sm font-medium">Salidas</p>
-                        <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">€12,500</p>
+                        class="bg-white dark:bg-dark-surface rounded-xl p-5 border border-slate-100 dark:border-white/5 shadow-sm">
+                        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Salidas</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1 font-serif">€12,500</p>
                     </div>
                     <div
-                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm">
-                        <p class="text-slate-500 text-sm font-medium">Neto</p>
-                        <p class="text-2xl font-bold text-emerald-600 mt-1">€12,500</p>
+                        class="bg-white dark:bg-dark-surface rounded-xl p-5 border border-slate-100 dark:border-white/5 shadow-sm">
+                        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Neto</p>
+                        <p class="text-2xl font-bold text-primary mt-1 font-serif">€12,500</p>
                     </div>
                 </div>
 
                 <div
-                    class="bg-white dark:bg-[#1a2c35] rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+                    class="bg-white dark:bg-dark-surface rounded-xl border border-slate-100 dark:border-white/5 shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
-                            <thead class="bg-slate-50 dark:bg-slate-800/50">
+                            <thead class="bg-slate-50 dark:bg-white/5">
                                 <tr>
                                     <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Fecha</th>
                                     <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Concepto</th>
@@ -517,7 +568,7 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody id="finance-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
+                            <tbody id="finance-table-body" class="divide-y divide-slate-100 dark:divide-white/5">
                                 <!-- JS WILL RENDER ROWS HERE -->
                             </tbody>
                         </table>
@@ -541,10 +592,10 @@
         <div id="transaction-modal" class="fixed inset-0 z-50 hidden">
             <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity" onclick="closeModal()">
             </div>
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-[#1a2c35] rounded-2xl shadow-xl p-6 border border-slate-100 dark:border-slate-700 scale-95 opacity-0 transition-all duration-200"
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-6 border border-slate-100 dark:border-white/10 scale-95 opacity-0 transition-all duration-200"
                 id="modal-content">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Nuevo Movimiento</h3>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white font-serif">Nuevo Movimiento</h3>
                     <button onclick="closeModal()"
                         class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                         <span class="material-symbols-outlined">close</span>
@@ -558,14 +609,14 @@
                                 <input type="radio" name="type" value="ingreso" class="peer hidden" checked
                                     onchange="toggleCostField(false)">
                                 <div
-                                    class="text-center py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 peer-checked:bg-green-50 peer-checked:text-green-700 peer-checked:border-green-200 transition-all font-medium">
+                                    class="text-center py-2 rounded-lg border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 peer-checked:bg-green-50 peer-checked:text-green-700 peer-checked:border-green-200 dark:peer-checked:bg-green-900/20 dark:peer-checked:text-green-400 transition-all font-medium">
                                     Ingreso</div>
                             </label>
                             <label class="flex-1 cursor-pointer">
                                 <input type="radio" name="type" value="gasto" class="peer hidden"
                                     onchange="toggleCostField(true)">
                                 <div
-                                    class="text-center py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 peer-checked:bg-red-50 peer-checked:text-red-700 peer-checked:border-red-200 transition-all font-medium">
+                                    class="text-center py-2 rounded-lg border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 peer-checked:bg-red-50 peer-checked:text-red-700 peer-checked:border-red-200 dark:peer-checked:bg-red-900/20 dark:peer-checked:text-red-400 transition-all font-medium">
                                     Gasto</div>
                             </label>
                         </div>
@@ -575,7 +626,7 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Doctor Asignado</label>
                         <select id="tx-doctor" name="doctorId"
-                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
                             <option value="">-- Sin asignar / Clínica --</option>
                             <!-- JS WILL POPULATE DOCTORS -->
                         </select>
@@ -586,7 +637,7 @@
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Categoría /
                             Tratamiento</label>
                         <select name="category"
-                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
                             <option value="General">Odontología General</option>
                             <option value="Ortodoncia">Ortodoncia</option>
                             <option value="Implantes">Implantes</option>
@@ -600,19 +651,19 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Concepto</label>
                         <input name="concept" required type="text" placeholder="Ej: Implante Unitario"
-                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white dark:placeholder-slate-600">
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Importe (€)</label>
                             <input name="amount" required type="number" step="0.01" placeholder="0.00"
-                                class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                                class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white dark:placeholder-slate-600">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Fecha</label>
                             <input name="date" required type="date"
-                                class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                                class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
                         </div>
                     </div>
 
@@ -622,7 +673,7 @@
                                 class="text-[10px] lowercase font-normal text-slate-400">(Lab,
                                 Materiales...)</span></label>
                         <input name="cost" type="number" step="0.01" placeholder="0.00"
-                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white dark:placeholder-slate-600">
                     </div>
 
                     <button type="submit"
@@ -635,7 +686,8 @@
         <div id="view-analytics" class="view-content overflow-y-auto h-full w-full">
             <div class="p-6 md:p-8 flex flex-col gap-6 pb-24 md:pb-10 max-w-7xl mx-auto">
                 <header>
-                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Analítica
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif">
+                        Analítica
                         Avanzada</h2>
                     <p class="text-slate-500 dark:text-slate-400 mt-1">Visión estratégica de rentabilidad y márgenes.
                     </p>
@@ -644,16 +696,18 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Profit per Doctor Chart -->
                     <div
-                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Rentabilidad por Doctor (Neto)
+                        class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Rentabilidad por
+                            Doctor (Neto)
                         </h3>
                         <canvas id="chart-profit-doctor"></canvas>
                     </div>
 
                     <!-- Margin per Treatment Chart -->
                     <div
-                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Margen por Tratamiento (%)
+                        class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Margen por
+                            Tratamiento (%)
                         </h3>
                         <canvas id="chart-margin-treatment"></canvas>
                     </div>
@@ -661,9 +715,9 @@
 
                 <!-- Integration Status -->
                 <div
-                    class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-100 dark:border-blue-800 flex items-center justify-between">
+                    class="bg-blue-50 dark:bg-blue-900/10 rounded-xl p-6 border border-blue-100 dark:border-blue-900/20 flex items-center justify-between">
                     <div>
-                        <h3 class="text-base font-bold text-blue-900 dark:text-white">Google Sheets Sync</h3>
+                        <h3 class="text-base font-bold text-blue-900 dark:text-blue-100">Google Sheets Sync</h3>
                         <p class="text-xs text-blue-600 dark:text-blue-300">Conectado a:
                             <code>contabilidad_master_2025.csv</code>
                         </p>
@@ -684,13 +738,13 @@
         <div id="view-settings" class="view-content overflow-y-auto h-full w-full">
             <div class="p-6 md:p-10 max-w-4xl mx-auto flex flex-col gap-8">
                 <header>
-                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Configuración</h2>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white font-serif">Configuración</h2>
                     <p class="text-sm text-slate-500 dark:text-slate-400">Personaliza tu experiencia dental.</p>
                 </header>
 
                 <section class="flex flex-col gap-4">
                     <div
-                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex items-center justify-between">
                         <div>
                             <h3 class="text-base font-bold text-slate-900 dark:text-white">Modo Oscuro</h3>
                             <p class="text-xs text-slate-500">Alternar entre tema claro y oscuro.</p>
@@ -703,7 +757,7 @@
                     </div>
 
                     <div
-                        class="bg-white dark:bg-[#1a2c35] rounded-xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex items-center justify-between">
                         <div>
                             <h3 class="text-base font-bold text-red-600">Restablecer Datos</h3>
                             <p class="text-xs text-slate-500">Borrar todos los movimientos y empezar de cero.</p>
@@ -726,22 +780,22 @@
             <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"
                 onclick="closeExportModal()"></div>
             <div
-                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white dark:bg-[#1a2c35] rounded-2xl shadow-xl p-6 border border-slate-100 dark:border-slate-700">
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Exportar a CSV</h3>
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-6 border border-slate-100 dark:border-white/10">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Exportar a CSV</h3>
                 <form onsubmit="handleExportCSV(event)" class="flex flex-col gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Desde</label>
                         <input name="startDate" required type="date"
-                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Hasta</label>
                         <input name="endDate" required type="date"
-                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:bg-[#233540] dark:border-slate-700 dark:text-white">
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
                     </div>
                     <div class="flex gap-2 mt-2">
                         <button type="button" onclick="closeExportModal()"
-                            class="flex-1 py-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">Cancelar</button>
+                            class="flex-1 py-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 rounded-lg text-sm font-medium transition-colors">Cancelar</button>
                         <button type="submit"
                             class="flex-1 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary-dark transition-colors shadow-lg shadow-primary/20">Descargar</button>
                     </div>
@@ -1129,23 +1183,23 @@
 
             filtered.forEach(t => {
                 const isIngreso = t.type === 'ingreso';
-                const color = isIngreso ? 'text-emerald-600' : 'text-red-500';
+                const color = isIngreso ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400';
                 const sign = isIngreso ? '+' : '-';
-                const sourceIcon = t.source === 'sheet' ? '<span class="material-symbols-outlined text-[14px] text-blue-500" title="Importado de Sheets">table_view</span>' : '';
+                const sourceIcon = t.source === 'sheet' ? '<span class="material-symbols-outlined text-[14px] text-blue-500 dark:text-blue-400" title="Importado de Sheets">table_view</span>' : '';
 
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white">${new Date(t.date).toLocaleDateString()}</td>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-b border-slate-100 dark:border-white/5 last:border-0">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white font-serif">${new Date(t.date).toLocaleDateString()}</td>
                         <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300 flex items-center gap-2">
                              ${sourceIcon}
                              <div>
-                                <p>${t.concept}</p>
+                                <p class="font-medium text-slate-900 dark:text-white">${t.concept}</p>
                                 <p class="text-[10px] text-slate-400">${t.category || 'General'} • ${getDoctorName(t.doctorId)}</p>
                              </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold ${color}">${sign} ${parseFloat(t.amount).toFixed(2)}€</td>
                         <td class="px-6 py-4 text-center">
-                            <button onclick="deleteTransaction(${t.id})" class="text-slate-400 hover:text-red-500"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+                            <button onclick="deleteTransaction(${t.id})" class="text-slate-400 hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-[20px]">delete</span></button>
                         </td>
                     </tr>`;
             });
@@ -1212,7 +1266,7 @@
             if (!container) return;
             container.innerHTML = `
                 <div class="flex items-center justify-between mb-1">
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">Doctores Activos</h3>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">Doctores Activos</h3>
                     <p class="text-sm text-slate-400">Datos basados en asignación directa.</p>
                 </div>
             `;
@@ -1223,21 +1277,25 @@
                 const generated = docTransactions.reduce((acc, t) => acc + t.amount, 0);
 
                 const progress = Math.min((generated / doc.goal) * 100, 100).toFixed(0);
-                const colorClass = doc.color === 'purple' ? 'text-purple-700 bg-purple-50 dark:text-purple-400 dark:bg-purple-900/30' : 'text-blue-700 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/30';
-                const barColor = doc.color === 'purple' ? 'bg-purple-500' : 'bg-primary';
+                // Use Lobato Gold/Dark theme logic for badges
+                const colorClass = doc.color === 'purple'
+                    ? 'text-slate-600 bg-slate-100 dark:text-slate-300 dark:bg-white/5'
+                    : 'text-primary bg-primary/10 dark:text-primary dark:bg-primary/20';
+
+                const barColor = doc.color === 'purple' ? 'bg-slate-400' : 'bg-primary';
 
                 container.innerHTML += `
-                    <div class="flex flex-col gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-100 dark:bg-[#1c2e3a] dark:ring-slate-800">
+                    <div class="flex flex-col gap-4 rounded-xl bg-white p-5 shadow-sm border border-slate-100 dark:bg-dark-surface dark:border-white/5">
                         <div class="flex items-start justify-between">
                             <div class="flex items-center gap-3">
-                                <div class="h-12 w-12 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-xl">${doc.name[0]}</div>
+                                <div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xl font-serif">${doc.name[0]}</div>
                                 <div>
-                                    <h4 class="text-base font-bold text-slate-900 dark:text-white">${doc.name}</h4>
-                                    <span class="inline-flex items-center rounded-md px-2 py-1 text-[10px] font-medium ${colorClass} ring-1 ring-inset ring-blue-700/10">${doc.role}</span>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white font-serif">${doc.name}</h4>
+                                    <span class="inline-flex items-center rounded-md px-2 py-1 text-[10px] font-medium ${colorClass} ring-1 ring-inset ring-slate-500/10">${doc.role}</span>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="text-xl font-black tracking-tight text-slate-900 dark:text-white">${(generated / 1000).toFixed(1)}k€</p>
+                                <p class="text-xl font-black tracking-tight text-slate-900 dark:text-white font-serif">${(generated / 1000).toFixed(1)}k€</p>
                             </div>
                         </div>
                         <div class="flex flex-col gap-1">
@@ -1245,11 +1303,11 @@
                                 <span class="text-slate-500">Objetivo ${(doc.goal / 1000).toFixed(1)}k€</span>
                                 <span class="text-slate-900 dark:text-white">${progress}%</span>
                             </div>
-                            <div class="relative h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+                            <div class="relative h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
                                 <div class="absolute left-0 top-0 h-full rounded-full ${barColor}" style="width: ${progress}%"></div>
                             </div>
                         </div>
-                         <button onclick="deleteDoctor(${doc.id})" class="self-end text-xs text-red-400 hover:text-red-500 mt-2">Eliminar</button>
+                         <button onclick="deleteDoctor(${doc.id})" class="self-end text-xs text-red-400 hover:text-red-500 mt-2 transition-colors">Eliminar</button>
                     </div>
                 `;
             });
@@ -1258,7 +1316,7 @@
         function handleAddDoctor(e) {
             e.preventDefault();
             const form = e.target;
-            const colors = ['blue', 'purple', 'emerald', 'amber'];
+            const colors = ['blue', 'purple']; // Simplified logic
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
             APP_DATA.doctors.push({
@@ -1292,6 +1350,100 @@
             setTimeout(() => m.classList.add('hidden'), 200);
         }
 
+        // 3.5 Render Analytics (New)
+        function renderAnalytics() {
+            const ctxProfit = document.getElementById('chart-profit-doctor');
+            const ctxMargin = document.getElementById('chart-margin-treatment');
+
+            if (!ctxProfit || !ctxMargin) return;
+
+            // Destroy existing instances to prevent overlays
+            if (profitChart) profitChart.destroy();
+            if (marginChart) marginChart.destroy();
+
+            // Prepare Data from APP_DATA
+            const labels = APP_DATA.doctors.map(d => d.name);
+            const dataProfit = APP_DATA.doctors.map(d => {
+                const txs = APP_DATA.transactions.filter(t => t.doctorId === d.id && t.type === 'ingreso');
+                return txs.reduce((sum, t) => sum + t.amount, 0);
+            });
+
+            // check theme for colors
+            const isDark = document.documentElement.classList.contains('dark');
+            const colorText = isDark ? '#ffffff' : '#0f172a';
+            const colorGrid = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+
+            // 1. Profit Chart (Bar)
+            profitChart = new Chart(ctxProfit, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Ingresos (€)',
+                        data: dataProfit,
+                        backgroundColor: '#C69C6D',
+                        borderRadius: 6,
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: isDark ? '#15171E' : '#ffffff',
+                            titleColor: isDark ? '#C69C6D' : '#0f172a',
+                            bodyColor: isDark ? '#ffffff' : '#64748b',
+                            borderColor: '#C69C6D',
+                            borderWidth: 1,
+                            padding: 10,
+                            titleFont: { family: 'Playfair Display', size: 14 },
+                            bodyFont: { family: 'Manrope', size: 13 }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: colorGrid, borderDash: [5, 5] },
+                            ticks: { color: colorText, font: { family: 'Manrope' } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: colorText, font: { family: 'Manrope', weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+
+            // 2. Margin Chart (Doughnut) - Mock Distribution
+            marginChart = new Chart(ctxMargin, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ortodoncia', 'Implantes', 'General', 'Estética'],
+                    datasets: [{
+                        data: [35, 45, 15, 5],
+                        backgroundColor: ['#C69C6D', '#A87F55', '#F3E7D7', '#334155'], // Gold Gradient & Dark Slate
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '75%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: colorText,
+                                font: { family: 'Manrope', size: 12 },
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         // 4. DASHBOARD LOGIC
         function updateDashboard() {
             let income = 0; let expenses = 0;
@@ -1309,7 +1461,7 @@
             if (kpiProfit) {
                 const p = income - expenses;
                 kpiProfit.innerText = p.toLocaleString('de-DE') + "€";
-                kpiProfit.className = p >= 0 ? "text-3xl font-bold text-primary tracking-tight" : "text-3xl font-bold text-red-500 tracking-tight";
+                kpiProfit.className = p >= 0 ? "text-3xl font-bold text-primary tracking-tight font-serif" : "text-3xl font-bold text-red-500 tracking-tight font-serif";
             }
         }
 
