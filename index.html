@@ -27,20 +27,22 @@
     <!-- Tailwind CSS (Configured via JS for Custom Colors) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Manrope', 'sans-serif'],
-                        serif: ['"Playfair Display"', 'serif'], // New Premium Font
-                    },
-                    colors: {
-                        // Lobato Brand Colors extracted from image
-                        primary: '#C69C6D', // Gold/Amber accent
-                        'primary-dark': '#A87F55',
-                        'dark-bg': '#0B0C10', // Deep Black/Charcoal
-                        'dark-surface': '#15171E', // Slightly lighter storage
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['Manrope', 'sans-serif'],
+                            serif: ['"Playfair Display"', 'serif'], // New Premium Font
+                        },
+                        colors: {
+                            // Lobato Brand Colors extracted from image
+                            primary: '#C69C6D', // Gold/Amber accent
+                            'primary-dark': '#A87F55',
+                            'dark-bg': '#0B0C10', // Deep Black/Charcoal
+                            'dark-surface': '#15171E', // Slightly lighter storage
+                        }
                     }
                 }
             }
@@ -1352,6 +1354,10 @@
 
         // 3.5 Render Analytics (New)
         function renderAnalytics() {
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js not loaded');
+                return;
+            }
             const ctxProfit = document.getElementById('chart-profit-doctor');
             const ctxMargin = document.getElementById('chart-margin-treatment');
 
@@ -1533,10 +1539,17 @@
 
         // 6. INITIALIZATION
         window.addEventListener('DOMContentLoaded', () => {
-            loadData();
-            renderTable();
-            renderTeam();
-            updateDashboard();
+            try {
+                loadData();
+                renderTable();
+                renderTeam();
+                updateDashboard();
+                renderAnalytics();
+            } catch (e) {
+                console.error("Initialization Error:", e);
+                // Fallback: Ensure Dashboard is visible
+                document.getElementById('view-dashboard')?.classList.add('active');
+            }
         });
 
     </script>
