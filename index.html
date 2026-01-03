@@ -135,9 +135,9 @@
     <!-- MAIN APP CONTAINER -->
     <div class="flex h-screen overflow-hidden bg-gray-50 dark:bg-dark-bg">
 
-        <!-- SIDEBAR (Desktop) - PREMIUM DARK -->
+        <!-- SIDEBAR (Desktop) - PREMIUM DARK (Fixed Alignment) -->
         <aside
-            class="hidden md:flex w-72 flex-col border-r border-slate-200 bg-white dark:border-white/5 dark:bg-dark-surface z-20">
+            class="hidden md:flex w-72 flex-col border-r border-slate-200 bg-white dark:border-white/5 dark:bg-dark-surface z-20 h-full">
             <!-- Brand -->
             <div class="flex h-20 items-center gap-3 px-6 border-b border-slate-100 dark:border-white/5">
                 <div
@@ -191,20 +191,21 @@
                     Asistente IA
                 </button>
             </nav>
-            <!-- User Footer -->
-            <div class="flex flex-col gap-4 border-t border-slate-100 dark:border-slate-800 pt-6">
+
+            <!-- User Footer (Pinned to bottom) -->
+            <div class="mt-auto flex flex-col gap-4 border-t border-slate-100 dark:border-slate-800 p-6">
                 <button onclick="switchTab('view-settings')"
-                    class="flex items-center gap-3 px-2 text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-left">
-                    <span class="material-symbols-outlined">settings</span>
+                    class="flex items-center gap-3 px-2 text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-left group">
+                    <span class="material-symbols-outlined group-hover:rotate-90 transition-transform">settings</span>
                     <span class="text-sm font-medium">Configuración</span>
                 </button>
                 <div class="flex items-center gap-3 px-2">
-                    <div class="h-8 w-8 rounded-full bg-slate-200 bg-cover bg-center shrink-0"
+                    <div class="h-9 w-9 rounded-full bg-slate-200 bg-cover bg-center shrink-0 ring-2 ring-white dark:ring-white/10"
                         style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB-E9taHyLsWFW6WpLd22sYFn0f7uwSNaanMTwKISPUir_BPMS9PjeOi10EN_WC_W983TqpLXF2YoGRRvVXfm1aFk3dTqPzaVaa4vFWB42uxb5TllkGeGFUnYy0gmQQjL3PYOxTzhvfn8Kix34LQH_EXSX4gmDFF5ZnGizFdhv6SOmaLFU8rZyxrQkP1MsTlDYuU_dPyfMi1vETLpaBPC8imIKk9NuCjqyxC4FT76oSP5UhU2PhUsTk5NWv4-u_603sHOapzYY_N9U");'>
                     </div>
                     <div class="flex flex-col">
-                        <p class="text-xs font-bold text-slate-900 dark:text-white">Dr. Lobato</p>
-                        <p class="text-[10px] text-slate-500">Administrador</p>
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">Dr. Lobato</p>
+                        <p class="text-[11px] text-slate-500 font-medium">Administrador</p>
                     </div>
                 </div>
             </div>
@@ -215,79 +216,97 @@
 
             <!-- DASHBOARD VIEW -->
             <div id="view-dashboard" class="view-content active overflow-y-auto h-full scroll-smooth w-full">
-                <div class="container mx-auto max-w-7xl p-6 md:p-10 flex flex-col gap-8 pb-24 md:pb-10">
+                <div class="container mx-auto max-w-7xl p-4 md:p-10 flex flex-col gap-6 md:gap-8 pb-32 md:pb-10">
                     <!-- Header -->
-                    <header class="flex flex-col gap-1">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h2
-                                    class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif">
-                                    Hola, Clínica Lobato</h2>
-                                <p class="text-slate-500 dark:text-slate-400 mt-1">Aquí tienes el resumen financiero de
-                                    hoy.
-                                </p>
-                            </div>
-                            <button
-                                class="hidden md:flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm hover:bg-slate-50 dark:bg-dark-surface dark:border-white/10 dark:text-slate-300 dark:hover:bg-white/5 transition-colors">
-                                <span class="material-symbols-outlined text-lg">calendar_today</span>
-                                <span>Octubre 2023</span>
-                            </button>
+                    <!-- Header with Global Time Selector -->
+                    <header class="flex flex-col md:flex-row items-center justify-between gap-4 mt-2 md:mt-0">
+                        <div class="text-center md:text-left">
+                            <h2
+                                class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif">
+                                Hola, Clínica Lobato</h2>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Visión general del negocio.</p>
+                        </div>
+
+                        <!-- Segmented Control (The Brain) -->
+                        <div class="flex bg-slate-100 dark:bg-white/5 rounded-xl p-1 gap-1 shadow-inner">
+                            <button onclick="switchTimeFilter('hoy')" id="btn-hoy"
+                                class="time-filter active px-4 py-2 rounded-lg text-xs md:text-sm font-bold transition-all duration-300 shadow-sm bg-white text-slate-900 dark:bg-dark-surface dark:text-white">HOY</button>
+                            <button onclick="switchTimeFilter('ayer')" id="btn-ayer"
+                                class="time-filter px-4 py-2 rounded-lg text-xs md:text-sm font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-all duration-300">AYER</button>
+                            <button onclick="switchTimeFilter('semana')" id="btn-semana"
+                                class="time-filter px-4 py-2 rounded-lg text-xs md:text-sm font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-all duration-300">SEMANA</button>
+                            <button onclick="switchTimeFilter('mes')" id="btn-mes"
+                                class="time-filter px-4 py-2 rounded-lg text-xs md:text-sm font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-all duration-300">MES</button>
                         </div>
                     </header>
 
-                    <!-- Cards -->
-                    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- COMPACT CARDS 2x2 on Mobile -->
+                    <section class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
+                        <!-- Revenue -->
                         <div
-                            class="flex flex-col gap-4 rounded-xl bg-white dark:bg-dark-surface p-6 shadow-sm border border-slate-100 dark:border-white/5">
-                            <div class="flex items-center justify-between">
+                            class="flex flex-col justify-between gap-3 rounded-2xl bg-white dark:bg-dark-surface p-4 md:p-6 shadow-sm border border-slate-100 dark:border-white/5">
+                            <div class="flex items-start justify-between">
                                 <div
-                                    class="rounded-full bg-green-50 dark:bg-green-900/20 p-3 text-green-600 dark:text-green-400">
-                                    <span class="material-symbols-outlined filled">account_balance_wallet</span>
+                                    class="rounded-full bg-green-50 dark:bg-green-900/20 p-2 md:p-3 text-green-600 dark:text-green-400">
+                                    <span
+                                        class="material-symbols-outlined filled text-[20px] md:text-[24px]">account_balance_wallet</span>
                                 </div>
                                 <span
-                                    class="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-1 text-xs font-bold text-green-700 dark:text-green-400">+12%</span>
+                                    class="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-[10px] md:text-xs font-bold text-green-700 dark:text-green-400">+12%</span>
                             </div>
                             <div>
-                                <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Ingresos Totales
+                                <p class="text-slate-500 dark:text-slate-400 text-xs md:text-sm font-medium mb-0.5">
+                                    Ingresos
+                                    Totales
                                 </p>
-                                <p class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif"
+                                <p class="text-xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif"
                                     id="kpi-income">
                                     ---</p>
                             </div>
                         </div>
+
+                        <!-- Expenses -->
                         <div
-                            class="flex flex-col gap-4 rounded-xl bg-white dark:bg-dark-surface p-6 shadow-sm border border-slate-100 dark:border-white/5">
-                            <div class="flex items-center justify-between">
+                            class="flex flex-col justify-between gap-3 rounded-2xl bg-white dark:bg-dark-surface p-4 md:p-6 shadow-sm border border-slate-100 dark:border-white/5">
+                            <div class="flex items-start justify-between">
                                 <div
-                                    class="rounded-full bg-red-50 dark:bg-red-900/20 p-3 text-red-600 dark:text-red-400">
-                                    <span class="material-symbols-outlined filled">credit_card</span>
+                                    class="rounded-full bg-red-50 dark:bg-red-900/20 p-2 md:p-3 text-red-600 dark:text-red-400">
+                                    <span
+                                        class="material-symbols-outlined filled text-[20px] md:text-[24px]">credit_card</span>
                                 </div>
                                 <span
-                                    class="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-1 text-xs font-bold text-green-700 dark:text-green-400">-5%</span>
+                                    class="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-[10px] md:text-xs font-bold text-green-700 dark:text-green-400">-5%</span>
                             </div>
                             <div>
-                                <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Gastos Operativos
+                                <p class="text-slate-500 dark:text-slate-400 text-xs md:text-sm font-medium mb-0.5">
+                                    Gastos
+                                    Operativos
                                 </p>
-                                <p class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif"
+                                <p class="text-xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif"
                                     id="kpi-expenses">---</p>
                             </div>
                         </div>
+
+                        <!-- Net Profit (Spans 2 cols on mobile to emphasize importance) -->
                         <div
-                            class="flex flex-col gap-4 rounded-xl bg-white dark:bg-dark-surface p-6 shadow-sm border border-slate-100 dark:border-white/5 relative overflow-hidden group">
+                            class="col-span-2 md:col-span-1 flex flex-col justify-between gap-3 rounded-2xl bg-white dark:bg-dark-surface p-4 md:p-6 shadow-sm border border-slate-100 dark:border-white/5 relative overflow-hidden group">
                             <div
                                 class="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-primary/10 transition-transform group-hover:scale-110">
                             </div>
-                            <div class="flex items-center justify-between relative z-10">
-                                <div class="rounded-full bg-primary/10 dark:bg-primary/20 p-3 text-primary">
-                                    <span class="material-symbols-outlined filled">trending_up</span>
+                            <div class="flex items-start justify-between relative z-10">
+                                <div class="rounded-full bg-primary/10 dark:bg-primary/20 p-2 md:p-3 text-primary">
+                                    <span
+                                        class="material-symbols-outlined filled text-[20px] md:text-[24px]">trending_up</span>
                                 </div>
                                 <span
-                                    class="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-1 text-xs font-bold text-green-700 dark:text-green-400">+8%</span>
+                                    class="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-[10px] md:text-xs font-bold text-green-700 dark:text-green-400">+8%</span>
                             </div>
                             <div class="relative z-10">
-                                <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Beneficio Neto
+                                <p class="text-slate-500 dark:text-slate-400 text-xs md:text-sm font-medium mb-0.5">
+                                    Beneficio Neto
                                 </p>
-                                <p class="text-3xl font-bold text-primary tracking-tight font-serif" id="kpi-profit">---
+                                <p class="text-2xl md:text-3xl font-bold text-primary tracking-tight font-serif"
+                                    id="kpi-profit">---
                                 </p>
                             </div>
                         </div>
@@ -303,24 +322,25 @@
                                 class="absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-white opacity-10 blur-2xl">
                             </div>
                             <div
-                                class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 p-6">
-                                <div class="flex items-start gap-4">
+                                class="relative z-10 flex flex-col md:flex-row items-center md:items-center justify-between gap-4 p-5 md:p-6 text-center md:text-left">
+                                <div class="flex flex-col md:flex-row items-center md:items-start gap-4">
                                     <div
                                         class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm shadow-inner text-white">
                                         <span class="material-symbols-outlined filled text-2xl">auto_awesome</span>
                                     </div>
-                                    <div class="flex flex-col gap-1">
+                                    <div class="flex flex-col gap-1 text-center md:text-left">
                                         <h3 class="text-lg font-bold text-white font-serif">Alertas IA (Gemini)</h3>
-                                        <p class="text-white/90 text-base font-medium max-w-2xl leading-relaxed">
+                                        <p
+                                            class="text-white/90 text-sm md:text-base font-medium max-w-2xl leading-relaxed">
                                             He detectado un sobrecoste inusual en la partida de <span
                                                 class="font-bold text-white underline decoration-white/30 underline-offset-4">Laboratorio
-                                                (+20%)</span> comparado con la media trimestral.
+                                                (+20%)</span>.
                                         </p>
                                     </div>
                                 </div>
                                 <button
-                                    class="shrink-0 whitespace-nowrap rounded-lg bg-white/10 backdrop-blur-md border border-white/20 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-white/20 transition-colors cursor-pointer">
-                                    Ver análisis detallado
+                                    class="shrink-0 whitespace-nowrap rounded-lg bg-white/10 backdrop-blur-md border border-white/20 px-5 py-2 text-sm font-bold text-white shadow-sm hover:bg-white/20 transition-colors cursor-pointer w-full md:w-auto">
+                                    Ver análisis
                                 </button>
                             </div>
                         </div>
@@ -352,7 +372,7 @@
                         <!-- Chart Grid Simulation -->
                         <div class="flex-1 w-full flex flex-col justify-end">
                             <div
-                                class="relative grid grid-cols-6 gap-2 md:gap-8 h-[200px] md:h-[300px] items-end px-1 md:px-6 border-b border-slate-200 dark:border-slate-700 pb-2">
+                                class="relative grid grid-cols-6 gap-2 md:gap-8 h-[180px] md:h-[300px] items-end px-1 md:px-6 border-b border-slate-200 dark:border-slate-700 pb-2">
                                 <!-- Background Lines -->
                                 <div
                                     class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-2 z-0">
@@ -894,33 +914,44 @@
 
         </main>
 
-        <!-- BOTTOM NAVIGATION (Mobile Only: fixed bottom, hidden on md) -->
+        <!-- FLOATING PILL NAVIGATION (Mobile Only - New Design) -->
         <nav
-            class="md:hidden fixed bottom-0 w-full bg-white dark:bg-[#1a2c35] border-t border-slate-200 dark:border-slate-800 flex justify-around p-2 z-40 pb-safe">
+            class="md:hidden fixed bottom-6 inset-x-4 border border-white/40 dark:border-white/10 bg-white/80 dark:bg-[#15171E]/90 backdrop-blur-xl shadow-2xl shadow-slate-300/40 dark:shadow-black/50 rounded-2xl flex justify-around p-1.5 z-50">
+
             <button onclick="switchTab('view-dashboard')" id="nav-mobile-dashboard"
-                class="flex flex-col items-center gap-1 p-2 rounded-lg text-primary w-full transition-colors">
-                <span class="material-symbols-outlined filled">grid_view</span>
-                <span class="text-[10px] font-medium">Home</span>
+                class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-primary">
+                <!-- Active Indicator Background -->
+                <span
+                    class="absolute inset-0 bg-primary/10 rounded-xl scale-100 opacity-100 transition-all duration-300 active-indicator z-0"></span>
+                <span class="material-symbols-outlined text-[24px] relative z-10 filled">grid_view</span>
             </button>
+
             <button onclick="switchTab('view-team')" id="nav-mobile-team"
-                class="flex flex-col items-center gap-1 p-2 rounded-lg text-slate-400 w-full transition-colors hover:text-slate-600 dark:hover:text-slate-300">
-                <span class="material-symbols-outlined">groups</span>
-                <span class="text-[10px] font-medium">Equipo</span>
+                class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                <span
+                    class="absolute inset-0 bg-transparent rounded-xl scale-90 opacity-0 transition-all duration-300 active-indicator z-0"></span>
+                <span class="material-symbols-outlined text-[24px] relative z-10">groups</span>
             </button>
+
             <button onclick="switchTab('view-finance')" id="nav-mobile-finance"
-                class="flex flex-col items-center gap-1 p-2 rounded-lg text-slate-400 w-full transition-colors hover:text-slate-600 dark:hover:text-slate-300">
-                <span class="material-symbols-outlined">payments</span>
-                <span class="text-[10px] font-medium">Finanzas</span>
+                class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                <span
+                    class="absolute inset-0 bg-transparent rounded-xl scale-90 opacity-0 transition-all duration-300 active-indicator z-0"></span>
+                <span class="material-symbols-outlined text-[24px] relative z-10">payments</span>
             </button>
+
             <button onclick="switchTab('view-chat')" id="nav-mobile-chat"
-                class="flex flex-col items-center gap-1 p-2 rounded-lg text-slate-400 w-full transition-colors hover:text-slate-600 dark:hover:text-slate-300">
-                <span class="material-symbols-outlined">smart_toy</span>
-                <span class="text-[10px] font-medium">IA</span>
+                class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                <span
+                    class="absolute inset-0 bg-transparent rounded-xl scale-90 opacity-0 transition-all duration-300 active-indicator z-0"></span>
+                <span class="material-symbols-outlined text-[24px] relative z-10">smart_toy</span>
             </button>
-            <button onclick="switchTab('view-analytics')" id="nav-mobile-analytics"
-                class="flex flex-col items-center gap-1 p-2 rounded-lg text-slate-400 w-full transition-colors hover:text-slate-600 dark:hover:text-slate-300">
-                <span class="material-symbols-outlined">analytics</span>
-                <span class="text-[10px] font-medium">Datos</span>
+
+            <button onclick="switchTab('view-settings')" id="nav-mobile-settings"
+                class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                <span
+                    class="absolute inset-0 bg-transparent rounded-xl scale-90 opacity-0 transition-all duration-300 active-indicator z-0"></span>
+                <span class="material-symbols-outlined text-[24px] relative z-10">settings</span>
             </button>
         </nav>
 
@@ -979,12 +1010,15 @@
                     if (icon) icon.classList.add('filled');
                 }
 
-                // 4. Update Mobile Navigation State
-                ['dashboard', 'team', 'finance', 'chat', 'analytics'].forEach(t => {
+                // 4. Update Mobile Navigation State (Floating Pill Logic)
+                ['dashboard', 'team', 'finance', 'chat', 'settings'].forEach(t => {
                     const btn = document.getElementById(`nav-mobile-${t}`);
                     if (btn) {
                         btn.classList.remove('text-primary');
                         btn.classList.add('text-slate-400');
+                        btn.querySelector('span.active-indicator').classList.remove('bg-primary/10', 'scale-100', 'opacity-100');
+                        btn.querySelector('span.active-indicator').classList.add('bg-transparent', 'scale-90', 'opacity-0');
+
                         const icon = btn.querySelector('.material-symbols-outlined');
                         if (icon) icon.classList.remove('filled');
                     }
@@ -994,6 +1028,10 @@
                 if (activeMobileBtn) {
                     activeMobileBtn.classList.remove('text-slate-400');
                     activeMobileBtn.classList.add('text-primary');
+                    // Add Active Pill Background
+                    activeMobileBtn.querySelector('span.active-indicator').classList.remove('bg-transparent', 'scale-90', 'opacity-0');
+                    activeMobileBtn.querySelector('span.active-indicator').classList.add('bg-primary/10', 'scale-100', 'opacity-100');
+
                     const icon = activeMobileBtn.querySelector('.material-symbols-outlined');
                     if (icon) icon.classList.add('filled');
                 }
@@ -1321,7 +1359,7 @@
                     const barColor = doc.color === 'purple' ? 'bg-slate-400' : 'bg-primary';
 
                     container.innerHTML += `
-                    <div class="flex flex-col gap-4 rounded-xl bg-white p-5 shadow-sm border border-slate-100 dark:bg-dark-surface dark:border-white/5">
+                    <div class="flex flex-col gap-4 rounded-xl bg-white p-4 md:p-5 shadow-sm border border-slate-100 dark:bg-dark-surface dark:border-white/5">
                         <div class="flex items-start justify-between">
                             <div class="flex items-center gap-3">
                                 <div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xl font-serif">${doc.name[0]}</div>
@@ -1533,7 +1571,7 @@
 
                 let csvContent = "data:text/csv;charset=utf-8,ID,Fecha,Concepto,Tipo,Importe\n";
                 dataToExport.forEach(row => {
-                    csvContent += `${row.id},${row.date},"${row.concept}",${row.type},${row.amount}\n`;
+                    csvContent += `${row.id},${row.date}, "${row.concept}", ${row.type},${row.amount} \n`;
                 });
 
                 const encodedUri = encodeURI(csvContent);
@@ -1572,20 +1610,165 @@
             }
 
             // 6. INITIALIZATION
-            window.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('DOMContentLoaded', () => {
                 try {
                     loadData();
                     renderTable();
                     renderTeam();
                     updateDashboard();
                     renderAnalytics();
+
+                    // Initialize Manager View if Dashboard is active
+                    if (document.getElementById('view-dashboard')) {
+                        switchTimeFilter('hoy');
+                    }
                 } catch (e) {
-                    console.error("Initialization Error:", e);
-                    // Fallback: Ensure Dashboard is visible
-                    document.getElementById('view-dashboard')?.classList.add('active');
+                    console.error("Initialization error:", e);
                 }
             });
 
+            // --- REAL SMART DATE LOGIC ---
+            function getPeriodDates(period) {
+                const now = new Date();
+                const start = new Date(now);
+                const end = new Date(now);
+
+                // Reset time to start/end of day
+                start.setHours(0, 0, 0, 0);
+                end.setHours(23, 59, 59, 999);
+
+                switch (period) {
+                    case 'ayer':
+                        start.setDate(now.getDate() - 1);
+                        end.setDate(now.getDate() - 1);
+                        break;
+                    case 'semana':
+                        // Start of current week (Monday)
+                        const day = now.getDay() || 7; // Get current day number, converting Sun(0) to 7
+                        if (day !== 1) start.setHours(-24 * (day - 1));
+                        break;
+                    case 'mes':
+                        start.setDate(1); // 1st of current month
+                        break;
+                    case 'hoy':
+                    default:
+                        // Already set to today
+                        break;
+                }
+                return { start, end };
+            }
+
+            function calculatePeriodData(period) {
+                const { start, end } = getPeriodDates(period);
+
+                // Filter Transactions
+                const relevantTxs = APP_DATA.transactions.filter(t => {
+                    const tDate = new Date(t.date);
+                    // Use simple string comparison for day precision to avoid timezone headaches
+                    const tStr = tDate.toISOString().split('T')[0];
+                    const sStr = start.toISOString().split('T')[0];
+                    const eStr = end.toISOString().split('T')[0];
+                    return tStr >= sStr && tStr <= eStr;
+                });
+
+                // Calculate Totals
+                let income = 0;
+                let expenses = 0;
+                const docStats = {};
+
+                // Init Doctors
+                APP_DATA.doctors.forEach(d => {
+                    docStats[d.id] = { ...d, generated: 0 };
+                });
+
+                relevantTxs.forEach(t => {
+                    if (t.type === 'ingreso') {
+                        income += parseFloat(t.amount);
+                        if (t.doctorId && docStats[t.doctorId]) {
+                            docStats[t.doctorId].generated += parseFloat(t.amount);
+                        }
+                    } else {
+                        expenses += parseFloat(t.amount);
+                    }
+                });
+
+                // Sort Team
+                const team = Object.values(docStats)
+                    .sort((a, b) => b.generated - a.generated)
+                    .map(d => ({
+                        ...d,
+                        amount: d.generated.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }),
+                        percent: (d.generated / (income || 1)) * 100 // Avoid divide by zero
+                    }));
+
+                return {
+                    income: income.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }),
+                    expenses: expenses.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }),
+                    team: team
+                };
+            }
+
+            window.switchTimeFilter = function (period) {
+                // 1. Update Buttons Visual State
+                document.querySelectorAll('.time-filter').forEach(btn => {
+                    btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
+                    btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
+                });
+                const activeBtn = document.getElementById(`btn-${period}`);
+                if (activeBtn) {
+                    activeBtn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
+                    activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
+                }
+
+                // 2. GET REAL CALCULATED DATA
+                const data = calculatePeriodData(period);
+
+                // 3. Update Hero Card
+                const incomeEl = document.getElementById('hero-income');
+                const expensesEl = document.getElementById('hero-expenses');
+
+                if (incomeEl && expensesEl) {
+                    incomeEl.style.opacity = '0.5';
+                    expensesEl.style.opacity = '0.5';
+                    setTimeout(() => {
+                        incomeEl.textContent = data.income;
+                        expensesEl.textContent = data.expenses;
+                        incomeEl.style.opacity = '1';
+                        expensesEl.style.opacity = '1';
+                    }, 150);
+                }
+
+                // 4. Update Team Ranking
+                const listEl = document.getElementById('team-ranking-list');
+                if (listEl) {
+                    listEl.innerHTML = '';
+
+                    data.team.forEach((doc, index) => {
+                        const isLeader = index === 0 && doc.generated > 0;
+                        const leaderIcon = isLeader ? '<span class="material-symbols-outlined text-yellow-500 text-sm">emoji_events</span>' : '';
+                        const barColor = isLeader ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600';
+                        const avatarLetter = doc.name ? doc.name[0] : '?';
+
+                        listEl.innerHTML += `
+                        <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+                            <div class="h-10 w-10 shrink-0 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center font-serif font-bold text-slate-600 dark:text-slate-300 relative">
+                                ${avatarLetter}
+                                ${isLeader ? '<div class="absolute -top-1 -right-1 bg-white dark:bg-dark-surface rounded-full p-0.5 shadow-sm">' + leaderIcon + '</div>' : ''}
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="font-bold text-slate-900 dark:text-white text-sm">${doc.name}</span>
+                                    <span class="font-black text-slate-900 dark:text-white text-sm font-serif">${doc.amount}</span>
+                                </div>
+                                <div class="h-1.5 w-full bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden">
+                                    <div class="h-full ${barColor} rounded-full" style="width: ${doc.percent}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    });
+                }
+            };
         </script>
 
 </body>
