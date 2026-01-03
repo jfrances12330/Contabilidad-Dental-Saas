@@ -27,22 +27,19 @@
     <!-- Tailwind CSS (Configured via JS for Custom Colors) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        if (typeof tailwind !== 'undefined') {
-            tailwind.config = {
-                darkMode: 'class',
-                theme: {
-                    extend: {
-                        fontFamily: {
-                            sans: ['Manrope', 'sans-serif'],
-                            serif: ['"Playfair Display"', 'serif'], // New Premium Font
-                        },
-                        colors: {
-                            // Lobato Brand Colors extracted from image
-                            primary: '#C69C6D', // Gold/Amber accent
-                            'primary-dark': '#A87F55',
-                            'dark-bg': '#0B0C10', // Deep Black/Charcoal
-                            'dark-surface': '#15171E', // Slightly lighter storage
-                        }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    colors: {
+                        primary: '#C69C6D',
+                        'primary-dark': '#A87F55',
+                        'dark-bg': '#0B0C10',
+                        'dark-surface': '#15171E',
                     }
                 }
             }
@@ -215,7 +212,7 @@
     </aside>
 
     <!-- MAIN CONTENT AREA -->
-    <main class="flex-1 overflow-hidden relative bg-background-light dark:bg-background-dark w-full h-full">
+    <main class="flex-1 overflow-hidden relative bg-slate-50 dark:bg-dark-bg w-full h-full">
 
         <!-- DASHBOARD VIEW -->
         <div id="view-dashboard" class="view-content active overflow-y-auto h-full scroll-smooth w-full">
