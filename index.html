@@ -577,19 +577,71 @@
             <div id="view-finance" class="view-content overflow-y-auto overflow-x-hidden h-full w-full">
                 <!-- Increased padding-bottom -->
                 <div class="p-4 md:p-8 flex flex-col gap-6 pb-48 md:pb-10 max-w-6xl mx-auto w-full">
-                    <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 w-full">
-                        <div class="w-full">
-                            <h2
-                                class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif">
-                                Finanzas</h2>
-                            <input id="search-input" onkeyup="renderTable()" type="text" placeholder="Buscar..."
-                                class="mt-2 w-full md:w-64 rounded-lg border-slate-200 bg-white px-3 py-2 text-sm dark:bg-dark-surface dark:border-white/10 dark:text-white dark:placeholder-slate-500 max-w-full">
+                    <header class="flex flex-col gap-4 w-full">
+                        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 w-full">
+                            <div class="w-full">
+                                <h2
+                                    class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif">
+                                    Finanzas</h2>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <div class="relative flex-1 md:flex-initial">
+                                        <input id="search-input" onkeyup="renderTable()" type="text"
+                                            placeholder="Buscar concepto o doctor..."
+                                            class="w-full md:w-80 rounded-lg border-slate-200 bg-white px-3 py-2 pl-9 text-sm dark:bg-dark-surface dark:border-white/10 dark:text-white dark:placeholder-slate-500 focus:ring-2 focus:ring-primary/20 transition-all">
+                                        <span
+                                            class="material-symbols-outlined absolute left-3 top-2 text-slate-400 text-[18px]">search</span>
+                                    </div>
+                                    <button onclick="toggleFinanceFilters()" id="btn-toggle-filters"
+                                        class="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors dark:bg-dark-surface dark:border-white/10 dark:text-slate-400">
+                                        <span class="material-symbols-outlined text-[18px]">tune</span>
+                                        <span class="hidden md:inline">Filtros</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button onclick="openExportModal()"
+                                    class="hidden md:flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors dark:bg-dark-surface dark:border-white/10 dark:text-slate-300 dark:hover:bg-white/5">
+                                    <span class="material-symbols-outlined text-[18px]">download</span>
+                                    Exportar
+                                </button>
+                            </div>
                         </div>
-                        <button onclick="openExportModal()"
-                            class="hidden md:flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors dark:bg-dark-surface dark:border-white/10 dark:text-slate-300 dark:hover:bg-white/5">
-                            <span class="material-symbols-outlined text-[18px]">download</span>
-                            Exportar CSV
-                        </button>
+
+                        <!-- Sub-view Toggles (Income, Expenses, All) -->
+                        <div class="flex flex-wrap items-center justify-between gap-4">
+                            <div class="flex bg-slate-100 dark:bg-white/5 rounded-xl p-1 gap-1 shadow-inner h-fit">
+                                <button onclick="switchFinanceType('all')" id="btn-fin-all"
+                                    class="fin-type-filter active px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 shadow-sm bg-white text-slate-900 dark:bg-dark-surface dark:text-white">TODOS</button>
+                                <button onclick="switchFinanceType('ingreso')" id="btn-fin-ingreso"
+                                    class="fin-type-filter px-4 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-all duration-300">INGRESOS</button>
+                                <button onclick="switchFinanceType('gasto')" id="btn-fin-gasto"
+                                    class="fin-type-filter px-4 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-all duration-300">GASTOS</button>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Filter Panel -->
+                        <div id="finance-filters-panel" class="hidden overflow-hidden transition-all duration-300">
+                            <div
+                                class="bg-slate-50 dark:bg-white/5 rounded-xl p-4 border border-slate-200 dark:border-white/10 flex flex-col md:flex-row gap-4">
+                                <div class="flex-1">
+                                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Fecha
+                                        Inicio</label>
+                                    <input type="date" id="filter-date-start" onchange="renderTable()"
+                                        class="w-full rounded-lg border-slate-200 bg-white px-3 py-2 text-sm dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Fecha
+                                        Fin</label>
+                                    <input type="date" id="filter-date-end" onchange="renderTable()"
+                                        class="w-full rounded-lg border-slate-200 bg-white px-3 py-2 text-sm dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
+                                </div>
+                                <div class="flex items-end">
+                                    <button onclick="clearFinanceFilters()"
+                                        class="text-xs text-primary hover:underline font-bold py-2">Limpiar
+                                        filtros</button>
+                                </div>
+                            </div>
+                        </div>
                     </header>
 
                     <!-- Compact Finance Summary Mobile Gap -->
@@ -623,7 +675,7 @@
                     </div>
 
                     <div
-                        class="bg-white dark:bg-dark-surface rounded-xl border border-slate-100 dark:border-white/5 shadow-sm overflow-hidden">
+                        class="hidden md:block bg-white dark:bg-dark-surface rounded-xl border border-slate-100 dark:border-white/5 shadow-sm overflow-hidden">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
                                 <thead class="bg-slate-50 dark:bg-white/5">
@@ -640,6 +692,11 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+
+                    <!-- Mobile List (Dynamic) -->
+                    <div id="finance-mobile-list" class="md:hidden flex flex-col gap-4">
+                        <!-- JS WILL RENDER CARDS HERE -->
                     </div>
                 </div>
                 <!-- FAB Mobile only -->
@@ -1282,18 +1339,81 @@
             }
 
             // 2. FINANCE LOGIC
+            let CURRENT_FINANCE_TYPE = 'all';
+
+            window.switchFinanceType = function (type) {
+                CURRENT_FINANCE_TYPE = type;
+                document.querySelectorAll('.fin-type-filter').forEach(btn => {
+                    btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white', 'font-bold');
+                    btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
+                    btn.classList.add('font-medium');
+                });
+                const activeBtn = document.getElementById(`btn-fin-${type}`);
+                if (activeBtn) {
+                    activeBtn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white', 'font-bold');
+                    activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400', 'font-medium');
+                }
+                renderTable();
+            }
+
+            window.toggleFinanceFilters = function () {
+                const panel = document.getElementById('finance-filters-panel');
+                const btn = document.getElementById('btn-toggle-filters');
+                if (panel.classList.contains('hidden')) {
+                    panel.classList.remove('hidden');
+                    btn.classList.add('bg-primary/10', 'border-primary/30', 'text-primary');
+                } else {
+                    panel.classList.add('hidden');
+                    btn.classList.remove('bg-primary/10', 'border-primary/30', 'text-primary');
+                }
+            }
+
+            window.clearFinanceFilters = function () {
+                document.getElementById('filter-date-start').value = '';
+                document.getElementById('filter-date-end').value = '';
+                document.getElementById('search-input').value = '';
+                renderTable();
+            }
+
             function renderTable() {
                 const tbody = document.getElementById('finance-table-body');
                 const mobileList = document.getElementById('finance-mobile-list');
                 const searchVal = document.getElementById('search-input')?.value.toLowerCase() || "";
+                const dateStart = document.getElementById('filter-date-start')?.value;
+                const dateEnd = document.getElementById('filter-date-end')?.value;
 
                 if (tbody) tbody.innerHTML = '';
                 if (mobileList) mobileList.innerHTML = '';
 
-                const filtered = APP_DATA.transactions.filter(t =>
-                    t.concept.toLowerCase().includes(searchVal) ||
-                    (t.category && t.category.toLowerCase().includes(searchVal))
-                ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                let filtered = APP_DATA.transactions;
+
+                // 1. Filter by Type
+                if (CURRENT_FINANCE_TYPE !== 'all') {
+                    filtered = filtered.filter(t => t.type === CURRENT_FINANCE_TYPE);
+                }
+
+                // 2. Filter by Dates
+                if (dateStart || dateEnd) {
+                    filtered = filtered.filter(t => {
+                        const tDate = t.date; // "YYYY-MM-DD"
+                        let match = true;
+                        if (dateStart && tDate < dateStart) match = false;
+                        if (dateEnd && tDate > dateEnd) match = false;
+                        return match;
+                    });
+                }
+
+                // 3. Filter by Search
+                if (searchVal) {
+                    filtered = filtered.filter(t =>
+                        t.concept.toLowerCase().includes(searchVal) ||
+                        (t.category && t.category.toLowerCase().includes(searchVal)) ||
+                        getDoctorName(t.doctorId).toLowerCase().includes(searchVal)
+                    );
+                }
+
+                // 4. Sort and Render
+                filtered = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
                 filtered.forEach(t => {
                     const isIngreso = t.type === 'ingreso';
