@@ -215,8 +215,10 @@
         <main class="flex-1 overflow-hidden relative bg-slate-50 dark:bg-dark-bg w-full h-full">
 
             <!-- DASHBOARD VIEW -->
+            <!-- DASHBOARD VIEW -->
             <div id="view-dashboard" class="view-content active overflow-y-auto h-full scroll-smooth w-full">
-                <div class="container mx-auto max-w-7xl p-4 md:p-10 flex flex-col gap-6 md:gap-8 pb-32 md:pb-10">
+                <!-- Increased padding-bottom to pb-48 to clear floating menu -->
+                <div class="container mx-auto max-w-7xl p-4 md:p-10 flex flex-col gap-6 md:gap-8 pb-48 md:pb-10">
                     <!-- Header -->
                     <!-- Header with Global Time Selector -->
                     <header class="flex flex-col md:flex-row items-center justify-between gap-4 mt-2 md:mt-0">
@@ -556,15 +558,16 @@
             </div>
 
             <!-- FINANCE VIEW -->
-            <div id="view-finance" class="view-content overflow-y-auto h-full w-full">
-                <div class="p-6 md:p-8 flex flex-col gap-6 pb-24 md:pb-10 max-w-6xl mx-auto">
-                    <header class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                        <div>
+            <div id="view-finance" class="view-content overflow-y-auto overflow-x-hidden h-full w-full">
+                <!-- Increased padding-bottom -->
+                <div class="p-4 md:p-8 flex flex-col gap-6 pb-48 md:pb-10 max-w-6xl mx-auto w-full">
+                    <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 w-full">
+                        <div class="w-full">
                             <h2
                                 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif">
                                 Finanzas</h2>
                             <input id="search-input" onkeyup="renderTable()" type="text" placeholder="Buscar..."
-                                class="mt-2 w-full md:w-64 rounded-lg border-slate-200 bg-white px-3 py-2 text-sm dark:bg-dark-surface dark:border-white/10 dark:text-white dark:placeholder-slate-500">
+                                class="mt-2 w-full md:w-64 rounded-lg border-slate-200 bg-white px-3 py-2 text-sm dark:bg-dark-surface dark:border-white/10 dark:text-white dark:placeholder-slate-500 max-w-full">
                         </div>
                         <button onclick="openExportModal()"
                             class="hidden md:flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors dark:bg-dark-surface dark:border-white/10 dark:text-slate-300 dark:hover:bg-white/5">
@@ -573,21 +576,33 @@
                         </button>
                     </header>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Compact Finance Summary Mobile Gap -->
+                    <div class="grid grid-cols-3 gap-2 md:gap-4 overflow-hidden w-full">
                         <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-5 border border-slate-100 dark:border-white/5 shadow-sm">
-                            <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Entradas</p>
-                            <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1 font-serif">€25,000</p>
+                            class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-5 border border-slate-100 dark:border-white/5 shadow-sm text-center md:text-left min-w-0">
+                            <p
+                                class="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-medium uppercase truncate">
+                                Entradas</p>
+                            <p
+                                class="text-sm md:text-2xl font-bold text-slate-900 dark:text-white mt-0.5 md:mt-1 font-serif truncate">
+                                €25,000</p>
                         </div>
                         <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-5 border border-slate-100 dark:border-white/5 shadow-sm">
-                            <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Salidas</p>
-                            <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1 font-serif">€12,500</p>
+                            class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-5 border border-slate-100 dark:border-white/5 shadow-sm text-center md:text-left min-w-0">
+                            <p
+                                class="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-medium uppercase truncate">
+                                Salidas</p>
+                            <p
+                                class="text-sm md:text-2xl font-bold text-slate-900 dark:text-white mt-0.5 md:mt-1 font-serif truncate">
+                                €12,500</p>
                         </div>
                         <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-5 border border-slate-100 dark:border-white/5 shadow-sm">
-                            <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Neto</p>
-                            <p class="text-2xl font-bold text-primary mt-1 font-serif">€12,500</p>
+                            class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-5 border border-slate-100 dark:border-white/5 shadow-sm text-center md:text-left min-w-0">
+                            <p
+                                class="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-medium uppercase truncate">
+                                Neto</p>
+                            <p class="text-sm md:text-2xl font-bold text-primary mt-0.5 md:mt-1 font-serif truncate">
+                                €12,500</p>
                         </div>
                     </div>
 
@@ -1247,8 +1262,11 @@
             // 2. FINANCE LOGIC
             function renderTable() {
                 const tbody = document.getElementById('finance-table-body');
+                const mobileList = document.getElementById('finance-mobile-list');
                 const searchVal = document.getElementById('search-input')?.value.toLowerCase() || "";
-                tbody.innerHTML = '';
+
+                if (tbody) tbody.innerHTML = '';
+                if (mobileList) mobileList.innerHTML = '';
 
                 const filtered = APP_DATA.transactions.filter(t =>
                     t.concept.toLowerCase().includes(searchVal) ||
@@ -1261,21 +1279,51 @@
                     const sign = isIngreso ? '+' : '-';
                     const sourceIcon = t.source === 'sheet' ? '<span class="material-symbols-outlined text-[14px] text-blue-500 dark:text-blue-400" title="Importado de Sheets">table_view</span>' : '';
 
-                    tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-b border-slate-100 dark:border-white/5 last:border-0">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white font-serif">${new Date(t.date).toLocaleDateString()}</td>
-                        <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300 flex items-center gap-2">
-                             ${sourceIcon}
-                             <div>
-                                <p class="font-medium text-slate-900 dark:text-white">${t.concept}</p>
-                                <p class="text-[10px] text-slate-400">${t.category || 'General'} • ${getDoctorName(t.doctorId)}</p>
-                             </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold ${color}">${sign} ${parseFloat(t.amount).toFixed(2)}€</td>
-                        <td class="px-6 py-4 text-center">
-                            <button onclick="deleteTransaction(${t.id})" class="text-slate-400 hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-[20px]">delete</span></button>
-                        </td>
-                    </tr>`;
+                    // Desktop Row
+                    if (tbody) {
+                        tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-b border-slate-100 dark:border-white/5 last:border-0">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white font-serif">${new Date(t.date).toLocaleDateString()}</td>
+                            <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300 flex items-center gap-2">
+                                 ${sourceIcon}
+                                 <div>
+                                     <p class="font-medium text-slate-900 dark:text-white">${t.concept}</p>
+                                     <p class="text-[10px] text-slate-400">${t.category || 'General'} • ${getDoctorName(t.doctorId)}</p>
+                                 </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold ${color}">${sign} ${parseFloat(t.amount).toFixed(2)}€</td>
+                            <td class="px-6 py-4 text-center">
+                                <button onclick="deleteTransaction(${t.id})" class="text-slate-400 hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+                            </td>
+                        </tr>`;
+                    }
+
+                    // Mobile Card (Stacked Layout)
+                    if (mobileList) {
+                        mobileList.innerHTML += `
+                        <div class="p-4 flex flex-col gap-3 bg-white dark:bg-dark-surface">
+                            <!-- Row 1: Date & Concept -->
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex flex-col gap-0.5 overflow-hidden">
+                                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${new Date(t.date).toLocaleDateString()}</span>
+                                     <p class="font-bold text-slate-900 dark:text-white text-sm leading-tight truncate">${t.concept}</p>
+                                </div>
+                                ${sourceIcon}
+                            </div>
+                            
+                            <!-- Row 2: Category, Doctor, Amount, Delete -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-[120px]">${t.category || 'General'}</span>
+                                    <span class="text-[10px] text-slate-400 truncate max-w-[120px]">${getDoctorName(t.doctorId)}</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-base font-black font-serif ${color}">${sign}${parseFloat(t.amount).toFixed(0)}€</span>
+                                    <button onclick="deleteTransaction(${t.id})" class="text-slate-300 hover:text-red-500 p-1 rounded-full hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+                                </div>
+                            </div>
+                        </div>`;
+                    }
                 });
             }
 
@@ -1359,17 +1407,17 @@
                     const barColor = doc.color === 'purple' ? 'bg-slate-400' : 'bg-primary';
 
                     container.innerHTML += `
-                    <div class="flex flex-col gap-4 rounded-xl bg-white p-4 md:p-5 shadow-sm border border-slate-100 dark:bg-dark-surface dark:border-white/5">
+                    <div class="flex flex-col gap-3 md:gap-4 rounded-xl bg-white p-3 md:p-5 shadow-sm border border-slate-100 dark:bg-dark-surface dark:border-white/5">
                         <div class="flex items-start justify-between">
                             <div class="flex items-center gap-3">
-                                <div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xl font-serif">${doc.name[0]}</div>
+                                <div class="h-10 w-10 md:h-12 md:w-12 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-lg md:text-xl font-serif">${doc.name[0]}</div>
                                 <div>
-                                    <h4 class="text-base font-bold text-slate-900 dark:text-white font-serif">${doc.name}</h4>
-                                    <span class="inline-flex items-center rounded-md px-2 py-1 text-[10px] font-medium ${colorClass} ring-1 ring-inset ring-slate-500/10">${doc.role}</span>
+                                    <h4 class="text-sm md:text-base font-bold text-slate-900 dark:text-white font-serif">${doc.name}</h4>
+                                    <span class="inline-flex items-center rounded-md px-2 py-0.5 md:py-1 text-[10px] font-medium ${colorClass} ring-1 ring-inset ring-slate-500/10">${doc.role}</span>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="text-xl font-black tracking-tight text-slate-900 dark:text-white font-serif">${(generated / 1000).toFixed(1)}k€</p>
+                                <p class="text-lg md:text-xl font-black tracking-tight text-slate-900 dark:text-white font-serif">${(generated / 1000).toFixed(1)}k€</p>
                             </div>
                         </div>
                         <div class="flex flex-col gap-1">
@@ -1377,11 +1425,11 @@
                                 <span class="text-slate-500">Objetivo ${(doc.goal / 1000).toFixed(1)}k€</span>
                                 <span class="text-slate-900 dark:text-white">${progress}%</span>
                             </div>
-                            <div class="relative h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
+                            <div class="relative h-1.5 md:h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
                                 <div class="absolute left-0 top-0 h-full rounded-full ${barColor}" style="width: ${progress}%"></div>
                             </div>
                         </div>
-                         <button onclick="deleteDoctor(${doc.id})" class="self-end text-xs text-red-400 hover:text-red-500 mt-2 transition-colors">Eliminar</button>
+                         <button onclick="deleteDoctor(${doc.id})" class="self-end text-xs text-red-400 hover:text-red-500 mt-1 transition-colors">Eliminar</button>
                     </div>
                 `;
                 });
