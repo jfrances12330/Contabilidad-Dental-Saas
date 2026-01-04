@@ -251,11 +251,11 @@
                     <!-- COMPACT CARDS 2x2 on Mobile -->
                     <section class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
                         <!-- Revenue -->
-                        <div
-                            class="flex flex-col justify-between gap-3 rounded-2xl bg-white dark:bg-dark-surface p-4 md:p-6 shadow-sm border border-slate-100 dark:border-white/5">
+                        <div onclick="switchTab('finance')"
+                            class="cursor-pointer group flex flex-col justify-between gap-3 rounded-2xl bg-white dark:bg-dark-surface p-4 md:p-6 shadow-sm border border-slate-100 dark:border-white/5 hover:scale-[1.02] transition-all hover:shadow-md">
                             <div class="flex items-start justify-between">
                                 <div
-                                    class="rounded-full bg-green-50 dark:bg-green-900/20 p-2 md:p-3 text-green-600 dark:text-green-400">
+                                    class="rounded-full bg-green-50 dark:bg-green-900/20 p-2 md:p-3 text-green-600 dark:text-green-400 group-hover:bg-primary/20 transition-colors">
                                     <span
                                         class="material-symbols-outlined filled text-[20px] md:text-[24px]">account_balance_wallet</span>
                                 </div>
@@ -274,11 +274,11 @@
                         </div>
 
                         <!-- Expenses -->
-                        <div
-                            class="flex flex-col justify-between gap-3 rounded-2xl bg-white dark:bg-dark-surface p-4 md:p-6 shadow-sm border border-slate-100 dark:border-white/5">
+                        <div onclick="switchTab('finance')"
+                            class="cursor-pointer group flex flex-col justify-between gap-3 rounded-2xl bg-white dark:bg-dark-surface p-4 md:p-6 shadow-sm border border-slate-100 dark:border-white/5 hover:scale-[1.02] transition-all hover:shadow-md">
                             <div class="flex items-start justify-between">
                                 <div
-                                    class="rounded-full bg-red-50 dark:bg-red-900/20 p-2 md:p-3 text-red-600 dark:text-red-400">
+                                    class="rounded-full bg-red-50 dark:bg-red-900/20 p-2 md:p-3 text-red-600 dark:text-red-400 group-hover:bg-primary/20 transition-colors">
                                     <span
                                         class="material-symbols-outlined filled text-[20px] md:text-[24px]">credit_card</span>
                                 </div>
@@ -296,10 +296,10 @@
                         </div>
 
                         <!-- Net Profit (Spans 2 cols on mobile to emphasize importance) -->
-                        <div
-                            class="col-span-2 md:col-span-1 flex flex-col justify-between gap-3 rounded-2xl bg-white dark:bg-dark-surface p-4 md:p-6 shadow-sm border border-slate-100 dark:border-white/5 relative overflow-hidden group">
+                        <div onclick="switchTab('finance')"
+                            class="cursor-pointer col-span-2 md:col-span-1 flex flex-col justify-between gap-3 rounded-2xl bg-white dark:bg-dark-surface p-4 md:p-6 shadow-sm border border-slate-100 dark:border-white/5 relative overflow-hidden group hover:scale-[1.02] transition-all hover:shadow-md">
                             <div
-                                class="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-primary/10 transition-transform group-hover:scale-110">
+                                class="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-primary/10 transition-transform group-hover:scale-125">
                             </div>
                             <div class="flex items-start justify-between relative z-10">
                                 <div class="rounded-full bg-primary/10 dark:bg-primary/20 p-2 md:p-3 text-primary">
@@ -459,14 +459,27 @@
             <div id="view-team" class="view-content overflow-y-auto h-full w-full">
                 <!-- Header Team -->
                 <header
-                    class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/90 px-6 py-5 backdrop-blur-md dark:border-white/5 dark:bg-dark-surface/90">
+                    class="sticky top-0 z-10 flex flex-col md:flex-row md:items-center justify-between border-b border-slate-200 bg-white/90 px-6 py-5 backdrop-blur-md dark:border-white/5 dark:bg-dark-surface/90 gap-4">
                     <div class="flex flex-col gap-1">
                         <h2 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white font-serif">Equipo
                             Médico</h2>
-                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Gestión de rendimiento</p>
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Rendimiento por periodos</p>
                     </div>
+
+                    <!-- Team Period Selector -->
+                    <div class="flex bg-slate-100 dark:bg-white/5 rounded-xl p-1 gap-1 shadow-inner order-3 md:order-2">
+                        <button onclick="switchTeamTimeFilter('hoy')" id="btn-team-hoy"
+                            class="team-time-filter px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 transition-all duration-300">HOY</button>
+                        <button onclick="switchTeamTimeFilter('ayer')" id="btn-team-ayer"
+                            class="team-time-filter px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 transition-all duration-300">AYER</button>
+                        <button onclick="switchTeamTimeFilter('semana')" id="btn-team-semana"
+                            class="team-time-filter px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 transition-all duration-300">SEMANA</button>
+                        <button onclick="switchTeamTimeFilter('mes')" id="btn-team-mes"
+                            class="team-time-filter active px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-bold transition-all duration-300 shadow-sm bg-white text-slate-900 dark:bg-dark-surface dark:text-white">MES</button>
+                    </div>
+
                     <button onclick="openDoctorModal()"
-                        class="flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-white shadow-md shadow-primary/20 hover:bg-primary-dark transition-all active:scale-95">
+                        class="flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-white shadow-md shadow-primary/20 hover:bg-primary-dark transition-all active:scale-95 order-2 md:order-3 self-end md:self-auto">
                         <span class="material-symbols-outlined text-[20px]">add</span>
                         <span class="hidden md:inline">Añadir</span>
                     </button>
@@ -528,34 +541,31 @@
                         <div class="flex flex-col gap-6">
                             <div
                                 class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-100 dark:bg-dark-surface dark:ring-white/5">
-                                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 font-serif">
-                                    Distribución
-                                </h3>
+                                <div class="flex items-center justify-between mb-6">
+                                    <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">
+                                        Distribución
+                                    </h3>
+                                    <span
+                                        class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded-md"
+                                        id="team-donut-period-label">MES</span>
+                                </div>
                                 <div class="relative flex items-center justify-center py-4">
-                                    <div class="relative h-48 w-48 rounded-full"
-                                        style="background: conic-gradient(#C69C6D 0% 41%, #A87F55 41% 73%, #F3E7D7 73% 100%);">
+                                    <div class="relative h-48 w-48 rounded-full transition-all duration-500"
+                                        id="team-donut-chart" style="background: conic-gradient(#C69C6D 0% 100%);">
                                         <div
-                                            class="absolute inset-4 rounded-full bg-white dark:bg-dark-surface flex flex-col items-center justify-center z-10">
-                                            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Total</p>
-                                            <p class="text-2xl font-black text-slate-900 dark:text-white font-serif">
-                                                30.7k€
+                                            class="absolute inset-4 rounded-full bg-white dark:bg-dark-surface flex flex-col items-center justify-center z-10 shadow-inner">
+                                            <p
+                                                class="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-tighter">
+                                                Total Periodo</p>
+                                            <p class="text-2xl font-black text-slate-900 dark:text-white font-serif"
+                                                id="team-donut-total">
+                                                0€
                                             </p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mt-4 flex flex-col gap-2">
-                                    <div class="flex items-center justify-between text-sm">
-                                        <span class="flex items-center gap-2">
-                                            <div class="h-2 w-2 rounded-full bg-primary"></div> Fernando
-                                        </span>
-                                        <span class="font-bold text-slate-700 dark:text-slate-300">41%</span>
-                                    </div>
-                                    <div class="flex items-center justify-between text-sm">
-                                        <span class="flex items-center gap-2">
-                                            <div class="h-2 w-2 rounded-full bg-primary-dark"></div> Carla
-                                        </span>
-                                        <span class="font-bold text-slate-700 dark:text-slate-300">32%</span>
-                                    </div>
+                                <div class="mt-4 flex flex-col gap-2" id="team-donut-legend">
+                                    <!-- Dynamic Legend -->
                                 </div>
                             </div>
                         </div>
@@ -1056,6 +1066,12 @@
                     const icon = activeMobileBtn.querySelector('.material-symbols-outlined');
                     if (icon) icon.classList.add('filled');
                 }
+
+                // 5. Refresh data for target view
+                if (type === 'dashboard') window.switchTimeFilter(window.CURRENT_PERIOD || 'mes');
+                if (type === 'finance') renderTable();
+                if (type === 'team') renderTeam();
+                if (type === 'analytics') if (typeof renderAnalytics === 'function') renderAnalytics();
             }
 
             // --- VOICE INPUT LOGIC (Web Speech API) ---
@@ -1389,22 +1405,41 @@
             }
 
             // 3. TEAM LOGIC (UPDATED V2)
+            let CURRENT_TEAM_PERIOD = 'mes';
+
+            window.switchTeamTimeFilter = function (period) {
+                CURRENT_TEAM_PERIOD = period;
+                document.querySelectorAll('.team-time-filter').forEach(btn => {
+                    btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
+                    btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
+                    btn.classList.remove('font-bold');
+                    btn.classList.add('font-medium');
+                });
+                const activeBtn = document.getElementById(`btn-team-${period}`);
+                if (activeBtn) {
+                    activeBtn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
+                    activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
+                    activeBtn.classList.add('font-bold');
+                    activeBtn.classList.remove('font-medium');
+                }
+                renderTeam();
+            }
+
             function renderTeam() {
                 const container = document.getElementById('doctors-container');
                 if (!container) return;
+
+                const periodData = calculatePeriodData(CURRENT_TEAM_PERIOD);
+
                 container.innerHTML = `
                 <div class="flex items-center justify-between mb-1">
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">Doctores Activos</h3>
-                    <p class="text-sm text-slate-400">Datos basados en asignación directa.</p>
+                    <p class="text-xs text-slate-400">Datos: <span class="capitalize font-bold text-primary">${CURRENT_TEAM_PERIOD}</span></p>
                 </div>
             `;
 
-                APP_DATA.doctors.forEach(doc => {
-                    // Calculate performance based on Doctor ID
-                    const docTransactions = APP_DATA.transactions.filter(t => t.doctorId === doc.id && t.type === 'ingreso');
-                    const generated = docTransactions.reduce((acc, t) => acc + t.amount, 0);
-
-                    const progress = Math.min((generated / doc.goal) * 100, 100).toFixed(0);
+                periodData.team.forEach(doc => {
+                    const progress = Math.min((doc.generated / doc.goal) * 100, 100).toFixed(0);
                     // Use Lobato Gold/Dark theme logic for badges
                     const colorClass = doc.color === 'purple'
                         ? 'text-slate-600 bg-slate-100 dark:text-slate-300 dark:bg-white/5'
@@ -1423,7 +1458,7 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="text-lg md:text-xl font-black tracking-tight text-slate-900 dark:text-white font-serif">${(generated / 1000).toFixed(1)}k€</p>
+                                <p class="text-lg md:text-xl font-black tracking-tight text-slate-900 dark:text-white font-serif">${(doc.generated / 1000).toFixed(1)}k€</p>
                             </div>
                         </div>
                         <div class="flex flex-col gap-1">
@@ -1439,6 +1474,57 @@
                     </div>
                 `;
                 });
+
+                // Update Donut Chart
+                updateTeamDonut(periodData.team);
+            }
+
+            function updateTeamDonut(teamData) {
+                const donutEl = document.getElementById('team-donut-chart');
+                const totalEl = document.getElementById('team-donut-total');
+                const legendEl = document.getElementById('team-donut-legend');
+                const labelEl = document.getElementById('team-donut-period-label');
+                if (!donutEl || !totalEl || !legendEl || !labelEl) return;
+
+                labelEl.textContent = CURRENT_TEAM_PERIOD;
+
+                const totalCalculated = teamData.reduce((sum, d) => sum + d.generated, 0);
+                totalEl.textContent = totalCalculated.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+                if (totalCalculated === 0) {
+                    donutEl.style.background = 'rgba(0,0,0,0.05)';
+                    legendEl.innerHTML = '<p class="text-center text-xs text-slate-400 py-4">Sin producción en este periodo</p>';
+                    return;
+                }
+
+                let currentPercent = 0;
+                const gradients = [];
+                const colors = ['#C69C6D', '#A87F55', '#E5C4A0', '#8B6B4D', '#D4AF37', '#7044bf', '#31165d'];
+
+                legendEl.innerHTML = '';
+
+                teamData.forEach((doc, i) => {
+                    const p = (doc.generated / totalCalculated) * 100;
+                    if (p > 0) {
+                        const color = colors[i % colors.length];
+                        gradients.push(`${color} ${currentPercent}% ${currentPercent + p}%`);
+                        currentPercent += p;
+
+                        legendEl.innerHTML += `
+                        <div class="flex items-center justify-between text-sm py-1 border-b border-slate-50 dark:border-white/5 last:border-0">
+                            <span class="flex items-center gap-2">
+                                <div class="h-2 w-2 rounded-full" style="background-color: ${color}"></div> 
+                                <span class="font-medium text-slate-600 dark:text-slate-400 text-xs">${doc.name}</span>
+                            </span>
+                            <span class="font-bold text-slate-900 dark:text-white text-xs">${p.toFixed(0)}%</span>
+                        </div>
+                    `;
+                    }
+                });
+
+                if (gradients.length > 0) {
+                    donutEl.style.background = `conic-gradient(${gradients.join(', ')})`;
+                }
             }
 
             function handleAddDoctor(e) {
@@ -1493,12 +1579,12 @@
                 if (profitChart) profitChart.destroy();
                 if (marginChart) marginChart.destroy();
 
-                // Prepare Data from APP_DATA
-                const labels = APP_DATA.doctors.map(d => d.name);
-                const dataProfit = APP_DATA.doctors.map(d => {
-                    const txs = APP_DATA.transactions.filter(t => t.doctorId === d.id && t.type === 'ingreso');
-                    return txs.reduce((sum, t) => sum + t.amount, 0);
-                });
+                // Prepare Data from APP_DATA (respecting current DASHBOARD period for consistency)
+                const period = window.CURRENT_PERIOD || 'mes';
+                const periodData = calculatePeriodData(period);
+
+                const labels = periodData.team.map(d => d.name);
+                const dataProfit = periodData.team.map(d => d.generated);
 
                 // check theme for colors
                 const isDark = document.documentElement.classList.contains('dark');
