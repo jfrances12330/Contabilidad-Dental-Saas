@@ -873,826 +873,880 @@
                     </header>
 
                     <section class="flex flex-col gap-4">
-                        <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex flex-col gap-4">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Conexión Google
-                                        Sheets</h3>
-                                    <p class="text-xs text-slate-500">Pega aquí el enlace CSV de tu hoja de cálculo.</p>
-                                </div>
-                                <button onclick="syncFromSheets()" id="btn-sync-now"
-                                    class="shrink-0 px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 min-w-[120px]">
-                                    <span class="material-symbols-outlined text-sm" id="sync-icon">sync</span>
-                                    <span id="sync-text">Sincronizar</span>
-                                </button>
-                            </div>
-                            <input type="text" id="sheets-url-input"
-                                placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv"
-                                class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
-                        </div>
-
-                        <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex items-center justify-between">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div>
-                                <h3 class="text-base font-bold text-slate-900 dark:text-white">Modo Oscuro</h3>
-                                <p class="text-xs text-slate-500">Alternar entre tema claro y oscuro.</p>
+                                <h3 class="text-base font-bold text-slate-900 dark:text-white">Conexión Ingresos (Google
+                                    Sheets)</h3>
+                                <p class="text-xs text-slate-500">Enlace CSV de la hoja maestra.</p>
                             </div>
-                            <button onclick="document.documentElement.classList.toggle('dark')"
-                                class="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-200 dark:bg-primary transition-colors">
-                                <span
-                                    class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1 dark:translate-x-6"></span>
+                            <button onclick="syncFromSheets()" id="btn-sync-now"
+                                class="shrink-0 px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 w-full md:w-auto min-w-[120px]">
+                                <span class="material-symbols-outlined text-sm" id="sync-icon">sync</span>
+                                <span id="sync-text">Sincronizar</span>
                             </button>
                         </div>
-
-                        <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex items-center justify-between">
-                            <div>
-                                <h3 class="text-base font-bold text-red-600">Restablecer Datos</h3>
-                                <p class="text-xs text-slate-500">Borrar todos los movimientos y empezar de cero.</p>
-                            </div>
-                            <button onclick="resetApp()"
-                                class="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-sm font-bold transition-colors">
-                                Borrar Todo
-                            </button>
-                        </div>
-                    </section>
-
-                    <div class="text-center text-xs text-slate-400 mt-10">
-                        Versión 1.0.0 • Clínica Lobato
-                    </div>
+                        <input type="text" id="sheets-url-input"
+                            placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv"
+                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
                 </div>
-            </div>
 
-            <!-- EXPORT MODAL -->
-            <div id="export-modal" class="fixed inset-0 z-50 hidden">
-                <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"
-                    onclick="closeExportModal()"></div>
+                <!-- EXPENSES CONNECTION -->
                 <div
-                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-6 border border-slate-100 dark:border-white/10">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Exportar a CSV</h3>
-                    <form onsubmit="handleExportCSV(event)" class="flex flex-col gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Desde</label>
-                            <input name="startDate" required type="date"
-                                class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Hasta</label>
-                            <input name="endDate" required type="date"
-                                class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
-                        </div>
-                        <div class="flex gap-2 mt-2">
-                            <button type="button" onclick="closeExportModal()"
-                                class="flex-1 py-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 rounded-lg text-sm font-medium transition-colors">Cancelar</button>
-                            <button type="submit"
-                                class="flex-1 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary-dark transition-colors shadow-lg shadow-primary/20">Descargar</button>
-                        </div>
-                    </form>
+                    class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex flex-col gap-4">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Conexión Gastos (Opcional)</h3>
+                        <p class="text-xs text-slate-500">Pega aquí el enlace CSV de tu hoja de GASTOS.</p>
+                    </div>
+                    <input type="text" id="expenses-url-input"
+                        placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv"
+                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
                 </div>
-            </div>
 
-            <!-- CHAT VIEW -->
-            <div id="view-chat" class="view-content w-full">
-                <!-- Header Chat -->
-                <header
-                    class="h-16 bg-white dark:bg-[#1a2c35] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 shrink-0">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-primary text-2xl">smart_toy</span>
-                        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Asistente IA</h2>
+                <div
+                    class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex items-center justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Modo Oscuro</h3>
+                        <p class="text-xs text-slate-500">Alternar entre tema claro y oscuro.</p>
+                    </div>
+                    <button onclick="document.documentElement.classList.toggle('dark')"
+                        class="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-200 dark:bg-primary transition-colors">
                         <span
-                            class="hidden md:inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">Online</span>
-                    </div>
-                </header>
-
-                <!-- Chat Area -->
-                <div class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 bg-slate-50 dark:bg-[#15232b]">
-                    <!-- AI Message -->
-                    <div class="flex justify-start items-end gap-3 max-w-2xl">
-                        <div
-                            class="size-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-white">
-                            <span class="material-symbols-outlined text-[18px]">smart_toy</span>
-                        </div>
-                        <div
-                            class="bg-white dark:bg-[#233540] p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700">
-                            <p class="text-sm leading-relaxed text-slate-800 dark:text-white">Hola Dr. Lobato. He
-                                agrupado
-                                los tratamientos realizados del 1 al 24 de Octubre. Tienes un <strong
-                                    class="text-emerald-600">margen del 73%</strong> en Implantes.</p>
-                        </div>
-                    </div>
-
-                    <!-- User Message -->
-                    <div class="flex justify-end items-end gap-3">
-                        <div class="bg-primary text-white p-4 rounded-2xl rounded-tr-none shadow-md max-w-xl">
-                            <p class="text-sm leading-relaxed">¿Cuál es el gasto de electricidad?</p>
-                        </div>
-                    </div>
+                            class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1 dark:translate-x-6"></span>
+                    </button>
                 </div>
 
-                <!-- Input Area -->
-                <div class="bg-white dark:bg-[#1a2c35] p-4 border-t border-slate-200 dark:border-slate-800">
-                    <div class="flex gap-2 max-w-4xl mx-auto relative">
-                        <input id="chat-input" type="text" placeholder="Escribe o decídselo a la IA..."
-                            class="w-full rounded-full border-slate-200 bg-slate-50 pl-5 pr-24 py-3 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white transition-all shadow-sm">
-
-                        <!-- Voice & Send Buttons Container -->
-                        <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1 pr-1">
-                            <!-- Microphone Button -->
-                            <button id="mic-btn" onclick="toggleVoiceInput()"
-                                class="p-2 rounded-full text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors relative group">
-                                <span class="material-symbols-outlined" id="mic-icon">mic</span>
-                                <!-- Tooltip -->
-                                <span
-                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Dictar
-                                    nota</span>
-                            </button>
-
-                            <!-- Send Button -->
-                            <button onclick="handleSend()"
-                                class="bg-primary text-white p-2 rounded-full hover:bg-primary-dark transition-colors shadow-sm flex items-center justify-center h-9 w-9">
-                                <span class="material-symbols-outlined text-[18px]">send</span>
-                            </button>
-                        </div>
+                <div
+                    class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex items-center justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-red-600">Restablecer Datos</h3>
+                        <p class="text-xs text-slate-500">Borrar todos los movimientos y empezar de cero.</p>
                     </div>
-                    <p id="voice-status"
-                        class="text-center text-[10px] text-emerald-600 font-bold mt-2 opacity-0 transition-opacity">
-                        Escuchando... 🎤</p>
+                    <button onclick="resetApp()"
+                        class="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-sm font-bold transition-colors">
+                        Borrar Todo
+                    </button>
+                </div>
+                </section>
+
+                <div class="text-center text-xs text-slate-400 mt-10">
+                    Versión 1.0.0 • Clínica Lobato
+                </div>
+            </div>
+    </div>
+
+    <!-- EXPORT MODAL -->
+    <div id="export-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity" onclick="closeExportModal()">
+        </div>
+        <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-6 border border-slate-100 dark:border-white/10">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Exportar a CSV</h3>
+            <form onsubmit="handleExportCSV(event)" class="flex flex-col gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Desde</label>
+                    <input name="startDate" required type="date"
+                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Hasta</label>
+                    <input name="endDate" required type="date"
+                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
+                </div>
+                <div class="flex gap-2 mt-2">
+                    <button type="button" onclick="closeExportModal()"
+                        class="flex-1 py-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 rounded-lg text-sm font-medium transition-colors">Cancelar</button>
+                    <button type="submit"
+                        class="flex-1 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary-dark transition-colors shadow-lg shadow-primary/20">Descargar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CHAT VIEW -->
+    <div id="view-chat" class="view-content w-full">
+        <!-- Header Chat -->
+        <header
+            class="h-16 bg-white dark:bg-[#1a2c35] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 shrink-0">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-2xl">smart_toy</span>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Asistente IA</h2>
+                <span
+                    class="hidden md:inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">Online</span>
+            </div>
+        </header>
+
+        <!-- Chat Area -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 bg-slate-50 dark:bg-[#15232b]">
+            <!-- AI Message -->
+            <div class="flex justify-start items-end gap-3 max-w-2xl">
+                <div class="size-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-white">
+                    <span class="material-symbols-outlined text-[18px]">smart_toy</span>
+                </div>
+                <div
+                    class="bg-white dark:bg-[#233540] p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700">
+                    <p class="text-sm leading-relaxed text-slate-800 dark:text-white">Hola Dr. Lobato. He
+                        agrupado
+                        los tratamientos realizados del 1 al 24 de Octubre. Tienes un <strong
+                            class="text-emerald-600">margen del 73%</strong> en Implantes.</p>
                 </div>
             </div>
 
-        </main>
+            <!-- User Message -->
+            <div class="flex justify-end items-end gap-3">
+                <div class="bg-primary text-white p-4 rounded-2xl rounded-tr-none shadow-md max-w-xl">
+                    <p class="text-sm leading-relaxed">¿Cuál es el gasto de electricidad?</p>
+                </div>
+            </div>
+        </div>
 
-        <!-- FLOATING PILL NAVIGATION (Mobile Only - New Design) -->
-        <nav
-            class="md:hidden fixed bottom-6 inset-x-4 border border-white/40 dark:border-white/10 bg-white/80 dark:bg-[#15171E]/90 backdrop-blur-xl shadow-2xl shadow-slate-300/40 dark:shadow-black/50 rounded-2xl flex justify-around p-1.5 z-50">
+        <!-- Input Area -->
+        <div class="bg-white dark:bg-[#1a2c35] p-4 border-t border-slate-200 dark:border-slate-800">
+            <div class="flex gap-2 max-w-4xl mx-auto relative">
+                <input id="chat-input" type="text" placeholder="Escribe o decídselo a la IA..."
+                    class="w-full rounded-full border-slate-200 bg-slate-50 pl-5 pr-24 py-3 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white transition-all shadow-sm">
 
-            <button onclick="switchTab('view-dashboard')" id="nav-mobile-dashboard"
-                class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-primary">
-                <!-- Active Indicator Background -->
-                <span
-                    class="absolute inset-0 bg-primary/10 rounded-xl scale-100 opacity-100 transition-all duration-300 active-indicator z-0"></span>
-                <span class="material-symbols-outlined text-[24px] relative z-10 filled">grid_view</span>
-            </button>
+                <!-- Voice & Send Buttons Container -->
+                <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1 pr-1">
+                    <!-- Microphone Button -->
+                    <button id="mic-btn" onclick="toggleVoiceInput()"
+                        class="p-2 rounded-full text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors relative group">
+                        <span class="material-symbols-outlined" id="mic-icon">mic</span>
+                        <!-- Tooltip -->
+                        <span
+                            class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Dictar
+                            nota</span>
+                    </button>
 
-            <button onclick="switchTab('view-team')" id="nav-mobile-team"
-                class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
-                <span
-                    class="absolute inset-0 bg-transparent rounded-xl scale-90 opacity-0 transition-all duration-300 active-indicator z-0"></span>
-                <span class="material-symbols-outlined text-[24px] relative z-10">groups</span>
-            </button>
+                    <!-- Send Button -->
+                    <button onclick="handleSend()"
+                        class="bg-primary text-white p-2 rounded-full hover:bg-primary-dark transition-colors shadow-sm flex items-center justify-center h-9 w-9">
+                        <span class="material-symbols-outlined text-[18px]">send</span>
+                    </button>
+                </div>
+            </div>
+            <p id="voice-status"
+                class="text-center text-[10px] text-emerald-600 font-bold mt-2 opacity-0 transition-opacity">
+                Escuchando... 🎤</p>
+        </div>
+    </div>
 
-            <button onclick="switchTab('view-finance')" id="nav-mobile-finance"
-                class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
-                <span
-                    class="absolute inset-0 bg-transparent rounded-xl scale-90 opacity-0 transition-all duration-300 active-indicator z-0"></span>
-                <span class="material-symbols-outlined text-[24px] relative z-10">payments</span>
-            </button>
+    </main>
 
-            <button onclick="switchTab('view-chat')" id="nav-mobile-chat"
-                class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
-                <span
-                    class="absolute inset-0 bg-transparent rounded-xl scale-90 opacity-0 transition-all duration-300 active-indicator z-0"></span>
-                <span class="material-symbols-outlined text-[24px] relative z-10">smart_toy</span>
-            </button>
+    <!-- FLOATING PILL NAVIGATION (Mobile Only - New Design) -->
+    <nav
+        class="md:hidden fixed bottom-6 inset-x-4 border border-white/40 dark:border-white/10 bg-white/80 dark:bg-[#15171E]/90 backdrop-blur-xl shadow-2xl shadow-slate-300/40 dark:shadow-black/50 rounded-2xl flex justify-around p-1.5 z-50">
 
-            <button onclick="switchTab('view-settings')" id="nav-mobile-settings"
-                class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
-                <span
-                    class="absolute inset-0 bg-transparent rounded-xl scale-90 opacity-0 transition-all duration-300 active-indicator z-0"></span>
-                <span class="material-symbols-outlined text-[24px] relative z-10">settings</span>
-            </button>
-        </nav>
+        <button onclick="switchTab('view-dashboard')" id="nav-mobile-dashboard"
+            class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-primary">
+            <!-- Active Indicator Background -->
+            <span
+                class="absolute inset-0 bg-primary/10 rounded-xl scale-100 opacity-100 transition-all duration-300 active-indicator z-0"></span>
+            <span class="material-symbols-outlined text-[24px] relative z-10 filled">grid_view</span>
+        </button>
 
-        <!-- Safe Area Padding for iPhone Home Indicator -->
-        <style>
-            .pb-safe {
-                padding-bottom: env(safe-area-inset-bottom, 20px);
+        <button onclick="switchTab('view-team')" id="nav-mobile-team"
+            class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+            <span
+                class="absolute inset-0 bg-transparent rounded-xl scale-90 opacity-0 transition-all duration-300 active-indicator z-0"></span>
+            <span class="material-symbols-outlined text-[24px] relative z-10">groups</span>
+        </button>
+
+        <button onclick="switchTab('view-finance')" id="nav-mobile-finance"
+            class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+            <span
+                class="absolute inset-0 bg-transparent rounded-xl scale-90 opacity-0 transition-all duration-300 active-indicator z-0"></span>
+            <span class="material-symbols-outlined text-[24px] relative z-10">payments</span>
+        </button>
+
+        <button onclick="switchTab('view-chat')" id="nav-mobile-chat"
+            class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+            <span
+                class="absolute inset-0 bg-transparent rounded-xl scale-90 opacity-0 transition-all duration-300 active-indicator z-0"></span>
+            <span class="material-symbols-outlined text-[24px] relative z-10">smart_toy</span>
+        </button>
+
+        <button onclick="switchTab('view-settings')" id="nav-mobile-settings"
+            class="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-3 transition-all duration-300 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+            <span
+                class="absolute inset-0 bg-transparent rounded-xl scale-90 opacity-0 transition-all duration-300 active-indicator z-0"></span>
+            <span class="material-symbols-outlined text-[24px] relative z-10">settings</span>
+        </button>
+    </nav>
+
+    <!-- Safe Area Padding for iPhone Home Indicator -->
+    <style>
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+    </style>
+
+    <script>
+        // --- GEMINI API CONFIGURATION ---
+        // ⚠️ IMPORTANTE: Reemplaza esto con tu API Key real de Google AI Studio
+        const GEMINI_API_KEY = "TU_API_KEY_AQUI";
+
+        const CHAT_HISTORY = [
+            { role: "user", parts: [{ text: "Hola soy el Dr. Lobato." }] },
+            { role: "model", parts: [{ text: "Hola Dr. Lobato. Soy tu asistente financiero dental. ¿En qué puedo ayudarte hoy?" }] }
+        ];
+
+        // --- UI LOGIC ---
+        function switchTab(viewId) {
+            // Handle both 'dashboard' and 'view-dashboard' inputs
+            const targetId = viewId.startsWith('view-') ? viewId : `view-${viewId}`;
+            const target = document.getElementById(targetId);
+
+            if (!target) {
+                console.error(`View not found: ${targetId}`);
+                return;
             }
-        </style>
 
-        <script>
-            // --- GEMINI API CONFIGURATION ---
-            // ⚠️ IMPORTANTE: Reemplaza esto con tu API Key real de Google AI Studio
-            const GEMINI_API_KEY = "TU_API_KEY_AQUI";
+            // 1. Hide all views
+            document.querySelectorAll('.view-content').forEach(el => {
+                el.classList.remove('active');
+            });
 
-            const CHAT_HISTORY = [
-                { role: "user", parts: [{ text: "Hola soy el Dr. Lobato." }] },
-                { role: "model", parts: [{ text: "Hola Dr. Lobato. Soy tu asistente financiero dental. ¿En qué puedo ayudarte hoy?" }] }
-            ];
+            // 2. Show target view
+            target.classList.add('active');
 
-            // --- UI LOGIC ---
-            function switchTab(viewId) {
-                // Handle both 'dashboard' and 'view-dashboard' inputs
-                const targetId = viewId.startsWith('view-') ? viewId : `view-${viewId}`;
-                const target = document.getElementById(targetId);
+            // 2.5 Scroll to top (Native behavior)
+            window.scrollTo(0, 0);
 
-                if (!target) {
-                    console.error(`View not found: ${targetId}`);
-                    return;
-                }
+            // 3. Update Desktop Navigation State
+            const type = targetId.replace('view-', '');
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.className = "nav-item group flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left";
+                const icon = btn.querySelector('.material-symbols-outlined');
+                if (icon) icon.classList.remove('filled');
+            });
 
-                // 1. Hide all views
-                document.querySelectorAll('.view-content').forEach(el => {
-                    el.classList.remove('active');
-                });
+            const activeDesktopBtn = document.getElementById(`nav-${type}`); // Changed from nav-desktop- to nav- for consistency if needed, but keeping nav-ID logic from HTML
+            // Actually the HTML IDs are nav-dashboard, nav-analytics etc. 
+            // Let's check lines 157, 164 etc. IDs are "nav-dashboard", "nav-analytics".
 
-                // 2. Show target view
-                target.classList.add('active');
+            const navBtn = document.getElementById(`nav-${type}`);
+            if (navBtn) {
+                navBtn.className = "nav-item group flex items-center gap-3 rounded-lg bg-primary px-4 py-3 text-white shadow-md shadow-primary/20 transition-all text-left";
+                const icon = navBtn.querySelector('.material-symbols-outlined');
+                if (icon) icon.classList.add('filled');
+            }
 
-                // 2.5 Scroll to top (Native behavior)
-                window.scrollTo(0, 0);
+            // 4. Update Mobile Navigation State (Floating Pill Logic)
+            ['dashboard', 'team', 'finance', 'chat', 'settings'].forEach(t => {
+                const btn = document.getElementById(`nav-mobile-${t}`);
+                if (btn) {
+                    btn.classList.remove('text-primary');
+                    btn.classList.add('text-slate-400');
+                    btn.querySelector('span.active-indicator').classList.remove('bg-primary/10', 'scale-100', 'opacity-100');
+                    btn.querySelector('span.active-indicator').classList.add('bg-transparent', 'scale-90', 'opacity-0');
 
-                // 3. Update Desktop Navigation State
-                const type = targetId.replace('view-', '');
-                document.querySelectorAll('.nav-item').forEach(btn => {
-                    btn.className = "nav-item group flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left";
                     const icon = btn.querySelector('.material-symbols-outlined');
                     if (icon) icon.classList.remove('filled');
-                });
-
-                const activeDesktopBtn = document.getElementById(`nav-${type}`); // Changed from nav-desktop- to nav- for consistency if needed, but keeping nav-ID logic from HTML
-                // Actually the HTML IDs are nav-dashboard, nav-analytics etc. 
-                // Let's check lines 157, 164 etc. IDs are "nav-dashboard", "nav-analytics".
-
-                const navBtn = document.getElementById(`nav-${type}`);
-                if (navBtn) {
-                    navBtn.className = "nav-item group flex items-center gap-3 rounded-lg bg-primary px-4 py-3 text-white shadow-md shadow-primary/20 transition-all text-left";
-                    const icon = navBtn.querySelector('.material-symbols-outlined');
-                    if (icon) icon.classList.add('filled');
                 }
+            });
 
-                // 4. Update Mobile Navigation State (Floating Pill Logic)
-                ['dashboard', 'team', 'finance', 'chat', 'settings'].forEach(t => {
-                    const btn = document.getElementById(`nav-mobile-${t}`);
-                    if (btn) {
-                        btn.classList.remove('text-primary');
-                        btn.classList.add('text-slate-400');
-                        btn.querySelector('span.active-indicator').classList.remove('bg-primary/10', 'scale-100', 'opacity-100');
-                        btn.querySelector('span.active-indicator').classList.add('bg-transparent', 'scale-90', 'opacity-0');
+            const activeMobileBtn = document.getElementById(`nav-mobile-${type}`);
+            if (activeMobileBtn) {
+                activeMobileBtn.classList.remove('text-slate-400');
+                activeMobileBtn.classList.add('text-primary');
+                // Add Active Pill Background
+                activeMobileBtn.querySelector('span.active-indicator').classList.remove('bg-transparent', 'scale-90', 'opacity-0');
+                activeMobileBtn.querySelector('span.active-indicator').classList.add('bg-primary/10', 'scale-100', 'opacity-100');
 
-                        const icon = btn.querySelector('.material-symbols-outlined');
-                        if (icon) icon.classList.remove('filled');
-                    }
-                });
-
-                const activeMobileBtn = document.getElementById(`nav-mobile-${type}`);
-                if (activeMobileBtn) {
-                    activeMobileBtn.classList.remove('text-slate-400');
-                    activeMobileBtn.classList.add('text-primary');
-                    // Add Active Pill Background
-                    activeMobileBtn.querySelector('span.active-indicator').classList.remove('bg-transparent', 'scale-90', 'opacity-0');
-                    activeMobileBtn.querySelector('span.active-indicator').classList.add('bg-primary/10', 'scale-100', 'opacity-100');
-
-                    const icon = activeMobileBtn.querySelector('.material-symbols-outlined');
-                    if (icon) icon.classList.add('filled');
-                }
-
-                // 5. Refresh data for target view
-                if (type === 'dashboard') window.switchTimeFilter(window.CURRENT_PERIOD || 'mes');
-                if (type === 'finance') renderTable();
-                if (type === 'team') renderTeam();
-                if (type === 'analytics') if (typeof renderAnalytics === 'function') renderAnalytics();
+                const icon = activeMobileBtn.querySelector('.material-symbols-outlined');
+                if (icon) icon.classList.add('filled');
             }
 
-            // --- VOICE INPUT LOGIC (Web Speech API) ---
-            let recognition;
-            let isRecording = false;
+            // 5. Refresh data for target view
+            if (type === 'dashboard') window.switchTimeFilter(window.CURRENT_PERIOD || 'mes');
+            if (type === 'finance') renderTable();
+            if (type === 'team') renderTeam();
+            if (type === 'analytics') if (typeof renderAnalytics === 'function') renderAnalytics();
+        }
 
-            if ('webkitSpeechRecognition' in window) {
-                recognition = new webkitSpeechRecognition();
-                recognition.continuous = false;
-                recognition.lang = 'es-ES'; // Detect Spanish
+        // --- VOICE INPUT LOGIC (Web Speech API) ---
+        let recognition;
+        let isRecording = false;
 
-                recognition.onstart = function () {
-                    isRecording = true;
-                    document.getElementById('voice-status').style.opacity = '1';
-                    document.getElementById('mic-icon').classList.add('text-red-500', 'animate-pulse');
-                    document.getElementById('mic-icon').innerText = 'mic_off';
-                };
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'es-ES'; // Detect Spanish
 
-                recognition.onend = function () {
-                    isRecording = false;
-                    document.getElementById('voice-status').style.opacity = '0';
-                    document.getElementById('mic-icon').classList.remove('text-red-500', 'animate-pulse');
-                    document.getElementById('mic-icon').innerText = 'mic';
-                };
+            recognition.onstart = function () {
+                isRecording = true;
+                document.getElementById('voice-status').style.opacity = '1';
+                document.getElementById('mic-icon').classList.add('text-red-500', 'animate-pulse');
+                document.getElementById('mic-icon').innerText = 'mic_off';
+            };
 
-                recognition.onresult = function (event) {
-                    const transcript = event.results[0][0].transcript;
-                    const input = document.getElementById('chat-input');
-                    // Append or set text
-                    input.value = input.value ? input.value + " " + transcript : transcript;
-                    input.focus();
-                };
-            } else {
-                console.log("Web Speech API not supported in this browser.");
-                document.getElementById('mic-btn').style.display = 'none'; // Hide if not supported
-            }
+            recognition.onend = function () {
+                isRecording = false;
+                document.getElementById('voice-status').style.opacity = '0';
+                document.getElementById('mic-icon').classList.remove('text-red-500', 'animate-pulse');
+                document.getElementById('mic-icon').innerText = 'mic';
+            };
 
-            function toggleVoiceInput() {
-                if (!recognition) return alert("Tu navegador no soporta dictado por voz 😢. Usa Chrome.");
-                if (isRecording) {
-                    recognition.stop();
-                } else {
-                    recognition.start();
-                }
-            }
-
-            // --- CHAT LOGIC ---
-            async function handleSend() {
+            recognition.onresult = function (event) {
+                const transcript = event.results[0][0].transcript;
                 const input = document.getElementById('chat-input');
-                const text = input.value.trim();
-                if (!text) return;
+                // Append or set text
+                input.value = input.value ? input.value + " " + transcript : transcript;
+                input.focus();
+            };
+        } else {
+            console.log("Web Speech API not supported in this browser.");
+            document.getElementById('mic-btn').style.display = 'none'; // Hide if not supported
+        }
 
-                // 1. Add User Message to UI
-                addMessageToUI(text, 'user');
-                input.value = '';
-
-                // 2. Mock or Call API
-                addLoadingIndicator();
-
-                try {
-                    // If API Key is placeholder, show simulated response
-                    if (GEMINI_API_KEY === "TU_API_KEY_AQUI") {
-                        await new Promise(r => setTimeout(r, 1500)); // Simulate delay
-                        removeLoadingIndicator();
-                        addMessageToUI("⚠️ <b>Modo Demo:</b> Para que te responda de verdad, abre el archivo `03_index.html` con un editor de texto y pega tu API Key de Google (Gemini) en la línea 480 donde dice `const GEMINI_API_KEY = ...`", 'model');
-                        addMessageToUI("🤖 <b>Respuesta Simulada:</b> Basado en tus datos, el Dr. Fernando ha facturado 12.500€ este mes.", 'model');
-                    } else {
-                        // REAL CALL TO GEMINI API
-                        const response = await callGeminiAPI(text);
-                        removeLoadingIndicator();
-                        addMessageToUI(response, 'model');
-                    }
-                } catch (error) {
-                    removeLoadingIndicator();
-                    addMessageToUI("Error al conectar con la IA. Revisa tu conexión.", 'model');
-                    console.error(error);
-                }
+        function toggleVoiceInput() {
+            if (!recognition) return alert("Tu navegador no soporta dictado por voz 😢. Usa Chrome.");
+            if (isRecording) {
+                recognition.stop();
+            } else {
+                recognition.start();
             }
+        }
 
-            function addMessageToUI(text, role) {
-                const chatContainer = document.querySelector("#view-chat .flex-1");
-                const isUser = role === 'user';
+        // --- CHAT LOGIC ---
+        async function handleSend() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
 
-                const div = document.createElement('div');
-                div.className = isUser ? "flex justify-end items-end gap-3" : "flex justify-start items-end gap-3 max-w-2xl";
+            // 1. Add User Message to UI
+            addMessageToUI(text, 'user');
+            input.value = '';
 
-                const avatar = isUser ? '' : `
+            // 2. Mock or Call API
+            addLoadingIndicator();
+
+            try {
+                // If API Key is placeholder, show simulated response
+                if (GEMINI_API_KEY === "TU_API_KEY_AQUI") {
+                    await new Promise(r => setTimeout(r, 1500)); // Simulate delay
+                    removeLoadingIndicator();
+                    addMessageToUI("⚠️ <b>Modo Demo:</b> Para que te responda de verdad, abre el archivo `03_index.html` con un editor de texto y pega tu API Key de Google (Gemini) en la línea 480 donde dice `const GEMINI_API_KEY = ...`", 'model');
+                    addMessageToUI("🤖 <b>Respuesta Simulada:</b> Basado en tus datos, el Dr. Fernando ha facturado 12.500€ este mes.", 'model');
+                } else {
+                    // REAL CALL TO GEMINI API
+                    const response = await callGeminiAPI(text);
+                    removeLoadingIndicator();
+                    addMessageToUI(response, 'model');
+                }
+            } catch (error) {
+                removeLoadingIndicator();
+                addMessageToUI("Error al conectar con la IA. Revisa tu conexión.", 'model');
+                console.error(error);
+            }
+        }
+
+        function addMessageToUI(text, role) {
+            const chatContainer = document.querySelector("#view-chat .flex-1");
+            const isUser = role === 'user';
+
+            const div = document.createElement('div');
+            div.className = isUser ? "flex justify-end items-end gap-3" : "flex justify-start items-end gap-3 max-w-2xl";
+
+            const avatar = isUser ? '' : `
                 <div class="size-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-white">
                     <span class="material-symbols-outlined text-[18px]">smart_toy</span>
                 </div>`;
 
-                const bubbleStyle = isUser
-                    ? "bg-primary text-white p-4 rounded-2xl rounded-tr-none shadow-md max-w-xl"
-                    : "bg-white dark:bg-[#233540] p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700";
+            const bubbleStyle = isUser
+                ? "bg-primary text-white p-4 rounded-2xl rounded-tr-none shadow-md max-w-xl"
+                : "bg-white dark:bg-[#233540] p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700";
 
-                const textColor = isUser ? "" : "text-slate-800 dark:text-white";
+            const textColor = isUser ? "" : "text-slate-800 dark:text-white";
 
-                div.innerHTML = `
+            div.innerHTML = `
                 ${isUser ? '' : avatar}
                 <div class="${bubbleStyle}">
                     <p class="text-sm leading-relaxed ${textColor}">${text}</p>
                 </div>
             `;
 
-                chatContainer.appendChild(div);
-                // Auto scroll to bottom
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
+            chatContainer.appendChild(div);
+            // Auto scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
 
-            function addLoadingIndicator() {
-                const chatContainer = document.querySelector("#view-chat .flex-1");
-                const div = document.createElement('div');
-                div.id = "loading-indicator";
-                div.className = "flex justify-start items-end gap-3 mt-4 opacity-70";
-                div.innerHTML = `
+        function addLoadingIndicator() {
+            const chatContainer = document.querySelector("#view-chat .flex-1");
+            const div = document.createElement('div');
+            div.id = "loading-indicator";
+            div.className = "flex justify-start items-end gap-3 mt-4 opacity-70";
+            div.innerHTML = `
                 <div class="size-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center shrink-0 animate-pulse">
                     <span class="material-symbols-outlined text-[18px] text-slate-400">more_horiz</span>
                 </div>
                 <span class="text-xs text-slate-400">Pensando...</span>
             `;
-                chatContainer.appendChild(div);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+            chatContainer.appendChild(div);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function removeLoadingIndicator() {
+            const loader = document.getElementById('loading-indicator');
+            if (loader) loader.remove();
+        }
+
+        async function callGeminiAPI(prompt) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+
+            const payload = {
+                contents: [
+                    ...CHAT_HISTORY, // Send history (simplified)
+                    { role: "user", parts: [{ text: prompt }] }
+                ]
+            };
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            const text = data.candidates[0].content.parts[0].text;
+
+            // Add to local history
+            CHAT_HISTORY.push({ role: "user", parts: [{ text: prompt }] });
+            CHAT_HISTORY.push({ role: "model", parts: [{ text: text }] });
+
+            return text; // Markdown parsed roughly
+        }
+
+        // Allow Enter key to send
+        document.getElementById('chat-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                handleSend();
+            }
+        });
+
+        // --- APP LOGIC (FULL - v2 ANALYTICS) ---
+        let APP_DATA = {
+            transactions: [],
+            doctors: [], // Start empty
+            sheetsUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTc7OqZQYtGXYgqiBW3QR8FuTeG70vuUtzzVZGCNvQp5O_upc1kCZRRlVKIbnEso0sY053eWwC-0Efv/pub?gid=0&single=true&output=csv", // Ingresos
+            expensesUrl: "" // Gastos
+        };
+
+        let profitChart = null;
+        let marginChart = null;
+
+        // 1. STATE MANAGEMENT
+        async function loadData() {
+            const DEFAULT_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTc7OqZQYtGXYgqiBW3QR8FuTeG70vuUtzzVZGCNvQp5O_upc1kCZRRlVKIbnEso0sY053eWwC-0Efv/pub?gid=0&single=true&output=csv";
+
+            const saved = localStorage.getItem('DENTAL_APP_DATA_V2');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                // Mezclamos para asegurar que si la URL guardada está vacía, use la default
+                APP_DATA = { ...APP_DATA, ...parsed };
+                if (!APP_DATA.sheetsUrl || APP_DATA.sheetsUrl === "") {
+                    APP_DATA.sheetsUrl = DEFAULT_URL;
+                }
+
+                // Si detectamos que los datos guardados son los mock iniciales (ID 101),
+                // y tenemos una URL real, intentamos sincronizar automáticamente una vez.
+                const isMock = APP_DATA.transactions.some(t => t.id === 101);
+                if (isMock) {
+                    console.log("Mock data detected with real URL. Syncing...");
+                    await syncFromSheets(true);
+                }
+            } else {
+                // Si es la primera vez y ya definimos la URL arriba
+                if (APP_DATA.sheetsUrl) {
+                    console.log("Detectada URL de Sheets, iniciando sync inicial...");
+                    await syncFromSheets(true); // true = silent mode (no alerts)
+                } else {
+                    initializeMockData();
+                }
             }
 
-            function removeLoadingIndicator() {
-                const loader = document.getElementById('loading-indicator');
-                if (loader) loader.remove();
+            populateDoctorDropdown();
+
+            // Asegurar que el input tenga el valor real
+            const urlInput = document.getElementById('sheets-url-input');
+            if (urlInput) {
+                urlInput.value = APP_DATA.sheetsUrl || DEFAULT_URL;
             }
 
-            async function callGeminiAPI(prompt) {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+            const expensesInput = document.getElementById('expenses-url-input');
+            if (expensesInput) {
+                expensesInput.value = APP_DATA.expensesUrl || "";
+            }
+        }
 
-                const payload = {
-                    contents: [
-                        ...CHAT_HISTORY, // Send history (simplified)
-                        { role: "user", parts: [{ text: prompt }] }
-                    ]
-                };
+        function initializeMockData() {
+            APP_DATA.doctors = [
+                { id: 1, name: "Dr. Fernando", role: "Implantes", goal: 15000, color: "blue" },
+                { id: 2, name: "Dra. Carla", role: "Ortodoncia", goal: 14000, color: "purple" }
+            ];
 
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+            // Hybrid Data: Manual + "Sheet"
+            APP_DATA.transactions = [
+                // Manual Entries
+                { id: 101, date: "2023-10-24", concept: "Implante Unitario", amount: 1200.00, cost: 300.00, type: "ingreso", doctorId: 1, category: "Implantes", source: "manual" },
+                { id: 102, date: "2023-10-23", concept: "Ortodoncia Invisible (Pago 1)", amount: 4500.00, cost: 1200.00, type: "ingreso", doctorId: 2, category: "Ortodoncia", source: "manual" },
+
+                // Mock "Google Sheet" Imports
+                { id: 201, date: "2023-10-22", concept: "[SHEET] Compra Material Quirúrgico", amount: 1500.00, cost: 0, type: "gasto", doctorId: null, category: "Otros", source: "sheet" },
+                { id: 202, date: "2023-10-20", concept: "[SHEET] Factura Luz Endesa", amount: 250.00, cost: 0, type: "gasto", doctorId: null, category: "Otros", source: "sheet" },
+                { id: 203, date: "2023-10-18", concept: "[SHEET] Limpieza Bucal", amount: 60.00, cost: 10.00, type: "ingreso", doctorId: 1, category: "General", source: "sheet" }
+            ];
+            saveData();
+        }
+
+        function saveData() {
+            localStorage.setItem('DENTAL_APP_DATA_V2', JSON.stringify(APP_DATA));
+            updateDashboard();
+            renderTeam();
+            renderAnalytics();
+        }
+
+        // --- GOOGLE SHEETS SYNC LOGIC (Async Parallel) ---
+        window.syncFromSheets = async function (silent = false) {
+            console.log("Iniciando sincronización completa...");
+            const urlInput = document.getElementById('sheets-url-input');
+            const expInput = document.getElementById('expenses-url-input'); // Nuevo input
+
+            // 1. Get URLs
+            let url = urlInput ? urlInput.value.trim() : APP_DATA.sheetsUrl;
+            let expUrl = expInput ? expInput.value.trim() : APP_DATA.expensesUrl;
+
+            if (!url || url === "") url = APP_DATA.sheetsUrl;
+
+            // 2. Validate Main URL
+            if (!url || !url.includes('output=csv')) {
+                if (!silent) alert("Error: La URL de INGRESOS no es válida (debe terminar en output=csv).");
+                updateSyncUI('error');
+                return false;
+            }
+
+            APP_DATA.sheetsUrl = url;
+            APP_DATA.expensesUrl = expUrl;  // Save expenses URL too
+
+            updateSyncUI('loading');
+
+            // 3. Fetch Both URLs
+            const promises = [fetchCSV(url)];
+            if (expUrl && expUrl.includes('output=csv')) {
+                promises.push(fetchCSV(expUrl));
+            } else if (expUrl && !expUrl.includes('output=csv')) {
+                if (!silent) alert("Advertencia: La URL de GASTOS no es válida (debe terminar en output=csv). Se ignorará.");
+            }
+
+            try {
+                const results = await Promise.all(promises);
+                const incomeData = results[0];
+                const expenseData = results.length > 1 ? results[1] : [];
+
+                if (incomeData && incomeData.length > 0) {
+                    processSheetsData(incomeData, expenseData); // Pass both
+                    updateSyncUI('success');
+                    saveData();
+                    if (!silent) alert("Sincronización completada (Ingresos + Gastos) ✅");
+                    return true;
+                } else {
+                    throw new Error("No se encontraron datos de ingresos.");
+                }
+            } catch (error) {
+                console.error("Sync Error:", error);
+                updateSyncUI('error');
+                if (!silent) alert("Error en la sincronización. Revisa las URLs.");
+                return false;
+            }
+        }
+
+        function fetchCSV(url) {
+            return new Promise((resolve, reject) => {
+                Papa.parse(url, {
+                    download: true,
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: (results) => resolve(results.data),
+                    error: (err) => reject(err)
                 });
+            });
+        }
 
-                const data = await response.json();
-                const text = data.candidates[0].content.parts[0].text;
+        function processSheetsData(incomeData, expenseData) {
+            // CLEAR OLD DOCTORS to avoid duplicates from mock data
+            APP_DATA.doctors = [];
 
-                // Add to local history
-                CHAT_HISTORY.push({ role: "user", parts: [{ text: prompt }] });
-                CHAT_HISTORY.push({ role: "model", parts: [{ text: text }] });
+            // 1. First Pass: Discovery & Smart Role Assignment
+            // We scan all rows to find unique doctors and analyze their work patterns
+            const detectedDoctors = new Map(); // Name -> { name, concepts: [], total: 0 }
 
-                return text; // Markdown parsed roughly
-            }
+            incomeData.forEach(row => {
+                if (!row.Dentista || row.Dentista.trim() === '') return;
+                const name = row.Dentista.trim().toUpperCase(); // Normalize
 
-            // Allow Enter key to send
-            document.getElementById('chat-input').addEventListener('keypress', function (e) {
-                if (e.key === 'Enter') {
-                    handleSend();
+                if (!detectedDoctors.has(name)) {
+                    detectedDoctors.set(name, { name, concepts: [], total: 0 });
+                }
+
+                const entry = detectedDoctors.get(name);
+                if (row.Concepto) entry.concepts.push(row.Concepto.toLowerCase());
+                if (row.Total) entry.total += parseFloat(row.Total);
+            });
+
+            // 2. Update Doctors List intelligently
+            detectedDoctors.forEach((stats, name) => {
+                // Check if doctor already exists
+                let doctor = APP_DATA.doctors.find(d => d.name.toUpperCase() === name);
+
+                if (!doctor) {
+                    // NEW DOCTOR DETECTED!
+                    const role = inferSpecialty(stats.concepts);
+                    const color = assignColor(APP_DATA.doctors.length);
+
+                    // Default goal logic: Scale based on volume? For now static.
+                    const goal = 10000;
+
+                    const newDoc = {
+                        id: Date.now() + Math.floor(Math.random() * 1000),
+                        name: properCase(name),
+                        role: role,
+                        goal: goal,
+                        color: color
+                    };
+                    APP_DATA.doctors.push(newDoc);
+                    console.log(`[Auto-Discovery] Created profile for: ${newDoc.name} (${newDoc.role})`);
                 }
             });
 
-            // --- APP LOGIC (FULL - v2 ANALYTICS) ---
-            let APP_DATA = {
-                transactions: [],
-                doctors: [
-                    { id: 1, name: "JOSE LUIS", role: "General", goal: 10000, color: "blue" }
-                ],
-                sheetsUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTc7OqZQYtGXYgqiBW3QR8FuTeG70vuUtzzVZGCNvQp5O_upc1kCZRRlVKIbnEso0sY053eWwC-0Efv/pub?gid=0&single=true&output=csv" // Tu enlace real
-            };
+            // 3. Create Transactions (INCOME)
+            // Mapeo específico para tus columnas:
+            // Fecha, Dentista, Paciente, Concepto, Efectivo, Tarjeta, Financiación, Laboratorio, Observación, Total
+            const importedIncome = incomeData
+                .filter(row => row.Total && parseFloat(row.Total) > 0) // Ignorar filas vacías
+                .map((row, index) => {
+                    const amount = parseFloat(row.Total) || 0;
+                    const cost = parseFloat(row.Laboratorio) || 0;
 
-            let profitChart = null;
-            let marginChart = null;
+                    // Si el concepto está vacío, usamos el nombre del paciente
+                    const concept = row.Concepto ? row.Concepto : (row.Paciente ? `Paciente: ${row.Paciente}` : "Tratamiento");
 
-            // 1. STATE MANAGEMENT
-            async function loadData() {
-                const DEFAULT_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTc7OqZQYtGXYgqiBW3QR8FuTeG70vuUtzzVZGCNvQp5O_upc1kCZRRlVKIbnEso0sY053eWwC-0Efv/pub?gid=0&single=true&output=csv";
+                    return {
+                        id: Date.now() + index,
+                        date: convertToISODate(row.Fecha),
+                        concept: concept,
+                        amount: amount,
+                        cost: cost,
+                        type: "ingreso",
+                        doctorId: findDoctorIdByName(row.Dentista),
+                        category: "General",
+                        source: "sheet"
+                    };
+                });
 
-                const saved = localStorage.getItem('DENTAL_APP_DATA_V2');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    // Mezclamos para asegurar que si la URL guardada está vacía, use la default
-                    APP_DATA = { ...APP_DATA, ...parsed };
-                    if (!APP_DATA.sheetsUrl || APP_DATA.sheetsUrl === "") {
-                        APP_DATA.sheetsUrl = DEFAULT_URL;
+            // 4. Create Transactions (EXPENSES)
+            // Assumed headers: Fecha, Concepto, Importe, Categoria (optional)
+            const importedExpenses = expenseData
+                .filter(row => row.Importe && parseFloat(row.Importe) > 0)
+                .map((row, index) => {
+                    const amount = parseFloat(row.Importe) || 0;
+                    return {
+                        id: Date.now() + index + 100000,
+                        date: convertToISODate(row.Fecha),
+                        concept: row.Concepto || "Gasto Operativo",
+                        amount: amount,
+                        params: {},
+                        type: "gasto",
+                        category: row.Categoria || "Operativo",
+                        source: "sheet_expenses"
+                    };
+                });
+
+            APP_DATA.transactions = [...importedIncome, ...importedExpenses];
+
+            // Force UI update for dropdowns
+            populateDoctorDropdown();
+        }
+
+        // --- HELPER FUNCTIONS FOR AI LOGIC ---
+
+        function inferSpecialty(concepts) {
+            const text = concepts.join(' ');
+
+            if (text.includes('implante') || text.includes('corona') || text.includes('cirugía') || text.includes('elevación')) return "Implantología";
+            if (text.includes('ortodoncia') || text.includes('invisalign') || text.includes('bracket') || text.includes('férula')) return "Ortodoncia";
+            if (text.includes('endodoncia') || text.includes('conducto') || text.includes('pulpectomía')) return "Endodoncia";
+            if (text.includes('limpieza') || text.includes('curetaje') || text.includes('blanqueamiento')) return "Higiene";
+            if (text.includes('prótesis') || text.includes('removible')) return "Prótesis";
+
+            return "General";
+        }
+
+        function assignColor(index) {
+            const palette = ['blue', 'purple', 'emerald', 'amber', 'rose', 'cyan', 'indigo', 'orange'];
+            return palette[index % palette.length];
+        }
+
+        function properCase(str) {
+            let name = str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+            // Enforce "Dr." prefix
+            if (!name.startsWith("Dr.")) {
+                const isFemale = name.endsWith("a"); // Heuristic
+                name = (isFemale ? "Dra. " : "Dr. ") + name;
+            }
+            return name;
+        }
+
+        function convertToISODate(dateStr) {
+            if (!dateStr) return new Date().toISOString().split('T')[0];
+            // Intentar convertir DD/MM/YYYY a YYYY-MM-DD
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            }
+            return dateStr;
+        }
+
+        function findDoctorIdByName(name) {
+            if (!name || name.toLowerCase() === 'clínica') return null;
+            // Normalizar nombres para la búsqueda
+            const normalizedSearch = name.trim().toLowerCase();
+            const doc = APP_DATA.doctors.find(d => d.name.toLowerCase().includes(normalizedSearch));
+            return doc ? doc.id : null;
+        }
+
+        function updateSyncUI(status) {
+            const text = document.getElementById('sync-status-text');
+            const label = document.getElementById('sync-status-label');
+            const indicator = document.getElementById('sync-indicator');
+            const btn = document.getElementById('btn-sync-now');
+            const btnIcon = document.getElementById('sync-icon');
+            const btnText = document.getElementById('sync-text');
+
+            if (!label || !indicator) return;
+
+            switch (status) {
+                case 'loading':
+                    if (text) text.innerText = "Sincronizando con Google Sheets...";
+                    label.innerText = "Cargando";
+                    indicator.innerHTML = '<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>';
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.classList.add('opacity-50', 'cursor-not-allowed');
                     }
-
-                    // Si detectamos que los datos guardados son los mock iniciales (ID 101),
-                    // y tenemos una URL real, intentamos sincronizar automáticamente una vez.
-                    const isMock = APP_DATA.transactions.some(t => t.id === 101);
-                    if (isMock) {
-                        console.log("Mock data detected with real URL. Syncing...");
-                        await syncFromSheets(true);
+                    if (btnIcon) btnIcon.classList.add('animate-spin');
+                    if (btnText) btnText.innerText = "Cargando...";
+                    break;
+                case 'success':
+                    if (text) text.innerText = "Última sincronización: " + new Date().toLocaleTimeString();
+                    label.innerText = "Sincronizado";
+                    indicator.innerHTML = '<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>';
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
                     }
-                } else {
-                    // Si es la primera vez y ya definimos la URL arriba
-                    if (APP_DATA.sheetsUrl) {
-                        console.log("Detectada URL de Sheets, iniciando sync inicial...");
-                        await syncFromSheets(true); // true = silent mode (no alerts)
-                    } else {
-                        initializeMockData();
+                    if (btnIcon) btnIcon.classList.remove('animate-spin');
+                    if (btnText) btnText.innerText = "Sincronizar";
+                    break;
+                case 'error':
+                    if (text) text.innerText = "Error en la última sincronización";
+                    label.innerText = "Error";
+                    indicator.innerHTML = '<span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>';
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
                     }
-                }
+                    if (btnIcon) btnIcon.classList.remove('animate-spin');
+                    if (btnText) btnText.innerText = "Reintentar";
+                    break;
+            }
+        }
 
-                populateDoctorDropdown();
+        // 2. FINANCE LOGIC
+        let CURRENT_FINANCE_TYPE = 'all';
 
-                // Asegurar que el input tenga el valor real, no solo el placeholder
-                const urlInput = document.getElementById('sheets-url-input');
-                if (urlInput) {
-                    urlInput.value = APP_DATA.sheetsUrl || DEFAULT_URL;
-                }
+        window.switchFinanceType = function (type) {
+            CURRENT_FINANCE_TYPE = type;
+            document.querySelectorAll('.fin-type-filter').forEach(btn => {
+                btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white', 'font-bold');
+                btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
+                btn.classList.add('font-medium');
+            });
+            const activeBtn = document.getElementById(`btn-fin-${type}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white', 'font-bold');
+                activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400', 'font-medium');
+            }
+            renderTable();
+        }
+
+        window.toggleFinanceFilters = function () {
+            const panel = document.getElementById('finance-filters-panel');
+            const btn = document.getElementById('btn-toggle-filters');
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                btn.classList.add('bg-primary/10', 'border-primary/30', 'text-primary');
+            } else {
+                panel.classList.add('hidden');
+                btn.classList.remove('bg-primary/10', 'border-primary/30', 'text-primary');
+            }
+        }
+
+        window.clearFinanceFilters = function () {
+            document.getElementById('filter-date-start').value = '';
+            document.getElementById('filter-date-end').value = '';
+            document.getElementById('search-input').value = '';
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('finance-table-body');
+            const mobileList = document.getElementById('finance-mobile-list');
+            const searchVal = document.getElementById('search-input')?.value.toLowerCase() || "";
+            const dateStart = document.getElementById('filter-date-start')?.value;
+            const dateEnd = document.getElementById('filter-date-end')?.value;
+
+            if (tbody) tbody.innerHTML = '';
+            if (mobileList) mobileList.innerHTML = '';
+
+            let filtered = APP_DATA.transactions;
+
+            // 1. Filter by Type
+            if (CURRENT_FINANCE_TYPE !== 'all') {
+                filtered = filtered.filter(t => t.type === CURRENT_FINANCE_TYPE);
             }
 
-            function initializeMockData() {
-                APP_DATA.doctors = [
-                    { id: 1, name: "Dr. Fernando", role: "Implantes", goal: 15000, color: "blue" },
-                    { id: 2, name: "Dra. Carla", role: "Ortodoncia", goal: 14000, color: "purple" }
-                ];
-
-                // Hybrid Data: Manual + "Sheet"
-                APP_DATA.transactions = [
-                    // Manual Entries
-                    { id: 101, date: "2023-10-24", concept: "Implante Unitario", amount: 1200.00, cost: 300.00, type: "ingreso", doctorId: 1, category: "Implantes", source: "manual" },
-                    { id: 102, date: "2023-10-23", concept: "Ortodoncia Invisible (Pago 1)", amount: 4500.00, cost: 1200.00, type: "ingreso", doctorId: 2, category: "Ortodoncia", source: "manual" },
-
-                    // Mock "Google Sheet" Imports
-                    { id: 201, date: "2023-10-22", concept: "[SHEET] Compra Material Quirúrgico", amount: 1500.00, cost: 0, type: "gasto", doctorId: null, category: "Otros", source: "sheet" },
-                    { id: 202, date: "2023-10-20", concept: "[SHEET] Factura Luz Endesa", amount: 250.00, cost: 0, type: "gasto", doctorId: null, category: "Otros", source: "sheet" },
-                    { id: 203, date: "2023-10-18", concept: "[SHEET] Limpieza Bucal", amount: 60.00, cost: 10.00, type: "ingreso", doctorId: 1, category: "General", source: "sheet" }
-                ];
-                saveData();
-            }
-
-            function saveData() {
-                localStorage.setItem('DENTAL_APP_DATA_V2', JSON.stringify(APP_DATA));
-                updateDashboard();
-                renderTeam();
-                renderAnalytics();
-            }
-
-            // --- GOOGLE SHEETS SYNC LOGIC ---
-            window.syncFromSheets = async function (silent = false) {
-                console.log("Iniciando sincronización...");
-                const urlInput = document.getElementById('sheets-url-input');
-                // Intentar sacar la URL del input, si no, del estado global
-                let url = urlInput ? urlInput.value.trim() : APP_DATA.sheetsUrl;
-
-                if (!url || url === "") {
-                    url = APP_DATA.sheetsUrl; // Último recurso
-                }
-
-                if (!url) {
-                    if (!silent) alert("Por favor, introduce o pega la URL en el cuadro inferior.");
-                    return;
-                }
-
-                if (!url.includes('output=csv')) {
-                    if (!silent) alert("La URL parece incorrecta. Asegúrate de que termina en 'output=csv'");
-                    return;
-                }
-
-                APP_DATA.sheetsUrl = url;
-                updateSyncUI('loading');
-
-                return new Promise((resolve) => {
-                    Papa.parse(url, {
-                        download: true,
-                        header: true,
-                        skipEmptyLines: true,
-                        complete: function (results) {
-                            console.log("Datos recibidos de PapaParse:", results.data ? results.data.length : 0);
-                            if (results.data && results.data.length > 0) {
-                                processSheetsData(results.data);
-                                updateSyncUI('success');
-                                saveData();
-                                if (!silent) alert("Sincronización completada con éxito ✅");
-                                resolve(true);
-                            } else {
-                                if (!silent) alert("No se encontraron datos en el CSV. Revisa el documento.");
-                                updateSyncUI('error');
-                                resolve(false);
-                            }
-                        },
-                        error: function (err) {
-                            console.error("PapaParse Error:", err);
-                            updateSyncUI('error');
-                            if (!silent) alert("Error al leer el archivo. Asegúrate de que esté 'Publicado en la web' como CSV.");
-                            resolve(false);
-                        }
-                    });
+            // 2. Filter by Dates
+            if (dateStart || dateEnd) {
+                filtered = filtered.filter(t => {
+                    const tDate = t.date; // "YYYY-MM-DD"
+                    let match = true;
+                    if (dateStart && tDate < dateStart) match = false;
+                    if (dateEnd && tDate > dateEnd) match = false;
+                    return match;
                 });
             }
 
-            function processSheetsData(data) {
-                // 1. First Pass: Discovery & Smart Role Assignment
-                // We scan all rows to find unique doctors and analyze their work patterns
-                const detectedDoctors = new Map(); // Name -> { name, concepts: [], total: 0 }
-
-                data.forEach(row => {
-                    if (!row.Dentista || row.Dentista.trim() === '') return;
-                    const name = row.Dentista.trim().toUpperCase(); // Normalize
-
-                    if (!detectedDoctors.has(name)) {
-                        detectedDoctors.set(name, { name, concepts: [], total: 0 });
-                    }
-
-                    const entry = detectedDoctors.get(name);
-                    if (row.Concepto) entry.concepts.push(row.Concepto.toLowerCase());
-                    if (row.Total) entry.total += parseFloat(row.Total);
-                });
-
-                // 2. Update Doctors List intelligently
-                detectedDoctors.forEach((stats, name) => {
-                    // Check if doctor already exists
-                    let doctor = APP_DATA.doctors.find(d => d.name.toUpperCase() === name);
-
-                    if (!doctor) {
-                        // NEW DOCTOR DETECTED!
-                        const role = inferSpecialty(stats.concepts);
-                        const color = assignColor(APP_DATA.doctors.length);
-
-                        // Default goal logic: Scale based on volume? For now static.
-                        const goal = 10000;
-
-                        const newDoc = {
-                            id: Date.now() + Math.floor(Math.random() * 1000),
-                            name: properCase(name),
-                            role: role,
-                            goal: goal,
-                            color: color
-                        };
-                        APP_DATA.doctors.push(newDoc);
-                        console.log(`[Auto-Discovery] Created profile for: ${newDoc.name} (${newDoc.role})`);
-                    }
-                });
-
-                // 3. Second Pass: Create Transactions
-                // Mapeo específico para tus columnas:
-                // Fecha, Dentista, Paciente, Concepto, Efectivo, Tarjeta, Financiación, Laboratorio, Observación, Total
-                const importedTxs = data
-                    .filter(row => row.Total && parseFloat(row.Total) > 0) // Ignorar filas vacías
-                    .map((row, index) => {
-                        const amount = parseFloat(row.Total) || 0;
-                        const cost = parseFloat(row.Laboratorio) || 0;
-
-                        // Si el concepto está vacío, usamos el nombre del paciente
-                        const concept = row.Concepto ? row.Concepto : (row.Paciente ? `Paciente: ${row.Paciente}` : "Tratamiento");
-
-                        return {
-                            id: Date.now() + index,
-                            date: convertToISODate(row.Fecha),
-                            concept: concept,
-                            amount: amount,
-                            cost: cost,
-                            type: "ingreso", // Por ahora todo lo que entra de esta hoja son ingresos
-                            doctorId: findDoctorIdByName(row.Dentista),
-                            category: "General",
-                            source: "sheet"
-                        };
-                    });
-
-                APP_DATA.transactions = importedTxs;
-                // Force UI update for dropdowns
-                populateDoctorDropdown();
+            // 3. Filter by Search
+            if (searchVal) {
+                filtered = filtered.filter(t =>
+                    t.concept.toLowerCase().includes(searchVal) ||
+                    (t.category && t.category.toLowerCase().includes(searchVal)) ||
+                    getDoctorName(t.doctorId).toLowerCase().includes(searchVal)
+                );
             }
 
-            // --- HELPER FUNCTIONS FOR AI LOGIC ---
+            // 4. Sort and Render
+            filtered = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-            function inferSpecialty(concepts) {
-                const text = concepts.join(' ');
+            filtered.forEach(t => {
+                const isIngreso = t.type === 'ingreso';
+                const color = isIngreso ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400';
+                const sign = isIngreso ? '+' : '-';
+                const sourceIcon = t.source === 'sheet' ? '<span class="material-symbols-outlined text-[14px] text-blue-500 dark:text-blue-400" title="Importado de Sheets">table_view</span>' : '';
 
-                if (text.includes('implante') || text.includes('corona') || text.includes('cirugía') || text.includes('elevación')) return "Implantología";
-                if (text.includes('ortodoncia') || text.includes('invisalign') || text.includes('bracket') || text.includes('férula')) return "Ortodoncia";
-                if (text.includes('endodoncia') || text.includes('conducto') || text.includes('pulpectomía')) return "Endodoncia";
-                if (text.includes('limpieza') || text.includes('curetaje') || text.includes('blanqueamiento')) return "Higiene";
-                if (text.includes('prótesis') || text.includes('removible')) return "Prótesis";
-
-                return "General";
-            }
-
-            function assignColor(index) {
-                const palette = ['blue', 'purple', 'emerald', 'amber', 'rose', 'cyan', 'indigo', 'orange'];
-                return palette[index % palette.length];
-            }
-
-            function properCase(str) {
-                return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-            }
-
-            function convertToISODate(dateStr) {
-                if (!dateStr) return new Date().toISOString().split('T')[0];
-                // Intentar convertir DD/MM/YYYY a YYYY-MM-DD
-                const parts = dateStr.split('/');
-                if (parts.length === 3) {
-                    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                }
-                return dateStr;
-            }
-
-            function findDoctorIdByName(name) {
-                if (!name || name.toLowerCase() === 'clínica') return null;
-                // Normalizar nombres para la búsqueda
-                const normalizedSearch = name.trim().toLowerCase();
-                const doc = APP_DATA.doctors.find(d => d.name.toLowerCase().includes(normalizedSearch));
-                return doc ? doc.id : null;
-            }
-
-            function updateSyncUI(status) {
-                const text = document.getElementById('sync-status-text');
-                const label = document.getElementById('sync-status-label');
-                const indicator = document.getElementById('sync-indicator');
-                const btn = document.getElementById('btn-sync-now');
-                const btnIcon = document.getElementById('sync-icon');
-                const btnText = document.getElementById('sync-text');
-
-                if (!label || !indicator) return;
-
-                switch (status) {
-                    case 'loading':
-                        if (text) text.innerText = "Sincronizando con Google Sheets...";
-                        label.innerText = "Cargando";
-                        indicator.innerHTML = '<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>';
-                        if (btn) {
-                            btn.disabled = true;
-                            btn.classList.add('opacity-50', 'cursor-not-allowed');
-                        }
-                        if (btnIcon) btnIcon.classList.add('animate-spin');
-                        if (btnText) btnText.innerText = "Cargando...";
-                        break;
-                    case 'success':
-                        if (text) text.innerText = "Última sincronización: " + new Date().toLocaleTimeString();
-                        label.innerText = "Sincronizado";
-                        indicator.innerHTML = '<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>';
-                        if (btn) {
-                            btn.disabled = false;
-                            btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                        }
-                        if (btnIcon) btnIcon.classList.remove('animate-spin');
-                        if (btnText) btnText.innerText = "Sincronizar";
-                        break;
-                    case 'error':
-                        if (text) text.innerText = "Error en la última sincronización";
-                        label.innerText = "Error";
-                        indicator.innerHTML = '<span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>';
-                        if (btn) {
-                            btn.disabled = false;
-                            btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                        }
-                        if (btnIcon) btnIcon.classList.remove('animate-spin');
-                        if (btnText) btnText.innerText = "Reintentar";
-                        break;
-                }
-            }
-
-            // 2. FINANCE LOGIC
-            let CURRENT_FINANCE_TYPE = 'all';
-
-            window.switchFinanceType = function (type) {
-                CURRENT_FINANCE_TYPE = type;
-                document.querySelectorAll('.fin-type-filter').forEach(btn => {
-                    btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white', 'font-bold');
-                    btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
-                    btn.classList.add('font-medium');
-                });
-                const activeBtn = document.getElementById(`btn-fin-${type}`);
-                if (activeBtn) {
-                    activeBtn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white', 'font-bold');
-                    activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400', 'font-medium');
-                }
-                renderTable();
-            }
-
-            window.toggleFinanceFilters = function () {
-                const panel = document.getElementById('finance-filters-panel');
-                const btn = document.getElementById('btn-toggle-filters');
-                if (panel.classList.contains('hidden')) {
-                    panel.classList.remove('hidden');
-                    btn.classList.add('bg-primary/10', 'border-primary/30', 'text-primary');
-                } else {
-                    panel.classList.add('hidden');
-                    btn.classList.remove('bg-primary/10', 'border-primary/30', 'text-primary');
-                }
-            }
-
-            window.clearFinanceFilters = function () {
-                document.getElementById('filter-date-start').value = '';
-                document.getElementById('filter-date-end').value = '';
-                document.getElementById('search-input').value = '';
-                renderTable();
-            }
-
-            function renderTable() {
-                const tbody = document.getElementById('finance-table-body');
-                const mobileList = document.getElementById('finance-mobile-list');
-                const searchVal = document.getElementById('search-input')?.value.toLowerCase() || "";
-                const dateStart = document.getElementById('filter-date-start')?.value;
-                const dateEnd = document.getElementById('filter-date-end')?.value;
-
-                if (tbody) tbody.innerHTML = '';
-                if (mobileList) mobileList.innerHTML = '';
-
-                let filtered = APP_DATA.transactions;
-
-                // 1. Filter by Type
-                if (CURRENT_FINANCE_TYPE !== 'all') {
-                    filtered = filtered.filter(t => t.type === CURRENT_FINANCE_TYPE);
-                }
-
-                // 2. Filter by Dates
-                if (dateStart || dateEnd) {
-                    filtered = filtered.filter(t => {
-                        const tDate = t.date; // "YYYY-MM-DD"
-                        let match = true;
-                        if (dateStart && tDate < dateStart) match = false;
-                        if (dateEnd && tDate > dateEnd) match = false;
-                        return match;
-                    });
-                }
-
-                // 3. Filter by Search
-                if (searchVal) {
-                    filtered = filtered.filter(t =>
-                        t.concept.toLowerCase().includes(searchVal) ||
-                        (t.category && t.category.toLowerCase().includes(searchVal)) ||
-                        getDoctorName(t.doctorId).toLowerCase().includes(searchVal)
-                    );
-                }
-
-                // 4. Sort and Render
-                filtered = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                filtered.forEach(t => {
-                    const isIngreso = t.type === 'ingreso';
-                    const color = isIngreso ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400';
-                    const sign = isIngreso ? '+' : '-';
-                    const sourceIcon = t.source === 'sheet' ? '<span class="material-symbols-outlined text-[14px] text-blue-500 dark:text-blue-400" title="Importado de Sheets">table_view</span>' : '';
-
-                    // Desktop Row
-                    if (tbody) {
-                        tbody.innerHTML += `
+                // Desktop Row
+                if (tbody) {
+                    tbody.innerHTML += `
                         <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-b border-slate-100 dark:border-white/5 last:border-0">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white font-serif">${new Date(t.date).toLocaleDateString()}</td>
                             <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300 flex items-center gap-2">
@@ -1707,11 +1761,11 @@
                                 <button onclick="deleteTransaction(${t.id})" class="text-slate-400 hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-[20px]">delete</span></button>
                             </td>
                         </tr>`;
-                    }
+                }
 
-                    // Mobile Card (Stacked Layout)
-                    if (mobileList) {
-                        mobileList.innerHTML += `
+                // Mobile Card (Stacked Layout)
+                if (mobileList) {
+                    mobileList.innerHTML += `
                         <div class="p-4 flex flex-col gap-3 bg-white dark:bg-dark-surface">
                             <!-- Row 1: Date & Concept -->
                             <div class="flex items-start justify-between gap-2">
@@ -1734,109 +1788,109 @@
                                 </div>
                             </div>
                         </div>`;
-                    }
-                });
-            }
+                }
+            });
+        }
 
-            function handleAddTransaction(e) {
-                e.preventDefault();
-                const form = e.target;
-                APP_DATA.transactions.unshift({
-                    id: Date.now(),
-                    type: form.type.value,
-                    concept: form.concept.value,
-                    amount: parseFloat(form.amount.value),
-                    date: form.date.value,
-                    doctorId: form.doctorId.value ? parseInt(form.doctorId.value) : null,
-                    category: form.category.value,
-                    cost: form.cost.value ? parseFloat(form.cost.value) : 0,
-                    source: "manual"
-                });
+        function handleAddTransaction(e) {
+            e.preventDefault();
+            const form = e.target;
+            APP_DATA.transactions.unshift({
+                id: Date.now(),
+                type: form.type.value,
+                concept: form.concept.value,
+                amount: parseFloat(form.amount.value),
+                date: form.date.value,
+                doctorId: form.doctorId.value ? parseInt(form.doctorId.value) : null,
+                category: form.category.value,
+                cost: form.cost.value ? parseFloat(form.cost.value) : 0,
+                source: "manual"
+            });
+            saveData();
+            renderTable();
+            closeModal();
+            form.reset();
+            form.date.value = new Date().toISOString().split('T')[0];
+            toggleCostField(false); // Reset UI
+        }
+
+        function toggleCostField(isExpense) {
+            const container = document.getElementById('cost-field-container');
+            if (isExpense) {
+                container.style.display = 'none'; // Expenses don't have "costs" in this simple model, they ARE the cost.
+            } else {
+                container.style.display = 'block';
+            }
+        }
+
+        function deleteTransaction(id) {
+            if (confirm("¿Eliminar este movimiento?")) {
+                APP_DATA.transactions = APP_DATA.transactions.filter(t => t.id !== id);
                 saveData();
                 renderTable();
-                closeModal();
-                form.reset();
-                form.date.value = new Date().toISOString().split('T')[0];
-                toggleCostField(false); // Reset UI
             }
+        }
 
-            function toggleCostField(isExpense) {
-                const container = document.getElementById('cost-field-container');
-                if (isExpense) {
-                    container.style.display = 'none'; // Expenses don't have "costs" in this simple model, they ARE the cost.
-                } else {
-                    container.style.display = 'block';
-                }
+        // Helper
+        function getDoctorName(id) {
+            if (!id) return 'Clínica';
+            const doc = APP_DATA.doctors.find(d => d.id === id);
+            return doc ? doc.name : 'Desconocido';
+        }
+
+        function populateDoctorDropdown() {
+            const select = document.getElementById('tx-doctor');
+            if (!select) return;
+            select.innerHTML = '<option value="">-- Sin asignar / Clínica --</option>';
+            APP_DATA.doctors.forEach(d => {
+                select.innerHTML += `<option value="${d.id}">${d.name}</option>`;
+            });
+        }
+
+        // 3. TEAM LOGIC (UPDATED V2)
+        let CURRENT_TEAM_PERIOD = 'mes';
+
+        window.switchTeamTimeFilter = function (period) {
+            CURRENT_TEAM_PERIOD = period;
+            document.querySelectorAll('.team-time-filter').forEach(btn => {
+                btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
+                btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
+                btn.classList.remove('font-bold');
+                btn.classList.add('font-medium');
+            });
+            const activeBtn = document.getElementById(`btn-team-${period}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
+                activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
+                activeBtn.classList.add('font-bold');
+                activeBtn.classList.remove('font-medium');
             }
+            renderTeam();
+        }
 
-            function deleteTransaction(id) {
-                if (confirm("¿Eliminar este movimiento?")) {
-                    APP_DATA.transactions = APP_DATA.transactions.filter(t => t.id !== id);
-                    saveData();
-                    renderTable();
-                }
-            }
+        function renderTeam() {
+            const container = document.getElementById('doctors-container');
+            if (!container) return;
 
-            // Helper
-            function getDoctorName(id) {
-                if (!id) return 'Clínica';
-                const doc = APP_DATA.doctors.find(d => d.id === id);
-                return doc ? doc.name : 'Desconocido';
-            }
+            const periodData = calculatePeriodData(CURRENT_TEAM_PERIOD);
 
-            function populateDoctorDropdown() {
-                const select = document.getElementById('tx-doctor');
-                if (!select) return;
-                select.innerHTML = '<option value="">-- Sin asignar / Clínica --</option>';
-                APP_DATA.doctors.forEach(d => {
-                    select.innerHTML += `<option value="${d.id}">${d.name}</option>`;
-                });
-            }
-
-            // 3. TEAM LOGIC (UPDATED V2)
-            let CURRENT_TEAM_PERIOD = 'mes';
-
-            window.switchTeamTimeFilter = function (period) {
-                CURRENT_TEAM_PERIOD = period;
-                document.querySelectorAll('.team-time-filter').forEach(btn => {
-                    btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
-                    btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
-                    btn.classList.remove('font-bold');
-                    btn.classList.add('font-medium');
-                });
-                const activeBtn = document.getElementById(`btn-team-${period}`);
-                if (activeBtn) {
-                    activeBtn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
-                    activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
-                    activeBtn.classList.add('font-bold');
-                    activeBtn.classList.remove('font-medium');
-                }
-                renderTeam();
-            }
-
-            function renderTeam() {
-                const container = document.getElementById('doctors-container');
-                if (!container) return;
-
-                const periodData = calculatePeriodData(CURRENT_TEAM_PERIOD);
-
-                container.innerHTML = `
+            container.innerHTML = `
                 <div class="flex items-center justify-between mb-1">
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">Doctores Activos</h3>
                     <p class="text-xs text-slate-400">Datos: <span class="capitalize font-bold text-primary">${CURRENT_TEAM_PERIOD}</span></p>
                 </div>
             `;
 
-                periodData.team.forEach(doc => {
-                    const progress = Math.min((doc.generated / doc.goal) * 100, 100).toFixed(0);
-                    // Use Lobato Gold/Dark theme logic for badges
-                    const colorClass = doc.color === 'purple'
-                        ? 'text-slate-600 bg-slate-100 dark:text-slate-300 dark:bg-white/5'
-                        : 'text-primary bg-primary/10 dark:text-primary dark:bg-primary/20';
+            periodData.team.forEach(doc => {
+                const progress = Math.min((doc.generated / doc.goal) * 100, 100).toFixed(0);
+                // Use Lobato Gold/Dark theme logic for badges
+                const colorClass = doc.color === 'purple'
+                    ? 'text-slate-600 bg-slate-100 dark:text-slate-300 dark:bg-white/5'
+                    : 'text-primary bg-primary/10 dark:text-primary dark:bg-primary/20';
 
-                    const barColor = doc.color === 'purple' ? 'bg-slate-400' : 'bg-primary';
+                const barColor = doc.color === 'purple' ? 'bg-slate-400' : 'bg-primary';
 
-                    container.innerHTML += `
+                container.innerHTML += `
                     <div class="flex flex-col gap-3 md:gap-4 rounded-xl bg-white p-3 md:p-5 shadow-sm border border-slate-100 dark:bg-dark-surface dark:border-white/5">
                         <div class="flex items-start justify-between">
                             <div class="flex items-center gap-3">
@@ -1862,44 +1916,44 @@
                          <button onclick="deleteDoctor(${doc.id})" class="self-end text-xs text-red-400 hover:text-red-500 mt-1 transition-colors">Eliminar</button>
                     </div>
                 `;
-                });
+            });
 
-                // Update Donut Chart
-                updateTeamDonut(periodData.team);
+            // Update Donut Chart
+            updateTeamDonut(periodData.team);
+        }
+
+        function updateTeamDonut(teamData) {
+            const donutEl = document.getElementById('team-donut-chart');
+            const totalEl = document.getElementById('team-donut-total');
+            const legendEl = document.getElementById('team-donut-legend');
+            const labelEl = document.getElementById('team-donut-period-label');
+            if (!donutEl || !totalEl || !legendEl || !labelEl) return;
+
+            labelEl.textContent = CURRENT_TEAM_PERIOD;
+
+            const totalCalculated = teamData.reduce((sum, d) => sum + d.generated, 0);
+            totalEl.textContent = totalCalculated.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+            if (totalCalculated === 0) {
+                donutEl.style.background = 'rgba(0,0,0,0.05)';
+                legendEl.innerHTML = '<p class="text-center text-xs text-slate-400 py-4">Sin producción en este periodo</p>';
+                return;
             }
 
-            function updateTeamDonut(teamData) {
-                const donutEl = document.getElementById('team-donut-chart');
-                const totalEl = document.getElementById('team-donut-total');
-                const legendEl = document.getElementById('team-donut-legend');
-                const labelEl = document.getElementById('team-donut-period-label');
-                if (!donutEl || !totalEl || !legendEl || !labelEl) return;
+            let currentPercent = 0;
+            const gradients = [];
+            const colors = ['#C69C6D', '#A87F55', '#E5C4A0', '#8B6B4D', '#D4AF37', '#7044bf', '#31165d'];
 
-                labelEl.textContent = CURRENT_TEAM_PERIOD;
+            legendEl.innerHTML = '';
 
-                const totalCalculated = teamData.reduce((sum, d) => sum + d.generated, 0);
-                totalEl.textContent = totalCalculated.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+            teamData.forEach((doc, i) => {
+                const p = (doc.generated / totalCalculated) * 100;
+                if (p > 0) {
+                    const color = colors[i % colors.length];
+                    gradients.push(`${color} ${currentPercent}% ${currentPercent + p}%`);
+                    currentPercent += p;
 
-                if (totalCalculated === 0) {
-                    donutEl.style.background = 'rgba(0,0,0,0.05)';
-                    legendEl.innerHTML = '<p class="text-center text-xs text-slate-400 py-4">Sin producción en este periodo</p>';
-                    return;
-                }
-
-                let currentPercent = 0;
-                const gradients = [];
-                const colors = ['#C69C6D', '#A87F55', '#E5C4A0', '#8B6B4D', '#D4AF37', '#7044bf', '#31165d'];
-
-                legendEl.innerHTML = '';
-
-                teamData.forEach((doc, i) => {
-                    const p = (doc.generated / totalCalculated) * 100;
-                    if (p > 0) {
-                        const color = colors[i % colors.length];
-                        gradients.push(`${color} ${currentPercent}% ${currentPercent + p}%`);
-                        currentPercent += p;
-
-                        legendEl.innerHTML += `
+                    legendEl.innerHTML += `
                         <div class="flex items-center justify-between text-sm py-1 border-b border-slate-50 dark:border-white/5 last:border-0">
                             <span class="flex items-center gap-2">
                                 <div class="h-2 w-2 rounded-full" style="background-color: ${color}"></div> 
@@ -1908,377 +1962,377 @@
                             <span class="font-bold text-slate-900 dark:text-white text-xs">${p.toFixed(0)}%</span>
                         </div>
                     `;
-                    }
-                });
-
-                if (gradients.length > 0) {
-                    donutEl.style.background = `conic-gradient(${gradients.join(', ')})`;
-                }
-            }
-
-            function handleAddDoctor(e) {
-                e.preventDefault();
-                const form = e.target;
-                const colors = ['blue', 'purple']; // Simplified logic
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-                APP_DATA.doctors.push({
-                    id: Date.now(),
-                    name: form.name.value,
-                    role: form.role.value,
-                    goal: parseFloat(form.goal.value),
-                    color: randomColor
-                });
-                saveData();
-                closeDoctorModal();
-                form.reset();
-            }
-
-            function deleteDoctor(id) {
-                if (confirm("¿Eliminar doctor?")) {
-                    APP_DATA.doctors = APP_DATA.doctors.filter(d => d.id !== id);
-                    saveData();
-                }
-            }
-
-            function openDoctorModal() {
-                const m = document.getElementById('doctor-modal');
-                m.classList.remove('hidden');
-                setTimeout(() => document.getElementById('doctor-modal-content').classList.remove('scale-95', 'opacity-0'), 10);
-            }
-            function closeDoctorModal() {
-                const m = document.getElementById('doctor-modal');
-                const c = document.getElementById('doctor-modal-content');
-                c.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => m.classList.add('hidden'), 200);
-            }
-
-            // 3.5 Render Analytics (New)
-            function renderAnalytics() {
-                if (typeof Chart === 'undefined') {
-                    console.warn('Chart.js not loaded');
-                    return;
-                }
-                const ctxProfit = document.getElementById('chart-profit-doctor');
-                const ctxMargin = document.getElementById('chart-margin-treatment');
-
-                if (!ctxProfit || !ctxMargin) return;
-
-                // Destroy existing instances to prevent overlays
-                if (profitChart) profitChart.destroy();
-                if (marginChart) marginChart.destroy();
-
-                // Prepare Data from APP_DATA (respecting current DASHBOARD period for consistency)
-                const period = window.CURRENT_PERIOD || 'mes';
-                const periodData = calculatePeriodData(period);
-
-                const labels = periodData.team.map(d => d.name);
-                const dataProfit = periodData.team.map(d => d.generated);
-
-                // check theme for colors
-                const isDark = document.documentElement.classList.contains('dark');
-                const colorText = isDark ? '#ffffff' : '#0f172a';
-                const colorGrid = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-
-                // 1. Profit Chart (Bar)
-                profitChart = new Chart(ctxProfit, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Ingresos (€)',
-                            data: dataProfit,
-                            backgroundColor: '#C69C6D',
-                            borderRadius: 6,
-                            barThickness: 40
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                backgroundColor: isDark ? '#15171E' : '#ffffff',
-                                titleColor: isDark ? '#C69C6D' : '#0f172a',
-                                bodyColor: isDark ? '#ffffff' : '#64748b',
-                                borderColor: '#C69C6D',
-                                borderWidth: 1,
-                                padding: 10,
-                                titleFont: { family: 'Playfair Display', size: 14 },
-                                bodyFont: { family: 'Manrope', size: 13 }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                grid: { color: colorGrid, borderDash: [5, 5] },
-                                ticks: { color: colorText, font: { family: 'Manrope' } }
-                            },
-                            x: {
-                                grid: { display: false },
-                                ticks: { color: colorText, font: { family: 'Manrope', weight: 'bold' } }
-                            }
-                        }
-                    }
-                });
-
-                // 2. Margin Chart (Doughnut) - Mock Distribution
-                marginChart = new Chart(ctxMargin, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Ortodoncia', 'Implantes', 'General', 'Estética'],
-                        datasets: [{
-                            data: [35, 45, 15, 5],
-                            backgroundColor: ['#C69C6D', '#A87F55', '#F3E7D7', '#334155'], // Gold Gradient & Dark Slate
-                            borderWidth: 0,
-                            hoverOffset: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        cutout: '75%',
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    color: colorText,
-                                    font: { family: 'Manrope', size: 12 },
-                                    padding: 20,
-                                    usePointStyle: true
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            // 4. DASHBOARD LOGIC
-            function updateDashboard() {
-                let income = 0; let expenses = 0;
-                APP_DATA.transactions.forEach(t => {
-                    if (t.type === 'ingreso') income += parseFloat(t.amount);
-                    if (t.type === 'gasto') expenses += parseFloat(t.amount);
-                });
-
-                const kpiIncome = document.getElementById('kpi-income');
-                const kpiExpenses = document.getElementById('kpi-expenses');
-                const kpiProfit = document.getElementById('kpi-profit');
-
-                if (kpiIncome) kpiIncome.innerText = income.toLocaleString('de-DE') + "€";
-                if (kpiExpenses) kpiExpenses.innerText = expenses.toLocaleString('de-DE') + "€";
-                if (kpiProfit) {
-                    const p = income - expenses;
-                    kpiProfit.innerText = p.toLocaleString('de-DE') + "€";
-                    kpiProfit.className = p >= 0 ? "text-3xl font-bold text-primary tracking-tight font-serif" : "text-3xl font-bold text-red-500 tracking-tight font-serif";
-                }
-            }
-
-            // 5. EXPORT & SETTINGS LOGIC
-            function openExportModal() {
-                const modal = document.getElementById('export-modal');
-                modal.classList.remove('hidden');
-                const today = new Date();
-                const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-                document.querySelector('#export-modal input[name="startDate"]').value = firstDay.toISOString().split('T')[0];
-                document.querySelector('#export-modal input[name="endDate"]').value = today.toISOString().split('T')[0];
-            }
-
-            function closeExportModal() {
-                document.getElementById('export-modal').classList.add('hidden');
-            }
-
-            function handleExportCSV(e) {
-                e.preventDefault();
-                const start = new Date(e.target.startDate.value);
-                const end = new Date(e.target.endDate.value);
-
-                const dataToExport = APP_DATA.transactions.filter(t => {
-                    const d = new Date(t.date);
-                    return d >= start && d <= end;
-                });
-
-                if (dataToExport.length === 0) return alert("No hay movimientos en esas fechas.");
-
-                let csvContent = "data:text/csv;charset=utf-8,ID,Fecha,Concepto,Tipo,Importe\n";
-                dataToExport.forEach(row => {
-                    csvContent += `${row.id},${row.date}, "${row.concept}", ${row.type},${row.amount} \n`;
-                });
-
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", `contabilidad_dental_${e.target.endDate.value}.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                closeExportModal();
-            }
-
-            function resetApp() {
-                if (confirm("⚠️ ¿BORRAR TODO? Esta acción no se puede deshacer.")) {
-                    localStorage.removeItem('DENTAL_APP_DATA');
-                    location.reload();
-                }
-            }
-
-            function openModal() {
-                const modal = document.getElementById('transaction-modal');
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    document.getElementById('modal-content').classList.remove('scale-95', 'opacity-0');
-                    document.getElementById('modal-content').classList.add('scale-100', 'opacity-100');
-                }, 10);
-                const dateInput = document.querySelector('input[name="date"]');
-                if (dateInput && !dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
-            }
-
-            function closeModal() {
-                const modal = document.getElementById('transaction-modal');
-                document.getElementById('modal-content').classList.remove('scale-100', 'opacity-100');
-                document.getElementById('modal-content').classList.add('scale-95', 'opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 200);
-            }
-
-            // 6. INITIALIZATION
-            document.addEventListener('DOMContentLoaded', () => {
-                try {
-                    loadData();
-                    renderTable();
-                    renderTeam();
-                    updateDashboard();
-                    renderAnalytics();
-
-                    // Initialize Manager View if Dashboard is active
-                    if (document.getElementById('view-dashboard')) {
-                        switchTimeFilter('mes');
-                    }
-                } catch (e) {
-                    console.error("Initialization error:", e);
                 }
             });
 
-            // --- REAL SMART DATE LOGIC ---
-            function getPeriodDates(period) {
-                const now = new Date();
-                const start = new Date(now);
-                const end = new Date(now);
-
-                // Reset time to start/end of day
-                start.setHours(0, 0, 0, 0);
-                end.setHours(23, 59, 59, 999);
-
-                switch (period) {
-                    case 'ayer':
-                        start.setDate(now.getDate() - 1);
-                        end.setDate(now.getDate() - 1);
-                        break;
-                    case 'semana':
-                        // Start of current week (Monday)
-                        const day = now.getDay() || 7; // Get current day number, converting Sun(0) to 7
-                        if (day !== 1) start.setHours(-24 * (day - 1));
-                        break;
-                    case 'mes':
-                        start.setDate(1); // 1st of current month
-                        break;
-                    case 'hoy':
-                    default:
-                        // Already set to today
-                        break;
-                }
-                return { start, end };
+            if (gradients.length > 0) {
+                donutEl.style.background = `conic-gradient(${gradients.join(', ')})`;
             }
+        }
 
-            function calculatePeriodData(period) {
-                const { start, end } = getPeriodDates(period);
+        function handleAddDoctor(e) {
+            e.preventDefault();
+            const form = e.target;
+            const colors = ['blue', 'purple']; // Simplified logic
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-                // Filter Transactions
-                const relevantTxs = APP_DATA.transactions.filter(t => {
-                    const tDate = new Date(t.date);
-                    // Use simple string comparison for day precision to avoid timezone headaches
-                    const tStr = tDate.toISOString().split('T')[0];
-                    const sStr = start.toISOString().split('T')[0];
-                    const eStr = end.toISOString().split('T')[0];
-                    return tStr >= sStr && tStr <= eStr;
-                });
+            APP_DATA.doctors.push({
+                id: Date.now(),
+                name: form.name.value,
+                role: form.role.value,
+                goal: parseFloat(form.goal.value),
+                color: randomColor
+            });
+            saveData();
+            closeDoctorModal();
+            form.reset();
+        }
 
-                // Calculate Totals
-                let income = 0;
-                let expenses = 0;
-                const docStats = {};
+        function deleteDoctor(id) {
+            if (confirm("¿Eliminar doctor?")) {
+                APP_DATA.doctors = APP_DATA.doctors.filter(d => d.id !== id);
+                saveData();
+            }
+        }
 
-                // Init Doctors
-                APP_DATA.doctors.forEach(d => {
-                    docStats[d.id] = { ...d, generated: 0 };
-                });
+        function openDoctorModal() {
+            const m = document.getElementById('doctor-modal');
+            m.classList.remove('hidden');
+            setTimeout(() => document.getElementById('doctor-modal-content').classList.remove('scale-95', 'opacity-0'), 10);
+        }
+        function closeDoctorModal() {
+            const m = document.getElementById('doctor-modal');
+            const c = document.getElementById('doctor-modal-content');
+            c.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => m.classList.add('hidden'), 200);
+        }
 
-                relevantTxs.forEach(t => {
-                    if (t.type === 'ingreso') {
-                        income += parseFloat(t.amount);
-                        if (t.doctorId && docStats[t.doctorId]) {
-                            docStats[t.doctorId].generated += parseFloat(t.amount);
+        // 3.5 Render Analytics (New)
+        function renderAnalytics() {
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js not loaded');
+                return;
+            }
+            const ctxProfit = document.getElementById('chart-profit-doctor');
+            const ctxMargin = document.getElementById('chart-margin-treatment');
+
+            if (!ctxProfit || !ctxMargin) return;
+
+            // Destroy existing instances to prevent overlays
+            if (profitChart) profitChart.destroy();
+            if (marginChart) marginChart.destroy();
+
+            // Prepare Data from APP_DATA (respecting current DASHBOARD period for consistency)
+            const period = window.CURRENT_PERIOD || 'mes';
+            const periodData = calculatePeriodData(period);
+
+            const labels = periodData.team.map(d => d.name);
+            const dataProfit = periodData.team.map(d => d.generated);
+
+            // check theme for colors
+            const isDark = document.documentElement.classList.contains('dark');
+            const colorText = isDark ? '#ffffff' : '#0f172a';
+            const colorGrid = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+
+            // 1. Profit Chart (Bar)
+            profitChart = new Chart(ctxProfit, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Ingresos (€)',
+                        data: dataProfit,
+                        backgroundColor: '#C69C6D',
+                        borderRadius: 6,
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: isDark ? '#15171E' : '#ffffff',
+                            titleColor: isDark ? '#C69C6D' : '#0f172a',
+                            bodyColor: isDark ? '#ffffff' : '#64748b',
+                            borderColor: '#C69C6D',
+                            borderWidth: 1,
+                            padding: 10,
+                            titleFont: { family: 'Playfair Display', size: 14 },
+                            bodyFont: { family: 'Manrope', size: 13 }
                         }
-                    } else {
-                        expenses += parseFloat(t.amount);
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: colorGrid, borderDash: [5, 5] },
+                            ticks: { color: colorText, font: { family: 'Manrope' } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: colorText, font: { family: 'Manrope', weight: 'bold' } }
+                        }
                     }
-                });
+                }
+            });
 
-                // Sort Team
-                const team = Object.values(docStats)
-                    .sort((a, b) => b.generated - a.generated)
-                    .map(d => ({
-                        ...d,
-                        amount: d.generated.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }),
-                        percent: (d.generated / (income || 1)) * 100 // Avoid divide by zero
-                    }));
+            // 2. Margin Chart (Doughnut) - Mock Distribution
+            marginChart = new Chart(ctxMargin, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ortodoncia', 'Implantes', 'General', 'Estética'],
+                    datasets: [{
+                        data: [35, 45, 15, 5],
+                        backgroundColor: ['#C69C6D', '#A87F55', '#F3E7D7', '#334155'], // Gold Gradient & Dark Slate
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '75%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: colorText,
+                                font: { family: 'Manrope', size: 12 },
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
 
-                return {
-                    income: income.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }),
-                    expenses: expenses.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }),
-                    team: team
-                };
+        // 4. DASHBOARD LOGIC
+        function updateDashboard() {
+            let income = 0; let expenses = 0;
+            APP_DATA.transactions.forEach(t => {
+                if (t.type === 'ingreso') income += parseFloat(t.amount);
+                if (t.type === 'gasto') expenses += parseFloat(t.amount);
+            });
+
+            const kpiIncome = document.getElementById('kpi-income');
+            const kpiExpenses = document.getElementById('kpi-expenses');
+            const kpiProfit = document.getElementById('kpi-profit');
+
+            if (kpiIncome) kpiIncome.innerText = income.toLocaleString('de-DE') + "€";
+            if (kpiExpenses) kpiExpenses.innerText = expenses.toLocaleString('de-DE') + "€";
+            if (kpiProfit) {
+                const p = income - expenses;
+                kpiProfit.innerText = p.toLocaleString('de-DE') + "€";
+                kpiProfit.className = p >= 0 ? "text-3xl font-bold text-primary tracking-tight font-serif" : "text-3xl font-bold text-red-500 tracking-tight font-serif";
+            }
+        }
+
+        // 5. EXPORT & SETTINGS LOGIC
+        function openExportModal() {
+            const modal = document.getElementById('export-modal');
+            modal.classList.remove('hidden');
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+            document.querySelector('#export-modal input[name="startDate"]').value = firstDay.toISOString().split('T')[0];
+            document.querySelector('#export-modal input[name="endDate"]').value = today.toISOString().split('T')[0];
+        }
+
+        function closeExportModal() {
+            document.getElementById('export-modal').classList.add('hidden');
+        }
+
+        function handleExportCSV(e) {
+            e.preventDefault();
+            const start = new Date(e.target.startDate.value);
+            const end = new Date(e.target.endDate.value);
+
+            const dataToExport = APP_DATA.transactions.filter(t => {
+                const d = new Date(t.date);
+                return d >= start && d <= end;
+            });
+
+            if (dataToExport.length === 0) return alert("No hay movimientos en esas fechas.");
+
+            let csvContent = "data:text/csv;charset=utf-8,ID,Fecha,Concepto,Tipo,Importe\n";
+            dataToExport.forEach(row => {
+                csvContent += `${row.id},${row.date}, "${row.concept}", ${row.type},${row.amount} \n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `contabilidad_dental_${e.target.endDate.value}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            closeExportModal();
+        }
+
+        function resetApp() {
+            if (confirm("⚠️ ¿BORRAR TODO? Esta acción no se puede deshacer.")) {
+                localStorage.removeItem('DENTAL_APP_DATA');
+                location.reload();
+            }
+        }
+
+        function openModal() {
+            const modal = document.getElementById('transaction-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('modal-content').classList.remove('scale-95', 'opacity-0');
+                document.getElementById('modal-content').classList.add('scale-100', 'opacity-100');
+            }, 10);
+            const dateInput = document.querySelector('input[name="date"]');
+            if (dateInput && !dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('transaction-modal');
+            document.getElementById('modal-content').classList.remove('scale-100', 'opacity-100');
+            document.getElementById('modal-content').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        // 6. INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                loadData();
+                renderTable();
+                renderTeam();
+                updateDashboard();
+                renderAnalytics();
+
+                // Initialize Manager View if Dashboard is active
+                if (document.getElementById('view-dashboard')) {
+                    switchTimeFilter('mes');
+                }
+            } catch (e) {
+                console.error("Initialization error:", e);
+            }
+        });
+
+        // --- REAL SMART DATE LOGIC ---
+        function getPeriodDates(period) {
+            const now = new Date();
+            const start = new Date(now);
+            const end = new Date(now);
+
+            // Reset time to start/end of day
+            start.setHours(0, 0, 0, 0);
+            end.setHours(23, 59, 59, 999);
+
+            switch (period) {
+                case 'ayer':
+                    start.setDate(now.getDate() - 1);
+                    end.setDate(now.getDate() - 1);
+                    break;
+                case 'semana':
+                    // Start of current week (Monday)
+                    const day = now.getDay() || 7; // Get current day number, converting Sun(0) to 7
+                    if (day !== 1) start.setHours(-24 * (day - 1));
+                    break;
+                case 'mes':
+                    start.setDate(1); // 1st of current month
+                    break;
+                case 'hoy':
+                default:
+                    // Already set to today
+                    break;
+            }
+            return { start, end };
+        }
+
+        function calculatePeriodData(period) {
+            const { start, end } = getPeriodDates(period);
+
+            // Filter Transactions
+            const relevantTxs = APP_DATA.transactions.filter(t => {
+                const tDate = new Date(t.date);
+                // Use simple string comparison for day precision to avoid timezone headaches
+                const tStr = tDate.toISOString().split('T')[0];
+                const sStr = start.toISOString().split('T')[0];
+                const eStr = end.toISOString().split('T')[0];
+                return tStr >= sStr && tStr <= eStr;
+            });
+
+            // Calculate Totals
+            let income = 0;
+            let expenses = 0;
+            const docStats = {};
+
+            // Init Doctors
+            APP_DATA.doctors.forEach(d => {
+                docStats[d.id] = { ...d, generated: 0 };
+            });
+
+            relevantTxs.forEach(t => {
+                if (t.type === 'ingreso') {
+                    income += parseFloat(t.amount);
+                    if (t.doctorId && docStats[t.doctorId]) {
+                        docStats[t.doctorId].generated += parseFloat(t.amount);
+                    }
+                } else {
+                    expenses += parseFloat(t.amount);
+                }
+            });
+
+            // Sort Team
+            const team = Object.values(docStats)
+                .sort((a, b) => b.generated - a.generated)
+                .map(d => ({
+                    ...d,
+                    amount: d.generated.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }), // Full Number
+                    percent: (d.generated / (income || 1)) * 100 // Avoid divide by zero
+                }));
+
+            return {
+                income: income.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }),
+                expenses: expenses.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }),
+                team: team
+            };
+        }
+
+        window.switchTimeFilter = function (period) {
+            // 1. Update Buttons Visual State
+            document.querySelectorAll('.time-filter').forEach(btn => {
+                btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
+                btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
+            });
+            const activeBtn = document.getElementById(`btn-${period}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
+                activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
             }
 
-            window.switchTimeFilter = function (period) {
-                // 1. Update Buttons Visual State
-                document.querySelectorAll('.time-filter').forEach(btn => {
-                    btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
-                    btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
-                });
-                const activeBtn = document.getElementById(`btn-${period}`);
-                if (activeBtn) {
-                    activeBtn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
-                    activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
-                }
+            // 2. GET REAL CALCULATED DATA
+            const data = calculatePeriodData(period);
 
-                // 2. GET REAL CALCULATED DATA
-                const data = calculatePeriodData(period);
+            // 3. Update Hero Card
+            const incomeEl = document.getElementById('hero-income');
+            const expensesEl = document.getElementById('hero-expenses');
 
-                // 3. Update Hero Card
-                const incomeEl = document.getElementById('hero-income');
-                const expensesEl = document.getElementById('hero-expenses');
+            if (incomeEl && expensesEl) {
+                incomeEl.style.opacity = '0.5';
+                expensesEl.style.opacity = '0.5';
+                setTimeout(() => {
+                    incomeEl.textContent = data.income;
+                    expensesEl.textContent = data.expenses;
+                    incomeEl.style.opacity = '1';
+                    expensesEl.style.opacity = '1';
+                }, 150);
+            }
 
-                if (incomeEl && expensesEl) {
-                    incomeEl.style.opacity = '0.5';
-                    expensesEl.style.opacity = '0.5';
-                    setTimeout(() => {
-                        incomeEl.textContent = data.income;
-                        expensesEl.textContent = data.expenses;
-                        incomeEl.style.opacity = '1';
-                        expensesEl.style.opacity = '1';
-                    }, 150);
-                }
+            // 4. Update Team Ranking
+            const listEl = document.getElementById('team-ranking-list');
+            if (listEl) {
+                listEl.innerHTML = '';
 
-                // 4. Update Team Ranking
-                const listEl = document.getElementById('team-ranking-list');
-                if (listEl) {
-                    listEl.innerHTML = '';
+                data.team.forEach((doc, index) => {
+                    const isLeader = index === 0 && doc.generated > 0;
+                    const leaderIcon = isLeader ? '<span class="material-symbols-outlined text-yellow-500 text-sm">emoji_events</span>' : '';
+                    const barColor = isLeader ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600';
+                    const avatarLetter = doc.name ? doc.name[0] : '?';
 
-                    data.team.forEach((doc, index) => {
-                        const isLeader = index === 0 && doc.generated > 0;
-                        const leaderIcon = isLeader ? '<span class="material-symbols-outlined text-yellow-500 text-sm">emoji_events</span>' : '';
-                        const barColor = isLeader ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600';
-                        const avatarLetter = doc.name ? doc.name[0] : '?';
-
-                        listEl.innerHTML += `
+                    listEl.innerHTML += `
                         <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
                             <div class="h-10 w-10 shrink-0 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center font-serif font-bold text-slate-600 dark:text-slate-300 relative">
                                 ${avatarLetter}
@@ -2295,10 +2349,10 @@
                             </div>
                         </div>
                         `;
-                    });
-                }
-            };
-        </script>
+                });
+            }
+        };
+    </script>
 
 </body>
 
