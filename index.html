@@ -805,36 +805,65 @@
                     </header>
 
                     <section class="flex flex-col gap-4">
+                        <!-- CONNECTION STATUS CARD -->
                         <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex flex-col gap-4">
+                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex flex-col gap-6">
                             <div class="flex items-center justify-between flex-wrap gap-4">
-                                <div>
-                                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Conexión Ingresos
-                                        (Google Sheets)</h3>
-                                    <p class="text-xs text-slate-500">Enlace CSV de la hoja maestra.</p>
+                                <div class="flex flex-col gap-1">
+                                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Conexión Google
+                                        Sheets</h3>
+                                    <p class="text-xs text-slate-500">Gestión de enlaces de sincronización.</p>
                                 </div>
-                                <button onclick="syncFromSheets()" id="btn-sync-now"
-                                    class="shrink-0 px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2">
-                                    <span class="material-symbols-outlined text-sm" id="sync-icon">sync</span>
-                                    <span id="sync-text">Sincronizar</span>
-                                </button>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="resetSyncUrls()"
+                                        class="p-2 text-slate-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50"
+                                        title="Restablecer valores por defecto">
+                                        <span class="material-symbols-outlined text-sm">restart_alt</span>
+                                    </button>
+                                    <button onclick="toggleUrlEdit()"
+                                        class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-300 transition-all">
+                                        <span class="material-symbols-outlined text-sm">settings_ethernet</span>
+                                        Configurar
+                                    </button>
+                                    <button onclick="syncFromSheets()" id="btn-sync-now"
+                                        class="shrink-0 px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+                                        <span class="material-symbols-outlined text-sm" id="sync-icon">sync</span>
+                                        <span id="sync-text">Sincronizar</span>
+                                    </button>
+                                </div>
                             </div>
-                            <input type="text" id="sheets-url-input"
-                                placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv"
-                                class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
-                        </div>
 
-                        <!-- EXPENSES CONNECTION -->
-                        <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex flex-col gap-4">
-                            <div>
-                                <h3 class="text-base font-bold text-slate-900 dark:text-white">Conexión Gastos
-                                    (Opcional)</h3>
-                                <p class="text-xs text-slate-500">Pega aquí el enlace CSV de tu hoja de GASTOS.</p>
+                            <!-- HIDDEN EDIT PANEL -->
+                            <div id="url-edit-panel"
+                                class="hidden flex flex-col gap-4 pt-4 border-t border-slate-100 dark:border-white/5 animate-in fade-in slide-in-from-top-2">
+                                <div class="flex flex-col gap-2">
+                                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Enlace
+                                        Ingresos (CSV)</label>
+                                    <input type="password" id="sheets-url-input"
+                                        placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv"
+                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
+                                </div>
+                                <div class="flex flex-col gap-2">
+                                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Enlace
+                                        Gastos (CSV)</label>
+                                    <input type="password" id="expenses-url-input"
+                                        placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv"
+                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
+                                </div>
+                                <p class="text-[10px] text-amber-600 font-medium">⚠️ Los cambios se guardarán al pulsar
+                                    el botón de Sincronizar fuera de este menú.</p>
                             </div>
-                            <input type="text" id="expenses-url-input"
-                                placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv"
-                                class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
+
+                            <div
+                                class="flex items-center justify-between p-3 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                                    <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">Estado:
+                                        Configurado</span>
+                                </div>
+                                <span
+                                    class="text-[10px] font-medium text-emerald-600 dark:text-emerald-500/70 italic">Protegido</span>
+                            </div>
                         </div>
 
                         <div
@@ -1351,22 +1380,50 @@
         }
 
         // --- GOOGLE SHEETS SYNC LOGIC (Async Parallel) ---
+        function convertToCSV(url) {
+            if (!url) return "";
+            let s = url.trim();
+            // If already CSV, return as is
+            if (s.includes('output=csv')) return s;
+
+            // If it's a pubhtml link, convert to CSV
+            if (s.includes('/pubhtml')) {
+                return s.replace('/pubhtml', '/pub?output=csv');
+            }
+
+            // If it's a standard spreadsheet link, attempt to convert to export
+            if (s.includes('docs.google.com/spreadsheets/d/')) {
+                const parts = s.split('/');
+                const idIndex = parts.indexOf('d') + 1;
+                if (idIndex > 0 && idIndex < parts.length) {
+                    const id = parts[idIndex];
+                    // Clean extra params if any
+                    const cleanId = id.split('?')[0].split('#')[0];
+                    return `https://docs.google.com/spreadsheets/d/${cleanId}/pub?output=csv`;
+                }
+            }
+            return s;
+        }
+
         window.syncFromSheets = async function (silent = false) {
             console.log("Iniciando sincronización completa...");
             const urlInput = document.getElementById('sheets-url-input');
             const expInput = document.getElementById('expenses-url-input');
 
-            // 1. Get URLs
-            let url = urlInput ? urlInput.value.trim() : APP_DATA.sheetsUrl;
-            let expUrl = expInput ? expInput.value.trim() : APP_DATA.expensesUrl;
+            // 1. Get URLs and auto-convert
+            let rawUrl = urlInput ? urlInput.value.trim() : APP_DATA.sheetsUrl;
+            let rawExpUrl = expInput ? expInput.value.trim() : APP_DATA.expensesUrl;
 
             // FALLBACKS
-            if (!url || url === "") url = APP_DATA.sheetsUrl;
-            if (!expUrl || expUrl === "") expUrl = APP_DATA.expensesUrl;
+            if (!rawUrl || rawUrl === "") rawUrl = APP_DATA.sheetsUrl;
+            if (!rawExpUrl || rawExpUrl === "") rawExpUrl = APP_DATA.expensesUrl;
+
+            const url = convertToCSV(rawUrl);
+            const expUrl = convertToCSV(rawExpUrl);
 
             // 2. Validate Main URL
             if (!url || !url.includes('output=csv')) {
-                if (!silent) alert("Error: La URL de INGRESOS no es válida (debe terminar en output=csv).");
+                if (!silent) alert("Error: La URL de INGRESOS no es válida. Asegúrate de publicar la hoja como CSV.");
                 updateSyncUI('error');
                 return false;
             }
@@ -1388,29 +1445,19 @@
                 const incomeData = results[0];
                 const expenseData = results.length > 1 ? results[1] : [];
 
-                // Robustness: If incomeData is empty, but expenseData exists, still process expenses.
-                // Or if incomeData is empty, but we had previous data, don't overwrite with empty.
-                if (incomeData && incomeData.length > 0) {
-                    processSheetsData(incomeData, expenseData); // Pass both
-                    updateSyncUI('success');
-                    saveData();
-                    if (!silent) alert("Sincronización completada (Ingresos + Gastos) ✅");
-                    return true;
-                } else if (expenseData && expenseData.length > 0) {
-                    // If only expense data was fetched, process it without clearing existing income
-                    processSheetsData([], expenseData); // Pass empty income to avoid clearing
-                    updateSyncUI('success');
-                    saveData();
-                    if (!silent) alert("Sincronización completada (Solo Gastos) ✅");
-                    return true;
+                if ((!incomeData || incomeData.length === 0) && (!expenseData || expenseData.length === 0)) {
+                    throw new Error("No se encontraron registros en ninguna de las hojas.");
                 }
-                else {
-                    throw new Error("No se encontraron datos válidos para sincronizar.");
-                }
+
+                processSheetsData(incomeData || [], expenseData || []);
+                updateSyncUI('success');
+                saveData();
+                if (!silent) alert("Sincronización completada con éxito ✅");
+                return true;
             } catch (error) {
-                console.error("Sync Error:", error);
+                console.error("Sync Error Details:", error);
                 updateSyncUI('error');
-                if (!silent) alert("Error en la sincronización. Revisa las URLs.");
+                if (!silent) alert(`Fallo en la sincronización: ${error.message || "Revisa tus enlaces de Google Sheets"}`);
                 return false;
             }
         }
@@ -1673,6 +1720,21 @@
             }
         }
 
+        window.resetSyncUrls = function () {
+            if (confirm("¿Quieres restablecer las URLs de conexión a los valores por defecto?")) {
+                APP_DATA.sheetsUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTc7OqZQYtGXYgqiBW3QR8FuTeG70vuUtzzVZGCNvQp5O_upc1kCZRRlVKIbnEso0sY053eWwC-0Efv/pub?gid=0&single=true&output=csv";
+                APP_DATA.expensesUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTc7OqZQYtGXYgqiBW3QR8FuTeG70vuUtzzVZGCNvQp5O_upc1kCZRRlVKIbnEso0sY053eWwC-0Efv/pub?gid=1425831012&single=true&output=csv";
+                saveData();
+                loadSettings();
+                alert("URLs restablecidas. Pulsa 'Sincronizar' para aplicar.");
+            }
+        }
+
+        window.toggleUrlEdit = function () {
+            const panel = document.getElementById('url-edit-panel');
+            panel.classList.toggle('hidden');
+        }
+
         // 2. FINANCE LOGIC
         let CURRENT_FINANCE_TYPE = 'all';
 
@@ -1861,24 +1923,6 @@
 
         // 3. TEAM LOGIC (UPDATED V2)
         let CURRENT_TEAM_PERIOD = 'mes';
-
-        window.switchTeamTimeFilter = function (period) {
-            CURRENT_TEAM_PERIOD = period;
-            document.querySelectorAll('.team-time-filter').forEach(btn => {
-                btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
-                btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
-                btn.classList.remove('font-bold');
-                btn.classList.add('font-medium');
-            });
-            const activeBtn = document.getElementById(`btn-team-${period}`);
-            if (activeBtn) {
-                activeBtn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
-                activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
-                activeBtn.classList.add('font-bold');
-                activeBtn.classList.remove('font-medium');
-            }
-            renderTeam();
-        }
 
         function renderTeam() {
             const container = document.getElementById('doctors-container');
