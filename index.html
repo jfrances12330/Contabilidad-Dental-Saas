@@ -1447,6 +1447,49 @@
             }
 
             function processSheetsData(data) {
+                // 1. First Pass: Discovery & Smart Role Assignment
+                // We scan all rows to find unique doctors and analyze their work patterns
+                const detectedDoctors = new Map(); // Name -> { name, concepts: [], total: 0 }
+
+                data.forEach(row => {
+                    if (!row.Dentista || row.Dentista.trim() === '') return;
+                    const name = row.Dentista.trim().toUpperCase(); // Normalize
+
+                    if (!detectedDoctors.has(name)) {
+                        detectedDoctors.set(name, { name, concepts: [], total: 0 });
+                    }
+
+                    const entry = detectedDoctors.get(name);
+                    if (row.Concepto) entry.concepts.push(row.Concepto.toLowerCase());
+                    if (row.Total) entry.total += parseFloat(row.Total);
+                });
+
+                // 2. Update Doctors List intelligently
+                detectedDoctors.forEach((stats, name) => {
+                    // Check if doctor already exists
+                    let doctor = APP_DATA.doctors.find(d => d.name.toUpperCase() === name);
+
+                    if (!doctor) {
+                        // NEW DOCTOR DETECTED!
+                        const role = inferSpecialty(stats.concepts);
+                        const color = assignColor(APP_DATA.doctors.length);
+
+                        // Default goal logic: Scale based on volume? For now static.
+                        const goal = 10000;
+
+                        const newDoc = {
+                            id: Date.now() + Math.floor(Math.random() * 1000),
+                            name: properCase(name),
+                            role: role,
+                            goal: goal,
+                            color: color
+                        };
+                        APP_DATA.doctors.push(newDoc);
+                        console.log(`[Auto-Discovery] Created profile for: ${newDoc.name} (${newDoc.role})`);
+                    }
+                });
+
+                // 3. Second Pass: Create Transactions
                 // Mapeo específico para tus columnas:
                 // Fecha, Dentista, Paciente, Concepto, Efectivo, Tarjeta, Financiación, Laboratorio, Observación, Total
                 const importedTxs = data
@@ -1472,6 +1515,31 @@
                     });
 
                 APP_DATA.transactions = importedTxs;
+                // Force UI update for dropdowns
+                populateDoctorDropdown();
+            }
+
+            // --- HELPER FUNCTIONS FOR AI LOGIC ---
+
+            function inferSpecialty(concepts) {
+                const text = concepts.join(' ');
+
+                if (text.includes('implante') || text.includes('corona') || text.includes('cirugía') || text.includes('elevación')) return "Implantología";
+                if (text.includes('ortodoncia') || text.includes('invisalign') || text.includes('bracket') || text.includes('férula')) return "Ortodoncia";
+                if (text.includes('endodoncia') || text.includes('conducto') || text.includes('pulpectomía')) return "Endodoncia";
+                if (text.includes('limpieza') || text.includes('curetaje') || text.includes('blanqueamiento')) return "Higiene";
+                if (text.includes('prótesis') || text.includes('removible')) return "Prótesis";
+
+                return "General";
+            }
+
+            function assignColor(index) {
+                const palette = ['blue', 'purple', 'emerald', 'amber', 'rose', 'cyan', 'indigo', 'orange'];
+                return palette[index % palette.length];
+            }
+
+            function properCase(str) {
+                return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
             }
 
             function convertToISODate(dateStr) {
