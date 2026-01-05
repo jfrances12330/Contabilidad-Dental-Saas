@@ -324,6 +324,73 @@
                         </div>
                     </section>
 
+                    <!-- NEW: Comparison & Insights Cards -->
+                    <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Month vs Month Comparison -->
+                        <div
+                            class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/10 rounded-xl p-5 border border-blue-200 dark:border-blue-800/30">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span
+                                    class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-[20px]">compare_arrows</span>
+                                <h3 class="text-sm font-bold text-blue-900 dark:text-blue-100 uppercase tracking-wide">
+                                    vs Mes Anterior</h3>
+                            </div>
+                            <div id="month-comparison-content">
+                                <p class="text-xs text-blue-600 dark:text-blue-400 mb-1">Ingresos</p>
+                                <p id="comparison-income"
+                                    class="text-2xl font-bold text-blue-900 dark:text-blue-100 font-serif mb-3">--</p>
+                                <p class="text-xs text-blue-600 dark:text-blue-400 mb-1">Beneficio</p>
+                                <p id="comparison-profit"
+                                    class="text-2xl font-bold text-blue-900 dark:text-blue-100 font-serif">--</p>
+                            </div>
+                        </div>
+
+                        <!-- Month Projection -->
+                        <div
+                            class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/10 rounded-xl p-5 border border-purple-200 dark:border-purple-800/30">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span
+                                    class="material-symbols-outlined text-purple-600 dark:text-purple-400 text-[20px]">timeline</span>
+                                <h3
+                                    class="text-sm font-bold text-purple-900 dark:text-purple-100 uppercase tracking-wide">
+                                    Proyección Mes</h3>
+                            </div>
+                            <div id="projection-content">
+                                <p class="text-xs text-purple-600 dark:text-purple-400 mb-1">Estimado al cierre</p>
+                                <p id="projection-amount"
+                                    class="text-2xl font-bold text-purple-900 dark:text-purple-100 font-serif mb-2">--
+                                </p>
+                                <div class="bg-purple-200 dark:bg-purple-900/40 rounded-full h-2 overflow-hidden">
+                                    <div id="projection-progress"
+                                        class="h-full bg-purple-600 dark:bg-purple-500 transition-all duration-500"
+                                        style="width: 0%"></div>
+                                </div>
+                                <p id="projection-text"
+                                    class="text-xs text-purple-700 dark:text-purple-300 mt-1 font-medium">Cargando...
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Burn Rate -->
+                        <div
+                            class="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/10 rounded-xl p-5 border border-amber-200 dark:border-amber-800/30">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span
+                                    class="material-symbols-outlined text-amber-600 dark:text-amber-400 text-[20px]">local_fire_department</span>
+                                <h3
+                                    class="text-sm font-bold text-amber-900 dark:text-amber-100 uppercase tracking-wide">
+                                    Burn Rate</h3>
+                            </div>
+                            <div id="burnrate-content">
+                                <p class="text-xs text-amber-600 dark:text-amber-400 mb-1">Gasto diario promedio</p>
+                                <p id="burnrate-daily"
+                                    class="text-2xl font-bold text-amber-900 dark:text-amber-100 font-serif mb-2">--</p>
+                                <p class="text-xs text-amber-700 dark:text-amber-300 font-medium" id="burnrate-insight">
+                                    --</p>
+                            </div>
+                        </div>
+                    </section>
+
                     <!-- AI Alert (Updated to Gold Gradient) -->
                     <section class="w-full">
                         <div
@@ -608,6 +675,62 @@
                                 €0</p>
                         </div>
                     </div>
+
+                    <!-- NEW: Transaction Statistics & Category Breakdown -->
+                    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Transaction Statistics Cards -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Total Visible -->
+                            <div
+                                class="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/10 rounded-xl p-4 border border-indigo-200 dark:border-indigo-800/30">
+                                <p
+                                    class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide mb-1">
+                                    Total Visible</p>
+                                <p id="stat-total-amount"
+                                    class="text-2xl font-bold text-indigo-900 dark:text-indigo-100 font-serif">€0</p>
+                            </div>
+
+                            <!-- Average -->
+                            <div
+                                class="bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900/20 dark:to-teal-800/10 rounded-xl p-4 border border-teal-200 dark:border-teal-800/30">
+                                <p
+                                    class="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wide mb-1">
+                                    Promedio</p>
+                                <p id="stat-avg-amount"
+                                    class="text-2xl font-bold text-teal-900 dark:text-teal-100 font-serif">€0</p>
+                            </div>
+
+                            <!-- Largest -->
+                            <div
+                                class="bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/20 dark:to-rose-800/10 rounded-xl p-4 border border-rose-200 dark:border-rose-800/30">
+                                <p
+                                    class="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wide mb-1">
+                                    Mayor</p>
+                                <p id="stat-largest-amount"
+                                    class="text-2xl font-bold text-rose-900 dark:text-rose-100 font-serif">€0</p>
+                            </div>
+
+                            <!-- Count -->
+                            <div
+                                class="bg-gradient-to-br from-violet-50 to-violet-100 dark:from-violet-900/20 dark:to-violet-800/10 rounded-xl p-4 border border-violet-200 dark:border-violet-800/30">
+                                <p
+                                    class="text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wide mb-1">
+                                    Transacciones</p>
+                                <p id="stat-count"
+                                    class="text-2xl font-bold text-violet-900 dark:text-violet-100 font-serif">0</p>
+                            </div>
+                        </div>
+
+                        <!-- Category Breakdown Chart -->
+                        <div
+                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Distribución
+                                por Categoría</h3>
+                            <div style="position: relative; height: 220px; width: 100%;">
+                                <canvas id="chart-finance-categories"></canvas>
+                            </div>
+                        </div>
+                    </section>
 
                     <div
                         class="hidden md:block bg-white dark:bg-dark-surface rounded-xl border border-slate-100 dark:border-white/5 shadow-sm overflow-hidden">
@@ -1902,6 +2025,92 @@
             renderTable();
         }
 
+        let financeCategoryChart = null;
+
+        function updateFinanceCategoryChart(transactions) {
+            const canvas = document.getElementById('chart-finance-categories');
+            if (!canvas) return;
+
+            // Calculate category totals
+            const categories = {};
+            transactions.forEach(t => {
+                const cat = t.category || 'Otros';
+                categories[cat] = (categories[cat] || 0) + t.amount;
+            });
+
+            const labels = Object.keys(categories);
+            const data = Object.values(categories);
+            const total = data.reduce((sum, v) => sum + v, 0);
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const colorText = isDark ? '#94a3b8' : '#64748b';
+
+            const colors = [
+                '#C69C6D', // Gold
+                '#A87F55', // Dark gold
+                '#7044bf', // Purple
+                '#31165d', // Dark purple
+                '#10b981', // Emerald
+                '#ef4444', // Red
+                '#f59e0b', // Amber
+                '#3b82f6'  // Blue
+            ];
+
+            if (financeCategoryChart) financeCategoryChart.destroy();
+            financeCategoryChart = new Chart(canvas, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.slice(0, labels.length),
+                        borderWidth: 0,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: colorText,
+                                font: { family: 'Manrope', size: 11 },
+                                padding: 12,
+                                usePointStyle: true,
+                                generateLabels: function (chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        return data.labels.map((label, i) => {
+                                            const value = data.datasets[0].data[i];
+                                            const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                            return {
+                                                text: `${label} (${percent}%)`,
+                                                fillStyle: data.datasets[0].backgroundColor[i],
+                                                hidden: false,
+                                                index: i
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const value = context.parsed;
+                                    const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                    return `${context.label}: ${value.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })} (${percent}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         window.toggleFinanceFilters = function () {
             const panel = document.getElementById('finance-filters-panel');
             const btn = document.getElementById('btn-toggle-filters');
@@ -1980,6 +2189,25 @@
                 kpiNet.innerText = (netValue >= 0 ? '+' : '') + netValue.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
                 kpiNet.className = `text-sm md:text-2xl font-bold mt-0.5 md:mt-1 font-serif truncate ${netValue >= 0 ? 'text-primary' : 'text-red-500'}`;
             }
+
+            // NEW: Calculate transaction statistics
+            const total = filtered.reduce((sum, t) => sum + t.amount, 0);
+            const avg = filtered.length > 0 ? total / filtered.length : 0;
+            const largest = filtered.length > 0 ? Math.max(...filtered.map(t => t.amount)) : 0;
+            const count = filtered.length;
+
+            const statTotal = document.getElementById('stat-total-amount');
+            const statAvg = document.getElementById('stat-avg-amount');
+            const statLargest = document.getElementById('stat-largest-amount');
+            const statCount = document.getElementById('stat-count');
+
+            if (statTotal) statTotal.innerText = total.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+            if (statAvg) statAvg.innerText = avg.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+            if (statLargest) statLargest.innerText = largest.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+            if (statCount) statCount.innerText = count;
+
+            // NEW: Category breakdown chart
+            updateFinanceCategoryChart(filtered);
 
             // 5. Sort and Render
             filtered = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -2619,8 +2847,94 @@
                 kpiProfit.className = p >= 0 ? "text-2xl md:text-3xl font-bold text-primary tracking-tight font-serif" : "text-2xl md:text-3xl font-bold text-red-500 tracking-tight font-serif";
             }
 
+            // NEW: Calculate insights for comparison, projection, and burn rate
+            updateDashboardInsights(period);
+
             // Update Team Ranking too
             renderTeamRanking(data.team);
+        }
+
+        function updateDashboardInsights(period) {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            // Get current month data
+            const currentMonthData = APP_DATA.transactions.filter(t => {
+                const d = new Date(t.date);
+                return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+            });
+
+            // Get previous month data
+            const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+            const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+            const prevMonthData = APP_DATA.transactions.filter(t => {
+                const d = new Date(t.date);
+                return d.getMonth() === prevMonth && d.getFullYear() === prevYear;
+            });
+
+            // Calculate totals
+            const currentIncome = currentMonthData.filter(t => t.type === 'ingreso').reduce((sum, t) => sum + t.amount, 0);
+            const currentExpenses = currentMonthData.filter(t => t.type === 'gasto').reduce((sum, t) => sum + t.amount, 0);
+            const currentProfit = currentIncome - currentExpenses;
+
+            const prevIncome = prevMonthData.filter(t => t.type === 'ingreso').reduce((sum, t) => sum + t.amount, 0);
+            const prevProfit = prevMonthData.filter(t => t.type === 'ingreso').reduce((sum, t) => sum + t.amount, 0) -
+                prevMonthData.filter(t => t.type === 'gasto').reduce((sum, t) => sum + t.amount, 0);
+
+            // Month Comparison
+            const incomeChange = prevIncome > 0 ? ((currentIncome - prevIncome) / prevIncome) * 100 : 0;
+            const profitChange = prevProfit > 0 ? ((currentProfit - prevProfit) / prevProfit) * 100 : 0;
+
+            const comparisonIncome = document.getElementById('comparison-income');
+            const comparisonProfit = document.getElementById('comparison-profit');
+
+            if (comparisonIncome) {
+                const arrow = incomeChange >= 0 ? '↑' : '↓';
+                const color = incomeChange >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
+                comparisonIncome.innerHTML = `<span class="${color}">${arrow} ${Math.abs(incomeChange).toFixed(1)}%</span>`;
+            }
+            if (comparisonProfit) {
+                const arrow = profitChange >= 0 ? '↑' : '↓';
+                const color = profitChange >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
+                comparisonProfit.innerHTML = `<span class="${color}">${arrow} ${Math.abs(profitChange).toFixed(1)}%</span>`;
+            }
+
+            // Month Projection
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const daysPassed = now.getDate();
+            const avgPerDay = daysPassed > 0 ? currentIncome / daysPassed : 0;
+            const projected = avgPerDay * daysInMonth;
+            const progress = daysPassed > 0 ? (daysPassed / daysInMonth) * 100 : 0;
+
+            const projectionAmount = document.getElementById('projection-amount');
+            const projectionProgress = document.getElementById('projection-progress');
+            const projectionText = document.getElementById('projection-text');
+
+            if (projectionAmount) {
+                projectionAmount.innerText = projected.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+            }
+            if (projectionProgress) {
+                projectionProgress.style.width = `${Math.min(progress, 100)}%`;
+            }
+            if (projectionText) {
+                projectionText.innerText = `Día ${daysPassed} de ${daysInMonth} • ${avgPerDay.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}/día`;
+            }
+
+            // Burn Rate
+            const expensesThisMonth = currentExpenses;
+            const dailyBurn = daysPassed > 0 ? expensesThisMonth / daysPassed : 0;
+
+            const burnrateDaily = document.getElementById('burnrate-daily');
+            const burnrateInsight = document.getElementById('burnrate-insight');
+
+            if (burnrateDaily) {
+                burnrateDaily.innerText = dailyBurn.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+            }
+            if (burnrateInsight) {
+                const projectedMonthlyExpenses = dailyBurn * daysInMonth;
+                burnrateInsight.innerText = `Proyección mes: ${projectedMonthlyExpenses.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}`;
+            }
         }
 
         function renderTeamRanking(team) {
