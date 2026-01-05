@@ -763,7 +763,9 @@
                                 por
                                 Doctor (Neto)
                             </h3>
-                            <canvas id="chart-profit-doctor"></canvas>
+                            <div style="position: relative; height: 300px; width: 100%;">
+                                <canvas id="chart-profit-doctor"></canvas>
+                            </div>
                         </div>
 
                         <!-- Margin per Treatment Chart -->
@@ -772,7 +774,88 @@
                             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Margen por
                                 Tratamiento (%)
                             </h3>
-                            <canvas id="chart-margin-treatment"></canvas>
+                            <div style="position: relative; height: 300px; width: 100%;">
+                                <canvas id="chart-margin-treatment"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Time Period Selector -->
+                    <div class="flex justify-end">
+                        <div class="flex bg-slate-100 dark:bg-white/5 rounded-xl p-1 gap-1 shadow-inner h-fit">
+                            <button onclick="switchAnalyticsPeriod('month')" id="btn-analytics-month"
+                                class="analytics-period-filter active px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 shadow-sm bg-white text-slate-900 dark:bg-dark-surface dark:text-white">MES</button>
+                            <button onclick="switchAnalyticsPeriod('quarter')" id="btn-analytics-quarter"
+                                class="analytics-period-filter px-4 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-all duration-300">TRIMESTRE</button>
+                            <button onclick="switchAnalyticsPeriod('year')" id="btn-analytics-year"
+                                class="analytics-period-filter px-4 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-all duration-300">AÑO</button>
+                            <button onclick="switchAnalyticsPeriod('all')" id="btn-analytics-all"
+                                class="analytics-period-filter px-4 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-all duration-300">TODO</button>
+                        </div>
+                    </div>
+
+                    <!-- KPI Summary Cards -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div
+                            class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/10 rounded-xl p-4 border border-blue-200 dark:border-blue-800/30">
+                            <p class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wide">Ticket
+                                Promedio</p>
+                            <p id="kpi-avg-ticket"
+                                class="text-2xl font-bold text-blue-900 dark:text-blue-100 mt-2 font-serif">€0</p>
+                        </div>
+                        <div
+                            class="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/10 rounded-xl p-4 border border-emerald-200 dark:border-emerald-800/30">
+                            <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
+                                Transacciones</p>
+                            <p id="kpi-transaction-count"
+                                class="text-2xl font-bold text-emerald-900 dark:text-emerald-100 mt-2 font-serif">0</p>
+                        </div>
+                        <div
+                            class="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/10 rounded-xl p-4 border border-amber-200 dark:border-amber-800/30">
+                            <p class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wide">
+                                Mejor Tratamiento</p>
+                            <p id="kpi-top-treatment"
+                                class="text-sm font-bold text-amber-900 dark:text-amber-100 mt-2 truncate">-</p>
+                        </div>
+                        <div
+                            class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/10 rounded-xl p-4 border border-purple-200 dark:border-purple-800/30">
+                            <p class="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wide">
+                                Mejor Doctor</p>
+                            <p id="kpi-top-doctor"
+                                class="text-sm font-bold text-purple-900 dark:text-purple-100 mt-2 truncate">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Revenue Trend Chart -->
+                    <div
+                        class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Tendencia de
+                            Ingresos (Últimos 12 Meses)</h3>
+                        <div style="position: relative; height: 300px; width: 100%;">
+                            <canvas id="chart-revenue-trend"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Top Services & Cash Flow -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Top Performing Services -->
+                        <div
+                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Servicios Más
+                                Rentables</h3>
+                            <div style="position: relative; height: 300px; width: 100%;">
+                                <canvas id="chart-top-services"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Cash Flow Analysis -->
+                        <div
+                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Flujo de Caja
+                                Mensual</h3>
+                            <div style="position: relative; height: 300px; width: 100%;">
+                                <canvas id="chart-cash-flow"></canvas>
+                            </div>
                         </div>
                     </div>
 
@@ -2096,6 +2179,50 @@
         }
 
         // 3.5 Render Analytics (New)
+        let CURRENT_ANALYTICS_PERIOD = 'month'; // month, quarter, year, all
+        let revenueTrendChart = null;
+        let topServicesChart = null;
+        let cashFlowChart = null;
+
+        window.switchAnalyticsPeriod = function (period) {
+            CURRENT_ANALYTICS_PERIOD = period;
+            document.querySelectorAll('.analytics-period-filter').forEach(btn => {
+                btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white', 'font-bold');
+                btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400', 'font-medium');
+            });
+            const activeBtn = document.getElementById(`btn-analytics-${period}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white', 'font-bold');
+                activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400', 'font-medium');
+            }
+            renderAnalytics();
+        }
+
+        function getAnalyticsPeriodData() {
+            const now = new Date();
+            let startDate;
+
+            switch (CURRENT_ANALYTICS_PERIOD) {
+                case 'month':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    break;
+                case 'quarter':
+                    const quarterMonth = Math.floor(now.getMonth() / 3) * 3;
+                    startDate = new Date(now.getFullYear(), quarterMonth, 1);
+                    break;
+                case 'year':
+                    startDate = new Date(now.getFullYear(), 0, 1);
+                    break;
+                case 'all':
+                default:
+                    startDate = new Date(2000, 0, 1); // Far back enough
+                    break;
+            }
+
+            const filtered = APP_DATA.transactions.filter(t => new Date(t.date) >= startDate);
+            return filtered;
+        }
+
         function renderAnalytics() {
             if (typeof Chart === 'undefined') {
                 console.warn('Chart.js not loaded');
@@ -2213,6 +2340,202 @@
                                     usePointStyle: true
                                 }
                             }
+                        }
+                    }
+                });
+            }
+
+            // --- NEW ANALYTICS FEATURES ---
+
+            // Get filtered data based on period
+            const periodData = getAnalyticsPeriodData();
+
+            // Calculate KPIs
+            const incomeTransactions = periodData.filter(t => t.type === 'ingreso');
+            const totalIncome = incomeTransactions.reduce((sum, t) => sum + t.amount, 0);
+            const avgTicket = incomeTransactions.length > 0 ? totalIncome / incomeTransactions.length : 0;
+            const totalTransactions = periodData.length;
+
+            // Top Treatment by Revenue
+            const treatmentRevenue = {};
+            incomeTransactions.forEach(t => {
+                const cat = t.category || 'Otros';
+                treatmentRevenue[cat] = (treatmentRevenue[cat] || 0) + t.amount;
+            });
+            const topTreatment = Object.keys(treatmentRevenue).length > 0 ?
+                Object.entries(treatmentRevenue).sort((a, b) => b[1] - a[1])[0][0] : 'N/A';
+
+            // Best Doctor by Net Profit
+            const doctorNet = {};
+            periodData.forEach(t => {
+                if (t.doctorId) {
+                    doctorNet[t.doctorId] = (doctorNet[t.doctorId] || 0) + (t.type === 'ingreso' ? t.amount : -t.amount);
+                }
+            });
+            const bestDoctorId = Object.keys(doctorNet).length > 0 ?
+                Object.entries(doctorNet).sort((a, b) => b[1] - a[1])[0][0] : null;
+            const bestDoctor = bestDoctorId ? getDoctorName(parseInt(bestDoctorId)) : 'N/A';
+
+            // Update KPI DOM
+            const kpiAvg = document.getElementById('kpi-avg-ticket');
+            const kpiCount = document.getElementById('kpi-transaction-count');
+            const kpiTreatment = document.getElementById('kpi-top-treatment');
+            const kpiDoctor = document.getElementById('kpi-top-doctor');
+
+            if (kpiAvg) kpiAvg.innerText = avgTicket.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+            if (kpiCount) kpiCount.innerText = totalTransactions;
+            if (kpiTreatment) kpiTreatment.innerText = topTreatment;
+            if (kpiDoctor) kpiDoctor.innerText = bestDoctor;
+
+            // 3. Revenue Trend Chart (Last 12 Months)
+            const ctxRevenue = document.getElementById('chart-revenue-trend');
+            if (ctxRevenue) {
+                const last12 = new Date(today.getFullYear(), today.getMonth() - 11, 1);
+                const trendLabels = [];
+                const trendIncome = Array(12).fill(0);
+                const trendExpense = Array(12).fill(0);
+
+                for (let i = 0; i < 12; i++) {
+                    const d = new Date(last12.getFullYear(), last12.getMonth() + i, 1);
+                    trendLabels.push(monthNames[d.getMonth()]);
+                }
+
+                APP_DATA.transactions.forEach(t => {
+                    const tDate = new Date(t.date);
+                    const monthDiff = (tDate.getFullYear() - last12.getFullYear()) * 12 + (tDate.getMonth() - last12.getMonth());
+                    if (monthDiff >= 0 && monthDiff < 12) {
+                        if (t.type === 'ingreso') {
+                            trendIncome[monthDiff] += t.amount;
+                        } else {
+                            trendExpense[monthDiff] += t.amount;
+                        }
+                    }
+                });
+
+                if (revenueTrendChart) revenueTrendChart.destroy();
+                revenueTrendChart = new Chart(ctxRevenue, {
+                    type: 'line',
+                    data: {
+                        labels: trendLabels,
+                        datasets: [
+                            {
+                                label: 'Ingresos',
+                                data: trendIncome,
+                                borderColor: '#C69C6D',
+                                backgroundColor: 'rgba(198, 156, 109, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            },
+                            {
+                                label: 'Gastos',
+                                data: trendExpense,
+                                borderColor: '#ef4444',
+                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8 } },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) label += ': ';
+                                        if (context.parsed.y !== null) {
+                                            label += new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(context.parsed.y);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, grid: { display: true, drawBorder: false } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            // 4. Top Performing Services Chart
+            const ctxServices = document.getElementById('chart-top-services');
+            if (ctxServices) {
+                const topServicesData = Object.entries(treatmentRevenue)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+
+                if (topServicesChart) topServicesChart.destroy();
+                topServicesChart = new Chart(ctxServices, {
+                    type: 'bar',
+                    data: {
+                        labels: topServicesData.map(s => s[0]),
+                        datasets: [{
+                            label: 'Ingresos',
+                            data: topServicesData.map(s => s[1]),
+                            backgroundColor: ['#C69C6D', '#A87F55', '#E5C4A0', '#8B6B4D', '#D4AF37'],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(context.parsed.x);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { beginAtZero: true, grid: { display: true } },
+                            y: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            // 5. Cash Flow Chart (Monthly Cash Flow for Last 12 Months)
+            const ctxCashFlow = document.getElementById('chart-cash-flow');
+            if (ctxCashFlow) {
+                const cashFlowData = trendIncome.map((income, i) => income - trendExpense[i]);
+
+                if (cashFlowChart) cashFlowChart.destroy();
+                cashFlowChart = new Chart(ctxCashFlow, {
+                    type: 'bar',
+                    data: {
+                        labels: trendLabels,
+                        datasets: [{
+                            label: 'Flujo de Caja',
+                            data: cashFlowData,
+                            backgroundColor: cashFlowData.map(v => v >= 0 ? '#10b981' : '#ef4444'),
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        return 'Flujo: ' + new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(context.parsed.y);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, grid: { display: true, drawBorder: false } },
+                            x: { grid: { display: false } }
                         }
                     }
                 });
