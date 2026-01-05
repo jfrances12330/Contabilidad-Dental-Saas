@@ -2184,34 +2184,39 @@
             }
 
             // 2. Margin Chart (Doughnut) - Mock Distribution
-            if (marginChart) marginChart.destroy();
-            marginChart = new Chart(ctxMargin, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Ortodoncia', 'Implantes', 'General', 'Estética'],
-                    datasets: [{
-                        data: [35, 45, 15, 5],
-                        backgroundColor: ['#C69C6D', '#A87F55', '#F3E7D7', '#334155'], // Gold Gradient & Dark Slate
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    cutout: '75%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: colorText,
-                                font: { family: 'Manrope', size: 12 },
-                                padding: 20,
-                                usePointStyle: true
+            if (ctxMargin) {
+                const isDark = document.documentElement.classList.contains('dark');
+                const colorText = isDark ? '#94a3b8' : '#64748b';
+
+                if (marginChart) marginChart.destroy();
+                marginChart = new Chart(ctxMargin, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Ortodoncia', 'Implantes', 'General', 'Estética'],
+                        datasets: [{
+                            data: [35, 45, 15, 5],
+                            backgroundColor: ['#C69C6D', '#A87F55', '#F3E7D7', '#334155'], // Gold Gradient & Dark Slate
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        cutout: '75%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: colorText,
+                                    font: { family: 'Manrope', size: 12 },
+                                    padding: 20,
+                                    usePointStyle: true
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
         }
 
         // 4. DASHBOARD LOGIC
