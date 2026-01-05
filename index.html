@@ -214,6 +214,8 @@
                     <div class="flex flex-col">
                         <p class="text-sm font-bold text-slate-900 dark:text-white">Dr. Lobato</p>
                         <p class="text-[11px] text-slate-500 font-medium">Administrador</p>
+                        <p id="current-date-display"
+                            class="text-[9px] text-primary/70 font-bold uppercase tracking-wider mt-1"></p>
                     </div>
                 </div>
             </div>
@@ -400,13 +402,13 @@
 
                     <!-- Team Period Selector -->
                     <div class="flex bg-slate-100 dark:bg-white/5 rounded-xl p-1 gap-1 shadow-inner order-3 md:order-2">
-                        <button onclick="switchTeamTimeFilter('hoy')" id="btn-team-hoy"
+                        <button onclick="switchTimeFilter('hoy')" id="btn-team-hoy"
                             class="team-time-filter px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 transition-all duration-300">HOY</button>
-                        <button onclick="switchTeamTimeFilter('ayer')" id="btn-team-ayer"
+                        <button onclick="switchTimeFilter('ayer')" id="btn-team-ayer"
                             class="team-time-filter px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 transition-all duration-300">AYER</button>
-                        <button onclick="switchTeamTimeFilter('semana')" id="btn-team-semana"
+                        <button onclick="switchTimeFilter('semana')" id="btn-team-semana"
                             class="team-time-filter px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 transition-all duration-300">SEMANA</button>
-                        <button onclick="switchTeamTimeFilter('mes')" id="btn-team-mes"
+                        <button onclick="switchTimeFilter('mes')" id="btn-team-mes"
                             class="team-time-filter active px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-bold transition-all duration-300 shadow-sm bg-white text-slate-900 dark:bg-dark-surface dark:text-white">MES</button>
                     </div>
 
@@ -1092,7 +1094,7 @@
             }
 
             // 5. Refresh data for target view
-            if (type === 'dashboard') window.switchTimeFilter(window.CURRENT_PERIOD || 'mes');
+            if (type === 'dashboard') window.switchTimeFilter(typeof CURRENT_TEAM_PERIOD !== 'undefined' ? CURRENT_TEAM_PERIOD : 'mes');
             if (type === 'finance') renderTable();
             if (type === 'team') renderTeam();
             if (type === 'analytics') if (typeof renderAnalytics === 'function') renderAnalytics();
@@ -1339,8 +1341,12 @@
 
         function saveData() {
             localStorage.setItem('DENTAL_APP_DATA_V2', JSON.stringify(APP_DATA));
-            updateDashboard();
-            renderTeam();
+            if (typeof switchTimeFilter === 'function') {
+                switchTimeFilter(typeof CURRENT_TEAM_PERIOD !== 'undefined' ? CURRENT_TEAM_PERIOD : 'mes');
+            } else {
+                updateDashboard();
+                renderTeam();
+            }
             renderAnalytics();
         }
 
@@ -1430,16 +1436,20 @@
             const detectedDoctors = new Map(); // Name -> { name, concepts: [], total: 0 }
 
             incomeData.forEach(row => {
-                if (!row.Dentista || row.Dentista.trim() === '') return;
-                const name = row.Dentista.trim().toUpperCase(); // Normalize
+                const dentistKey = Object.keys(row).find(k => k.toLowerCase().includes('dentista') || k.toLowerCase().includes('doctor')) || 'Dentista';
+                if (!row[dentistKey] || row[dentistKey].trim() === '' || row[dentistKey].toLowerCase() === 'clínica') return;
+                const name = row[dentistKey].trim().toUpperCase(); // Normalize
 
                 if (!detectedDoctors.has(name)) {
                     detectedDoctors.set(name, { name, concepts: [], total: 0 });
                 }
 
                 const entry = detectedDoctors.get(name);
-                if (row.Concepto) entry.concepts.push(row.Concepto.toLowerCase());
-                if (row.Total) entry.total += parseFloat(row.Total);
+                const conceptKey = Object.keys(row).find(k => k.toLowerCase().includes('concepto')) || 'Concepto';
+                const totalKey = Object.keys(row).find(k => k.toLowerCase() === 'total' || k.toLowerCase().includes('importe')) || 'Total';
+
+                if (row[conceptKey]) entry.concepts.push(row[conceptKey].toLowerCase());
+                if (row[totalKey]) entry.total += cleanNumber(row[totalKey]);
             });
 
             // 2. Update Doctors List intelligently
@@ -1588,11 +1598,31 @@
             return dateStr;
         }
 
+        function cleanNumber(val) {
+            if (typeof val === 'number') return val;
+            if (!val || val === "") return 0;
+            // Handle European format: 1.250,50 -> 1250.50
+            // 1. Remove dots (thousands)
+            // 2. Replace comma with dot (decimal)
+            let s = val.toString().trim();
+            if (s.includes(',') && s.includes('.')) {
+                // If both present, dots are likely thousands
+                s = s.replace(/\./g, '').replace(',', '.');
+            } else if (s.includes(',')) {
+                // If only comma, it's decimal
+                s = s.replace(',', '.');
+            }
+            return parseFloat(s) || 0;
+        }
+
         function findDoctorIdByName(name) {
             if (!name || name.toLowerCase() === 'clínica') return null;
-            // Normalizar nombres para la búsqueda
             const normalizedSearch = name.trim().toLowerCase();
-            const doc = APP_DATA.doctors.find(d => d.name.toLowerCase().includes(normalizedSearch));
+            // Fuzzy search: check if doctor name includes the search term or vice versa
+            const doc = APP_DATA.doctors.find(d => {
+                const dName = d.name.toLowerCase();
+                return dName.includes(normalizedSearch) || normalizedSearch.includes(dName.replace('dr. ', '').replace('dra. ', '').trim());
+            });
             return doc ? doc.id : null;
         }
 
@@ -2109,24 +2139,58 @@
         }
 
         // 4. DASHBOARD LOGIC
-        function updateDashboard() {
-            let income = 0; let expenses = 0;
-            APP_DATA.transactions.forEach(t => {
-                if (t.type === 'ingreso') income += parseFloat(t.amount);
-                if (t.type === 'gasto') expenses += parseFloat(t.amount);
-            });
+        function updateDashboard(period = 'mes') {
+            const data = calculatePeriodData(period);
+            const income = data.income;
+            const expenses = data.expenses;
 
             const kpiIncome = document.getElementById('kpi-income');
             const kpiExpenses = document.getElementById('kpi-expenses');
             const kpiProfit = document.getElementById('kpi-profit');
 
-            if (kpiIncome) kpiIncome.innerText = income.toLocaleString('de-DE') + "€";
-            if (kpiExpenses) kpiExpenses.innerText = expenses.toLocaleString('de-DE') + "€";
+            const fmt = (v) => v.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+            if (kpiIncome) kpiIncome.innerText = fmt(income);
+            if (kpiExpenses) kpiExpenses.innerText = fmt(expenses);
             if (kpiProfit) {
                 const p = income - expenses;
-                kpiProfit.innerText = p.toLocaleString('de-DE') + "€";
-                kpiProfit.className = p >= 0 ? "text-3xl font-bold text-primary tracking-tight font-serif" : "text-3xl font-bold text-red-500 tracking-tight font-serif";
+                kpiProfit.innerText = fmt(p);
+                kpiProfit.className = p >= 0 ? "text-2xl md:text-3xl font-bold text-primary tracking-tight font-serif" : "text-2xl md:text-3xl font-bold text-red-500 tracking-tight font-serif";
             }
+
+            // Update Team Ranking too
+            renderTeamRanking(data.team);
+        }
+
+        function renderTeamRanking(team) {
+            const listEl = document.getElementById('team-ranking-list');
+            if (!listEl) return;
+
+            listEl.innerHTML = '';
+            team.forEach((doc, index) => {
+                const isLeader = index === 0 && doc.generated > 0;
+                const leaderIcon = isLeader ? '<span class="material-symbols-outlined text-yellow-500 text-sm">emoji_events</span>' : '';
+                const barColor = isLeader ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600';
+                const avatarLetter = doc.name ? doc.name[0] : '?';
+
+                listEl.innerHTML += `
+                    <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+                        <div class="h-10 w-10 shrink-0 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center font-serif font-bold text-slate-600 dark:text-slate-300 relative">
+                            ${avatarLetter}
+                            ${isLeader ? '<div class="absolute -top-1 -right-1 bg-white dark:bg-dark-surface rounded-full p-0.5 shadow-sm">' + leaderIcon + '</div>' : ''}
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-slate-900 dark:text-white text-sm">${doc.name}</span>
+                                <span class="font-black text-slate-900 dark:text-white text-sm font-serif">${doc.amount}</span>
+                            </div>
+                            <div class="h-1.5 w-full bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full ${barColor} rounded-full" style="width: ${doc.percent}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         // 5. EXPORT & SETTINGS LOGIC
@@ -2196,18 +2260,13 @@
         }
 
         // 6. INITIALIZATION
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             try {
-                loadData();
+                await loadData();
                 renderTable();
-                renderTeam();
-                updateDashboard();
+                switchTimeFilter(CURRENT_TEAM_PERIOD);
                 renderAnalytics();
-
-                // Initialize Manager View if Dashboard is active
-                if (document.getElementById('view-dashboard')) {
-                    switchTimeFilter('mes');
-                }
+                updateClock();
             } catch (e) {
                 console.error("Initialization error:", e);
             }
@@ -2303,68 +2362,44 @@
         }
 
         window.switchTimeFilter = function (period) {
-            // 1. Update Buttons Visual State
-            document.querySelectorAll('.time-filter').forEach(btn => {
-                btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
-                btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
+            // 1. Update Buttons Visual State (Global)
+            document.querySelectorAll('.time-filter, .team-time-filter').forEach(btn => {
+                btn.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white', 'font-bold');
+                btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400', 'font-medium');
             });
-            const activeBtn = document.getElementById(`btn-${period}`);
-            if (activeBtn) {
-                activeBtn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white');
-                activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400');
-            }
 
-            // 2. GET REAL CALCULATED DATA
-            const data = calculatePeriodData(period);
+            // Activate buttons in both views if they exist
+            const dashBtn = document.getElementById(`btn-${period}`);
+            const teamBtn = document.getElementById(`btn-team-${period}`);
 
-            // 3. Update Hero Card
-            const incomeEl = document.getElementById('hero-income');
-            const expensesEl = document.getElementById('hero-expenses');
+            [dashBtn, teamBtn].forEach(btn => {
+                if (btn) {
+                    btn.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-sm', 'dark:bg-dark-surface', 'dark:text-white', 'font-bold');
+                    btn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400', 'font-medium');
+                }
+            });
 
-            const formatCurrency = (val) => val.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+            // 2. Refresh Views
+            updateDashboard(period);
 
-            if (incomeEl && expensesEl) {
-                incomeEl.style.opacity = '0.5';
-                expensesEl.style.opacity = '0.5';
-                setTimeout(() => {
-                    incomeEl.textContent = formatCurrency(data.income); // Apply global format
-                    expensesEl.textContent = formatCurrency(data.expenses); // Apply global format
-                    incomeEl.style.opacity = '1';
-                    expensesEl.style.opacity = '1';
-                }, 150);
-            }
-
-            // 4. Update Team Ranking
-            const listEl = document.getElementById('team-ranking-list');
-            if (listEl) {
-                listEl.innerHTML = '';
-
-                data.team.forEach((doc, index) => {
-                    const isLeader = index === 0 && doc.generated > 0;
-                    const leaderIcon = isLeader ? '<span class="material-symbols-outlined text-yellow-500 text-sm">emoji_events</span>' : '';
-                    const barColor = isLeader ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600';
-                    const avatarLetter = doc.name ? doc.name[0] : '?';
-
-                    listEl.innerHTML += `
-                        <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
-                            <div class="h-10 w-10 shrink-0 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center font-serif font-bold text-slate-600 dark:text-slate-300 relative">
-                                ${avatarLetter}
-                                ${isLeader ? '<div class="absolute -top-1 -right-1 bg-white dark:bg-dark-surface rounded-full p-0.5 shadow-sm">' + leaderIcon + '</div>' : ''}
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="font-bold text-slate-900 dark:text-white text-sm">${doc.name}</span>
-                                    <span class="font-black text-slate-900 dark:text-white text-sm font-serif">${doc.amount}</span>
-                                </div>
-                                <div class="h-1.5 w-full bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden">
-                                    <div class="h-full ${barColor} rounded-full" style="width: ${doc.percent}%"></div>
-                                </div>
-                            </div>
-                        </div>
-                        `;
-                });
+            // Sync Team view global state
+            if (typeof CURRENT_TEAM_PERIOD !== 'undefined') {
+                CURRENT_TEAM_PERIOD = period;
+                renderTeam();
             }
         };
+
+        // Initialize current date display
+        function updateClock() {
+            const el = document.getElementById('current-date-display');
+            if (el) {
+                const now = new Date();
+                const options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+                el.innerText = now.toLocaleDateString('es-ES', options).replace(',', '');
+            }
+        }
+        setInterval(updateClock, 10000);
+        updateClock();
     </script>
 
 </body>
