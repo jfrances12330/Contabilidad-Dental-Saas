@@ -325,7 +325,7 @@
                     </section>
 
                     <!-- NEW: Comparison & Insights Cards -->
-                    <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <section class="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <!-- Month vs Month Comparison -->
                         <div
                             class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/10 rounded-xl p-5 border border-blue-200 dark:border-blue-800/30">
@@ -479,11 +479,7 @@
                             class="team-time-filter active px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-bold transition-all duration-300 shadow-sm bg-white text-slate-900 dark:bg-dark-surface dark:text-white">MES</button>
                     </div>
 
-                    <button onclick="openDoctorModal()"
-                        class="flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-white shadow-md shadow-primary/20 hover:bg-primary-dark transition-all active:scale-95 order-2 md:order-3 self-end md:self-auto">
-                        <span class="material-symbols-outlined text-[20px]">add</span>
-                        <span class="hidden md:inline">Añadir</span>
-                    </button>
+                    <!-- Removed Add Doctor button - auto-discovery from sheets -->
                 </header>
 
                 <div class="flex flex-col gap-6 p-6 md:p-8 w-full pb-24 md:pb-10">
@@ -1845,10 +1841,11 @@
                         date: convertToISODate(row[dateKey]),
                         concept: row[conceptKey] || "Gasto Operativo",
                         amount: amount,
-                        params: {},
+                        cost: 0, // Expenses don't have cost
+                        doctorId: null, // Expenses not assigned to doctor
                         type: "gasto",
                         category: row[catKey] || "Operativo",
-                        source: "sheet_expenses"
+                        source: "sheet"
                     };
                 });
 
@@ -2163,12 +2160,14 @@
                 });
             }
 
-            // 3. Filter by Search
+            // 3. Filter by Search (accent-insensitive)
             if (searchVal) {
+                const normalizeText = (text) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+                const normalizedSearch = normalizeText(searchVal);
                 filtered = filtered.filter(t =>
-                    t.concept.toLowerCase().includes(searchVal) ||
-                    (t.category && t.category.toLowerCase().includes(searchVal)) ||
-                    getDoctorName(t.doctorId).toLowerCase().includes(searchVal)
+                    normalizeText(t.concept).includes(normalizedSearch) ||
+                    (t.category && normalizeText(t.category).includes(normalizedSearch)) ||
+                    normalizeText(getDoctorName(t.doctorId)).includes(normalizedSearch)
                 );
             }
 
@@ -2279,23 +2278,33 @@
                 }
             });
 
-            // Add pagination info and load more button
+            // Add pagination info and load more button (both mobile AND desktop)
+            const paginationHTML = hasMore ? `
+                <div class="text-center py-4 border-t border-slate-200 dark:border-white/10">
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">Mostrando ${endIndex} de ${totalItems} transacciones</p>
+                    <button onclick="loadMoreTransactions()" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary-dark transition-all">
+                        Cargar más
+                    </button>
+                </div>
+            ` : (totalItems > ITEMS_PER_PAGE ? `
+                <div class="text-center py-4 border-t border-slate-200 dark:border-white/10">
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Mostrando todas las ${totalItems} transacciones</p>
+                </div>
+            ` : '');
+
             if (mobileList) {
-                if (hasMore) {
-                    mobileList.innerHTML += `
-                        <div class="text-center py-4 border-t border-slate-200 dark:border-white/10">
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">Mostrando ${endIndex} de ${totalItems} transacciones</p>
-                            <button onclick="loadMoreTransactions()" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary-dark transition-all">
-                                Cargar más
-                            </button>
-                        </div>
-                    `;
-                } else if (totalItems > ITEMS_PER_PAGE) {
-                    mobileList.innerHTML += `
-                        <div class="text-center py-4 border-t border-slate-200 dark:border-white/10">
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Mostrando todas las ${totalItems} transacciones</p>
-                        </div>
-                    `;
+                mobileList.innerHTML += paginationHTML;
+            }
+            if (tbody && paginationHTML) {
+                // Add after desktop table
+                const tableContainer = tbody.closest('.bg-white');
+                if (tableContainer) {
+                    const existingPagination = tableContainer.querySelector('.pagination-container');
+                    if (existingPagination) existingPagination.remove();
+                    const paginationDiv = document.createElement('div');
+                    paginationDiv.className = 'pagination-container';
+                    paginationDiv.innerHTML = paginationHTML;
+                    tableContainer.appendChild(paginationDiv);
                 }
             }
 
