@@ -379,79 +379,9 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Chart Grid Simulation -->
-                        <div class="flex-1 w-full flex flex-col justify-end">
-                            <div
-                                class="relative grid grid-cols-6 gap-2 md:gap-8 h-[180px] md:h-[300px] items-end px-1 md:px-6 border-b border-slate-200 dark:border-slate-700 pb-2">
-                                <!-- Background Lines -->
-                                <div
-                                    class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-2 z-0">
-                                    <div
-                                        class="w-full border-t border-dashed border-slate-200 dark:border-slate-700 h-0">
-                                    </div>
-                                    <div
-                                        class="w-full border-t border-dashed border-slate-200 dark:border-slate-700 h-0">
-                                    </div>
-                                    <div
-                                        class="w-full border-t border-dashed border-slate-200 dark:border-slate-700 h-0">
-                                    </div>
-                                    <div
-                                        class="w-full border-t border-dashed border-slate-200 dark:border-slate-700 h-0">
-                                    </div>
-                                    <div class="w-full h-0"></div>
-                                </div>
-                                <!-- Bars (Simplified) -->
-                                <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
-                                    <div class="flex items-end justify-center gap-1 h-full">
-                                        <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 65%;"></div>
-                                        <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-700 rounded-t-sm"
-                                            style="height: 45%;"></div>
-                                    </div>
-                                </div>
-                                <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
-                                    <div class="flex items-end justify-center gap-1 h-full">
-                                        <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 72%;"></div>
-                                        <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-700 rounded-t-sm"
-                                            style="height: 48%;"></div>
-                                    </div>
-                                </div>
-                                <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
-                                    <div class="flex items-end justify-center gap-1 h-full">
-                                        <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 55%;"></div>
-                                        <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-700 rounded-t-sm"
-                                            style="height: 40%;"></div>
-                                    </div>
-                                </div>
-                                <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
-                                    <div class="flex items-end justify-center gap-1 h-full">
-                                        <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 45%;"></div>
-                                        <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-700 rounded-t-sm"
-                                            style="height: 35%;"></div>
-                                    </div>
-                                </div>
-                                <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
-                                    <div class="flex items-end justify-center gap-1 h-full">
-                                        <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 85%;"></div>
-                                        <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-700 rounded-t-sm"
-                                            style="height: 50%;"></div>
-                                    </div>
-                                </div>
-                                <div class="group relative flex h-full flex-col justify-end gap-1 z-10">
-                                    <div class="flex items-end justify-center gap-1 h-full">
-                                        <div class="w-2 md:w-6 bg-primary rounded-t-sm" style="height: 92%;"></div>
-                                        <div class="w-2 md:w-6 bg-slate-300 dark:bg-slate-700 rounded-t-sm"
-                                            style="height: 38%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-6 gap-2 md:gap-8 px-1 md:px-6 pt-3">
-                                <div class="text-center text-[10px] md:text-xs font-semibold text-slate-500">May</div>
-                                <div class="text-center text-[10px] md:text-xs font-semibold text-slate-500">Jun</div>
-                                <div class="text-center text-[10px] md:text-xs font-semibold text-slate-500">Jul</div>
-                                <div class="text-center text-[10px] md:text-xs font-semibold text-slate-500">Ago</div>
-                                <div class="text-center text-[10px] md:text-xs font-semibold text-slate-500">Sep</div>
-                                <div class="text-center text-[10px] md:text-xs font-bold text-primary">Oct</div>
-                            </div>
+                        <!-- Real Chart Canvas -->
+                        <div class="flex-1 w-full min-h-[300px]">
+                            <canvas id="chart-profit"></canvas>
                         </div>
                     </section>
                 </div>
@@ -1335,8 +1265,9 @@
             sheetsUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTc7OqZQYtGXYgqiBW3QR8FuTeG70vuUtzzVZGCNvQp5O_upc1kCZRRlVKIbnEso0sY053eWwC-0Efv/pub?gid=0&single=true&output=csv", // Ingresos
             expensesUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTc7OqZQYtGXYgqiBW3QR8FuTeG70vuUtzzVZGCNvQp5O_upc1kCZRRlVKIbnEso0sY053eWwC-0Efv/pub?gid=1425831012&single=true&output=csv" // Gastos
         };
-
-        let profitChart = null;
+        // Chart Variables
+        let profitChartDash = null;
+        let profitChartAdv = null;
         let marginChart = null;
 
         // 1. STATE MANAGEMENT
@@ -1358,6 +1289,9 @@
                 if (isMock) {
                     console.log("Mock data detected with real URL. Syncing...");
                     await syncFromSheets(true);
+                } else {
+                    // Si ya tenemos datos reales pero recargamos, marcamos como sincronizado
+                    updateSyncUI('success');
                 }
             } else {
                 // Si es la primera vez y ya definimos la URL arriba
@@ -1424,26 +1358,6 @@
             if (!url || url === "") url = APP_DATA.sheetsUrl;
             if (!expUrl || expUrl === "") expUrl = APP_DATA.expensesUrl;
 
-            // AUTO-CONVERT pubhtml -> csv for the specific expenses link
-            const convertToCSV = (u) => {
-                if (!u) return u;
-                if (u.includes('output=csv')) return u;
-                // Basic conversion for single sheet pubhtml
-                if (u.includes('pubhtml')) {
-                    // Extract GID if present, otherwise default to 0
-                    const gidMatch = u.match(/gid=(\d+)/);
-                    const gid = gidMatch ? gidMatch[1] : '0';
-                    // Reconstruct into CSV export link
-                    // Base: https://docs.google.com/spreadsheets/d/e/.../pub?
-                    const baseUrl = u.split('?')[0].replace('/pubhtml', '/pub');
-                    return `${baseUrl}?gid=${gid}&single=true&output=csv`;
-                }
-                return u;
-            };
-
-            url = convertToCSV(url);
-            expUrl = convertToCSV(expUrl);
-
             // 2. Validate Main URL
             if (!url || !url.includes('output=csv')) {
                 if (!silent) alert("Error: La URL de INGRESOS no es válida (debe terminar en output=csv).");
@@ -1468,14 +1382,24 @@
                 const incomeData = results[0];
                 const expenseData = results.length > 1 ? results[1] : [];
 
+                // Robustness: If incomeData is empty, but expenseData exists, still process expenses.
+                // Or if incomeData is empty, but we had previous data, don't overwrite with empty.
                 if (incomeData && incomeData.length > 0) {
                     processSheetsData(incomeData, expenseData); // Pass both
                     updateSyncUI('success');
                     saveData();
                     if (!silent) alert("Sincronización completada (Ingresos + Gastos) ✅");
                     return true;
-                } else {
-                    throw new Error("No se encontraron datos de ingresos.");
+                } else if (expenseData && expenseData.length > 0) {
+                    // If only expense data was fetched, process it without clearing existing income
+                    processSheetsData([], expenseData); // Pass empty income to avoid clearing
+                    updateSyncUI('success');
+                    saveData();
+                    if (!silent) alert("Sincronización completada (Solo Gastos) ✅");
+                    return true;
+                }
+                else {
+                    throw new Error("No se encontraron datos válidos para sincronizar.");
                 }
             } catch (error) {
                 console.error("Sync Error:", error);
@@ -1547,22 +1471,32 @@
             // Mapeo específico para tus columnas:
             // Fecha, Dentista, Paciente, Concepto, Efectivo, Tarjeta, Financiación, Laboratorio, Observación, Total
             const importedIncome = incomeData
-                .filter(row => row.Total && parseFloat(row.Total) > 0) // Ignorar filas vacías
+                .filter(row => {
+                    const amountKey = Object.keys(row).find(k => k.toLowerCase() === 'total' || k.toLowerCase().includes('importe'));
+                    const amount = parseFloat(row[amountKey]) || 0;
+                    return amount > 0;
+                })
                 .map((row, index) => {
-                    const amount = parseFloat(row.Total) || 0;
-                    const cost = parseFloat(row.Laboratorio) || 0;
+                    const dateKey = Object.keys(row).find(k => k.toLowerCase().includes('fecha') || k.toLowerCase().includes('date')) || 'Fecha';
+                    const amountKey = Object.keys(row).find(k => k.toLowerCase() === 'total' || k.toLowerCase().includes('importe'));
+                    const costKey = Object.keys(row).find(k => k.toLowerCase().includes('laboratorio') || k.toLowerCase().includes('coste')) || 'Laboratorio';
+                    const dentistKey = Object.keys(row).find(k => k.toLowerCase().includes('dentista') || k.toLowerCase().includes('doctor')) || 'Dentista';
+                    const patientKey = Object.keys(row).find(k => k.toLowerCase().includes('paciente') || k.toLowerCase().includes('patient')) || 'Paciente';
+                    const conceptKey = Object.keys(row).find(k => k.toLowerCase().includes('concepto') || k.toLowerCase().includes('concept')) || 'Concepto';
 
-                    // Si el concepto está vacío, usamos el nombre del paciente
-                    const concept = row.Concepto ? row.Concepto : (row.Paciente ? `Paciente: ${row.Paciente}` : "Tratamiento");
+                    const amount = parseFloat(row[amountKey]) || 0;
+                    const cost = parseFloat(row[costKey]) || 0;
+
+                    const concept = row[conceptKey] ? row[conceptKey] : (row[patientKey] ? `Paciente: ${row[patientKey]}` : "Tratamiento");
 
                     return {
                         id: Date.now() + index,
-                        date: convertToISODate(row.Fecha),
+                        date: convertToISODate(row[dateKey]),
                         concept: concept,
                         amount: amount,
                         cost: cost,
                         type: "ingreso",
-                        doctorId: findDoctorIdByName(row.Dentista),
+                        doctorId: findDoctorIdByName(row[dentistKey]),
                         category: "General",
                         source: "sheet"
                     };
@@ -1571,17 +1505,26 @@
             // 4. Create Transactions (EXPENSES)
             // Assumed headers: Fecha, Concepto, Importe, Categoria (optional)
             const importedExpenses = expenseData
-                .filter(row => row.Importe && parseFloat(row.Importe) > 0)
+                .filter(row => {
+                    const amountKey = Object.keys(row).find(k => k.toLowerCase().includes('importe') || k.toLowerCase().includes('total'));
+                    const amount = parseFloat(row[amountKey]) || 0;
+                    return amount > 0;
+                })
                 .map((row, index) => {
-                    const amount = parseFloat(row.Importe) || 0;
+                    const dateKey = Object.keys(row).find(k => k.toLowerCase().includes('fecha') || k.toLowerCase().includes('date')) || 'Fecha';
+                    const amountKey = Object.keys(row).find(k => k.toLowerCase().includes('importe') || k.toLowerCase().includes('total'));
+                    const conceptKey = Object.keys(row).find(k => k.toLowerCase().includes('concepto') || k.toLowerCase().includes('concept')) || 'Concepto';
+                    const catKey = Object.keys(row).find(k => k.toLowerCase().includes('categoria') || k.toLowerCase().includes('category')) || 'Categoria';
+
+                    const amount = parseFloat(row[amountKey]) || 0;
                     return {
                         id: Date.now() + index + 100000,
-                        date: convertToISODate(row.Fecha),
-                        concept: row.Concepto || "Gasto Operativo",
+                        date: convertToISODate(row[dateKey]),
+                        concept: row[conceptKey] || "Gasto Operativo",
                         amount: amount,
                         params: {},
                         type: "gasto",
-                        category: row.Categoria || "Operativo",
+                        category: row[catKey] || "Operativo",
                         source: "sheet_expenses"
                     };
                 });
@@ -2052,10 +1995,12 @@
                 console.warn('Chart.js not loaded');
                 return;
             }
-            const ctxProfit = document.getElementById('chart-profit');
-            const ctxMargin = document.getElementById('chart-margin-treatment'); // Reusing ID for now or check HTML
 
-            if (!ctxProfit) return;
+            const ctxDash = document.getElementById('chart-profit');
+            const ctxAdv = document.getElementById('chart-profit-doctor');
+            const ctxMargin = document.getElementById('chart-margin-treatment');
+
+            if (!ctxDash && !ctxAdv) return;
 
             // --- DYNAMIC LAST 6 MONTHS LABELS ---
             const today = new Date();
@@ -2086,9 +2031,7 @@
                 }
             });
 
-            // 1. Profit & Loss Chart
-            if (profitChart) profitChart.destroy();
-            profitChart = new Chart(ctxProfit, {
+            const chartConfig = {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -2120,7 +2063,19 @@
                         x: { grid: { display: false } }
                     }
                 }
-            });
+            };
+
+            // 1. Dashboard Chart
+            if (ctxDash) {
+                if (profitChartDash) profitChartDash.destroy();
+                profitChartDash = new Chart(ctxDash, chartConfig);
+            }
+
+            // 2. Advanced Analytics Chart
+            if (ctxAdv) {
+                if (profitChartAdv) profitChartAdv.destroy();
+                profitChartAdv = new Chart(ctxAdv, chartConfig);
+            }
 
             // 2. Margin Chart (Doughnut) - Mock Distribution
             if (marginChart) marginChart.destroy();
