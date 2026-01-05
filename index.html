@@ -519,7 +519,7 @@
                                     Finanzas</h2>
                                 <div class="flex items-center gap-2 mt-2">
                                     <div class="relative flex-1 md:flex-initial">
-                                        <input id="search-input" onkeyup="renderTable()" type="text"
+                                        <input id="search-input" onkeyup="debouncedRenderTable()" type="text"
                                             placeholder="Buscar concepto o doctor..."
                                             class="w-full md:w-80 rounded-lg border-slate-200 bg-white px-3 py-2 pl-9 text-sm dark:bg-dark-surface dark:border-white/10 dark:text-white dark:placeholder-slate-500 focus:ring-2 focus:ring-primary/20 transition-all">
                                         <span
@@ -1206,11 +1206,16 @@
                 if (icon) icon.classList.add('filled');
             }
 
-            // 5. Refresh data for target view
-            if (type === 'dashboard') window.switchTimeFilter(typeof CURRENT_TEAM_PERIOD !== 'undefined' ? CURRENT_TEAM_PERIOD : 'mes');
-            if (type === 'finance') renderTable();
-            if (type === 'team') renderTeam();
-            if (type === 'analytics') if (typeof renderAnalytics === 'function') renderAnalytics();
+            // 5. Refresh data ONLY for the active view (Lazy Rendering)
+            if (type === 'dashboard') {
+                window.switchTimeFilter(typeof CURRENT_TEAM_PERIOD !== 'undefined' ? CURRENT_TEAM_PERIOD : 'mes');
+            } else if (type === 'finance') {
+                renderTable();
+            } else if (type === 'team') {
+                renderTeam();
+            } else if (type === 'analytics') {
+                if (typeof renderAnalytics === 'function') renderAnalytics();
+            }
         }
 
         // --- VOICE INPUT LOGIC (Web Speech API) ---
@@ -1462,13 +1467,34 @@
 
         function saveData() {
             localStorage.setItem('DENTAL_APP_DATA_V2', JSON.stringify(APP_DATA));
-            if (typeof switchTimeFilter === 'function') {
-                switchTimeFilter(typeof CURRENT_TEAM_PERIOD !== 'undefined' ? CURRENT_TEAM_PERIOD : 'mes');
+
+            // Only refresh the currently active view (Performance Optimization)
+            const activeView = document.querySelector('.view-content.active');
+            if (activeView) {
+                const viewType = activeView.id.replace('view-', '');
+
+                if (viewType === 'dashboard') {
+                    if (typeof switchTimeFilter === 'function') {
+                        switchTimeFilter(typeof CURRENT_TEAM_PERIOD !== 'undefined' ? CURRENT_TEAM_PERIOD : 'mes');
+                    } else {
+                        updateDashboard();
+                        renderTeam();
+                    }
+                } else if (viewType === 'finance') {
+                    renderTable();
+                } else if (viewType === 'team') {
+                    renderTeam();
+                } else if (viewType === 'analytics') {
+                    if (typeof renderAnalytics === 'function') renderAnalytics();
+                }
             } else {
-                updateDashboard();
-                renderTeam();
+                // Fallback: if no active view detected, update dashboard (initial load)
+                if (typeof switchTimeFilter === 'function') {
+                    switchTimeFilter(typeof CURRENT_TEAM_PERIOD !== 'undefined' ? CURRENT_TEAM_PERIOD : 'mes');
+                } else {
+                    updateDashboard();
+                }
             }
-            renderAnalytics();
         }
 
         // --- GOOGLE SHEETS SYNC LOGIC (Async Parallel) ---
@@ -1525,11 +1551,11 @@
 
             updateSyncUI('loading');
 
-            // 3. Fetch Both URLs
-            const promises = [fetchCSV(url)];
+            // 3. Fetch Both URLs with Timeout Protection
+            const promises = [fetchCSVWithTimeout(url)];
             // Fetch expenses if valid CSV link
             if (expUrl && expUrl.includes('output=csv')) {
-                promises.push(fetchCSV(expUrl));
+                promises.push(fetchCSVWithTimeout(expUrl));
             }
 
             try {
@@ -1548,8 +1574,24 @@
                 return true;
             } catch (error) {
                 console.error("Sync Error Details:", error);
+
+                // Categorize error for better user feedback
+                let userMessage = "Error desconocido";
+
+                if (error.message && error.message.includes('Timeout')) {
+                    userMessage = error.message; // Already has clear message
+                } else if (error.message && (error.message.includes('not defined') || error.message.includes('undefined'))) {
+                    userMessage = "Error de JavaScript. Por favor, recarga la página (F5).";
+                } else if (error.message && error.message.includes('network')) {
+                    userMessage = "Error de conexión. Verifica tu internet.";
+                } else if (error.message && (error.message.includes('CORS') || error.message.includes('No \'Access-Control'))) {
+                    userMessage = "Las hojas de Google no están publicadas correctamente. Ve a Archivo > Compartir > Publicar en la web.";
+                } else if (error.message) {
+                    userMessage = error.message;
+                }
+
                 updateSyncUI('error');
-                if (!silent) alert(`Fallo en la sincronización: ${error.message || "Revisa tus enlaces de Google Sheets"}`);
+                if (!silent) alert(`Fallo en la sincronización: ${userMessage}`);
                 return false;
             }
         }
@@ -1564,6 +1606,15 @@
                     error: (err) => reject(err)
                 });
             });
+        }
+
+        function fetchCSVWithTimeout(url, timeout = 15000) {
+            return Promise.race([
+                fetchCSV(url),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Timeout: La sincronización tardó demasiado. Verifica tu conexión a internet.')), timeout)
+                )
+            ]);
         }
 
         function processSheetsData(incomeData, expenseData) {
@@ -1829,6 +1880,12 @@
 
         // 2. FINANCE LOGIC
         let CURRENT_FINANCE_TYPE = 'all';
+        let searchDebounceTimer = null; // For performance optimization
+
+        window.debouncedRenderTable = function () {
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => renderTable(), 300); // Wait 300ms after last keystroke
+        }
 
         window.switchFinanceType = function (type) {
             CURRENT_FINANCE_TYPE = type;
