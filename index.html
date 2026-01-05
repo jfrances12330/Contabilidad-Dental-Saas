@@ -477,6 +477,8 @@
                             class="team-time-filter px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 transition-all duration-300">SEMANA</button>
                         <button onclick="switchTimeFilter('mes')" id="btn-team-mes"
                             class="team-time-filter active px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-bold transition-all duration-300 shadow-sm bg-white text-slate-900 dark:bg-dark-surface dark:text-white">MES</button>
+                        <button onclick="switchTimeFilter('año')" id="btn-team-año"
+                            class="team-time-filter px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 transition-all duration-300">AÑO</button>
                     </div>
 
                     <!-- Removed Add Doctor button - auto-discovery from sheets -->
@@ -2541,6 +2543,8 @@
                     return date >= weekAgo && date <= now;
                 case 'mes':
                     return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+                case 'año':
+                    return date.getFullYear() === now.getFullYear();
                 default:
                     return true;
             }
@@ -2567,6 +2571,10 @@
                     startDate.setDate(startDate.getDate() - 14);
                     endDate = new Date(now);
                     endDate.setDate(endDate.getDate() - 7);
+                    break;
+                case 'año':
+                    startDate = new Date(now.getFullYear() - 1, 0, 1); // Jan 1 of last year
+                    endDate = new Date(now.getFullYear() - 1, 11, 31); // Dec 31 of last year
                     break;
                 case 'mes':
                 default:
@@ -3288,6 +3296,9 @@
                     break;
                 case 'mes':
                     start.setDate(1); // 1st of current month
+                    break;
+                case 'año':
+                    start.setMonth(0, 1); // January 1st of current year
                     break;
                 case 'hoy':
                 default:
