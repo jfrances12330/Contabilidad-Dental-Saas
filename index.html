@@ -1318,8 +1318,10 @@
             // --- APP LOGIC (FULL - v2 ANALYTICS) ---
             let APP_DATA = {
                 transactions: [],
-                doctors: [],
-                sheetsUrl: "" // Google Sheets CSV URL
+                doctors: [
+                    { id: 1, name: "JOSE LUIS", role: "General", goal: 10000, color: "blue" }
+                ],
+                sheetsUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTc7OqZQYtGXYgqiBW3QR8FuTeG70vuUtzzVZGCNvQp5O_upc1kCZRRlVKIbnEso0sY053eWwC-0Efv/pub?gid=0&single=true&output=csv" // Tu enlace real
             };
 
             let profitChart = null;
@@ -1410,29 +1412,48 @@
             }
 
             function processSheetsData(data) {
-                // Map CSV rows to existing application format
-                // Expected Headers: Fecha, Concepto, Importe, Coste, Tipo, Doctor, Categoria
-                const importedTxs = data.map((row, index) => {
-                    return {
-                        id: Date.now() + index,
-                        date: row.Fecha || new Date().toISOString().split('T')[0],
-                        concept: row.Concepto || "Sin concepto",
-                        amount: parseFloat(row.Importe) || 0,
-                        cost: parseFloat(row.Coste) || 0,
-                        type: (row.Tipo || "ingreso").toLowerCase(),
-                        doctorId: findDoctorIdByName(row.Doctor),
-                        category: row.Categoria || "General",
-                        source: "sheet"
-                    };
-                });
+                // Mapeo específico para tus columnas:
+                // Fecha, Dentista, Paciente, Concepto, Efectivo, Tarjeta, Financiación, Laboratorio, Observación, Total
+                const importedTxs = data
+                    .filter(row => row.Total && parseFloat(row.Total) > 0) // Ignorar filas vacías
+                    .map((row, index) => {
+                        const amount = parseFloat(row.Total) || 0;
+                        const cost = parseFloat(row.Laboratorio) || 0;
 
-                // Merge or replace? Let's replace for now to keep it clean from the sheet source
+                        // Si el concepto está vacío, usamos el nombre del paciente
+                        const concept = row.Concepto ? row.Concepto : (row.Paciente ? `Paciente: ${row.Paciente}` : "Tratamiento");
+
+                        return {
+                            id: Date.now() + index,
+                            date: convertToISODate(row.Fecha),
+                            concept: concept,
+                            amount: amount,
+                            cost: cost,
+                            type: "ingreso", // Por ahora todo lo que entra de esta hoja son ingresos
+                            doctorId: findDoctorIdByName(row.Dentista),
+                            category: "General",
+                            source: "sheet"
+                        };
+                    });
+
                 APP_DATA.transactions = importedTxs;
+            }
+
+            function convertToISODate(dateStr) {
+                if (!dateStr) return new Date().toISOString().split('T')[0];
+                // Intentar convertir DD/MM/YYYY a YYYY-MM-DD
+                const parts = dateStr.split('/');
+                if (parts.length === 3) {
+                    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                }
+                return dateStr;
             }
 
             function findDoctorIdByName(name) {
                 if (!name || name.toLowerCase() === 'clínica') return null;
-                const doc = APP_DATA.doctors.find(d => d.name.toLowerCase().includes(name.toLowerCase()));
+                // Normalizar nombres para la búsqueda
+                const normalizedSearch = name.trim().toLowerCase();
+                const doc = APP_DATA.doctors.find(d => d.name.toLowerCase().includes(normalizedSearch));
                 return doc ? doc.id : null;
             }
 
