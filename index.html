@@ -585,26 +585,27 @@
                             <p
                                 class="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-medium uppercase truncate">
                                 Entradas</p>
-                            <p
+                            <p id="finance-kpi-income"
                                 class="text-sm md:text-2xl font-bold text-slate-900 dark:text-white mt-0.5 md:mt-1 font-serif truncate">
-                                €25,000</p>
+                                €0</p>
                         </div>
                         <div
                             class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-5 border border-slate-100 dark:border-white/5 shadow-sm text-center md:text-left min-w-0">
                             <p
                                 class="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-medium uppercase truncate">
                                 Salidas</p>
-                            <p
+                            <p id="finance-kpi-expenses"
                                 class="text-sm md:text-2xl font-bold text-slate-900 dark:text-white mt-0.5 md:mt-1 font-serif truncate">
-                                €12,500</p>
+                                €0</p>
                         </div>
                         <div
                             class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-5 border border-slate-100 dark:border-white/5 shadow-sm text-center md:text-left min-w-0">
                             <p
                                 class="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-medium uppercase truncate">
                                 Neto</p>
-                            <p class="text-sm md:text-2xl font-bold text-primary mt-0.5 md:mt-1 font-serif truncate">
-                                €12,500</p>
+                            <p id="finance-kpi-net"
+                                class="text-sm md:text-2xl font-bold text-primary mt-0.5 md:mt-1 font-serif truncate">
+                                €0</p>
                         </div>
                     </div>
 
@@ -1335,16 +1336,24 @@
             }
 
             populateDoctorDropdown();
+        }
 
-            // Asegurar que el input tenga el valor real
+        function loadSettings() {
             const urlInput = document.getElementById('sheets-url-input');
+            const expInput = document.getElementById('expenses-url-input');
+
             if (urlInput) {
-                urlInput.value = APP_DATA.sheetsUrl || DEFAULT_URL;
+                urlInput.value = APP_DATA.sheetsUrl || "";
+            }
+            if (expInput) {
+                expInput.value = APP_DATA.expensesUrl || "";
             }
 
-            const expensesInput = document.getElementById('expenses-url-input');
-            if (expensesInput) {
-                expensesInput.value = APP_DATA.expensesUrl || "";
+            // Update protected label
+            const label = document.querySelector('#view-settings .bg-emerald-50 div span');
+            if (label) {
+                const configured = (APP_DATA.sheetsUrl && APP_DATA.sheetsUrl.length > 5);
+                label.innerText = configured ? "Estado: Todo Configurado" : "Estado: Pendiente";
             }
         }
 
@@ -1809,7 +1818,30 @@
                 );
             }
 
-            // 4. Sort and Render
+            // 4. Calculate Totals for KPIs (based on search/date filters)
+            let totalIncome = 0;
+            let totalExpenses = 0;
+
+            filtered.forEach(t => {
+                if (t.type === 'ingreso') totalIncome += parseFloat(t.amount);
+                else if (t.type === 'gasto') totalExpenses += parseFloat(t.amount);
+            });
+
+            const netValue = totalIncome - totalExpenses;
+
+            // Update KPI DOM
+            const kpiInc = document.getElementById('finance-kpi-income');
+            const kpiExp = document.getElementById('finance-kpi-expenses');
+            const kpiNet = document.getElementById('finance-kpi-net');
+
+            if (kpiInc) kpiInc.innerText = totalIncome.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+            if (kpiExp) kpiExp.innerText = totalExpenses.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+            if (kpiNet) {
+                kpiNet.innerText = (netValue >= 0 ? '+' : '') + netValue.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+                kpiNet.className = `text-sm md:text-2xl font-bold mt-0.5 md:mt-1 font-serif truncate ${netValue >= 0 ? 'text-primary' : 'text-red-500'}`;
+            }
+
+            // 5. Sort and Render
             filtered = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             filtered.forEach(t => {
@@ -2311,6 +2343,7 @@
                 switchTimeFilter(CURRENT_TEAM_PERIOD);
                 renderAnalytics();
                 updateClock();
+                loadSettings();
             } catch (e) {
                 console.error("Initialization error:", e);
             }
