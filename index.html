@@ -2329,53 +2329,216 @@
             if (!container) return;
 
             const periodData = calculatePeriodData(CURRENT_TEAM_PERIOD);
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            // Calculate previous period for trends
+            const prevPeriodData = calculatePreviousPeriodData(CURRENT_TEAM_PERIOD);
+
+            // Calculate days remaining in month for projections
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const daysPassed = now.getDate();
+            const daysLeft = daysInMonth - daysPassed;
 
             container.innerHTML = `
-                <div class="flex items-center justify-between mb-1">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">Doctores Activos</h3>
-                    <p class="text-xs text-slate-400">Datos: <span class="capitalize font-bold text-primary">${CURRENT_TEAM_PERIOD}</span></p>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">Rendimiento Individual</h3>
+                    <p class="text-xs text-slate-400">Período: <span class="capitalize font-bold text-primary">${CURRENT_TEAM_PERIOD}</span></p>
                 </div>
+                
+                <!-- Mobile: 2-column grid, Tablet: 2-column, Desktop: 1-column for details -->
+                <div class="grid grid-cols-2 lg:grid-cols-1 gap-3 md:gap-4">
             `;
 
-            periodData.team.forEach(doc => {
+            periodData.team.forEach((doc, index) => {
                 const progress = Math.min((doc.generated / doc.goal) * 100, 100).toFixed(0);
-                // Use Lobato Gold/Dark theme logic for badges
+
+                // Find previous period data for trend
+                const prevDoc = prevPeriodData.team.find(d => d.id === doc.id);
+                const prevGenerated = prevDoc ? prevDoc.generated : 0;
+                const trend = prevGenerated > 0 ? ((doc.generated - prevGenerated) / prevGenerated) * 100 : 0;
+                const trendIcon = trend >= 0 ? '↑' : '↓';
+                const trendColor = trend >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400';
+
+                // Calculate efficiency (avg ticket considering only income transactions)
+                const doctorTransactions = APP_DATA.transactions.filter(t =>
+                    t.doctorId === doc.id &&
+                    t.type === 'ingreso' &&
+                    isInPeriod(t.date, CURRENT_TEAM_PERIOD)
+                );
+                const procedureCount = doctorTransactions.length;
+                const avgTicket = procedureCount > 0 ? doc.generated / procedureCount : 0;
+
+                // Calculate top categories
+                const categories = {};
+                doctorTransactions.forEach(t => {
+                    const cat = t.category || 'Otros';
+                    categories[cat] = (categories[cat] || 0) + t.amount;
+                });
+                const topCategories = Object.entries(categories)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 3);
+                const topCategory = topCategories.length > 0 ? topCategories[0][0] : 'N/A';
+
+                // Goal tracking
+                const expectedProgress = CURRENT_TEAM_PERIOD === 'mes' ? (daysPassed / daysInMonth) * 100 : 100;
+                const status = progress >= expectedProgress * 0.9 ? 'on-track' :
+                    progress >= expectedProgress * 0.7 ? 'at-risk' : 'behind';
+                const statusColor = status === 'on-track' ? 'emerald' :
+                    status === 'at-risk' ? 'amber' : 'red';
+                const statusText = status === 'on-track' ? 'En Objetivo' :
+                    status === 'at-risk' ? 'En Riesgo' : 'Retrasado';
+
+                // Daily pace needed (only for month view)
+                const remaining = doc.goal - doc.generated;
+                const dailyPaceNeeded = CURRENT_TEAM_PERIOD === 'mes' && daysLeft > 0 ? remaining / daysLeft : 0;
+
+                // Ranking badge
+                const rankBadge = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+
                 const colorClass = doc.color === 'purple'
                     ? 'text-slate-600 bg-slate-100 dark:text-slate-300 dark:bg-white/5'
                     : 'text-primary bg-primary/10 dark:text-primary dark:bg-primary/20';
-
                 const barColor = doc.color === 'purple' ? 'bg-slate-400' : 'bg-primary';
 
                 container.innerHTML += `
-                    <div class="flex flex-col gap-3 md:gap-4 rounded-xl bg-white p-3 md:p-5 shadow-sm border border-slate-100 dark:bg-dark-surface dark:border-white/5">
-                        <div class="flex items-start justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="h-10 w-10 md:h-12 md:w-12 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-lg md:text-xl font-serif">${doc.name[0]}</div>
-                                <div>
-                                    <h4 class="text-sm md:text-base font-bold text-slate-900 dark:text-white font-serif">${doc.name}</h4>
-                                    <span class="inline-flex items-center rounded-md px-2 py-0.5 md:py-1 text-[10px] font-medium ${colorClass} ring-1 ring-inset ring-slate-500/10">${doc.role}</span>
+                    <div class="flex flex-col gap-2 md:gap-3 rounded-xl bg-white p-3 md:p-5 shadow-sm border border-slate-100 dark:bg-dark-surface dark:border-white/5 hover:shadow-md transition-shadow">
+                        <!-- Header -->
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <div class="h-8 w-8 md:h-10 md:w-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center text-primary font-bold text-sm md:text-base font-serif shrink-0">${doc.name[0]}</div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-1">
+                                        <h4 class="text-xs md:text-sm font-bold text-slate-900 dark:text-white font-serif truncate">${doc.name}</h4>
+                                        ${rankBadge ? `<span class="text-sm">${rankBadge}</span>` : ''}
+                                    </div>
+                                    <span class="inline-flex items-center rounded-md px-1.5 py-0.5 text-[9px] md:text-[10px] font-medium ${colorClass} ring-1 ring-inset ring-slate-500/10">${doc.role}</span>
                                 </div>
                             </div>
-                            <div class="text-right">
-                                <p class="text-lg md:text-xl font-black tracking-tight text-slate-900 dark:text-white font-serif">${doc.amount}</p>
+                            <div class="text-right shrink-0">
+                                <p class="text-sm md:text-lg font-black tracking-tight text-slate-900 dark:text-white font-serif">${doc.amount}</p>
+                                <p class="text-[9px] md:text-xs ${trendColor} font-bold">${trendIcon} ${Math.abs(trend).toFixed(1)}%</p>
                             </div>
                         </div>
+                        
+                        <!-- Metrics Grid (Hidden on mobile to save space, visible on md+) -->
+                        <div class="hidden md:grid grid-cols-3 gap-2 text-center">
+                            <div>
+                                <p class="text-[9px] md:text-xs text-slate-500 dark:text-slate-400 uppercase">Ticket Promedio</p>
+                                <p class="text-xs md:text-sm font-bold text-slate-900 dark:text-white">${avgTicket.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}</p>
+                            </div>
+                            <div>
+                                <p class="text-[9px] md:text-xs text-slate-500 dark:text-slate-400 uppercase">Procedimientos</p>
+                                <p class="text-xs md:text-sm font-bold text-slate-900 dark:text-white">${procedureCount}</p>
+                            </div>
+                            <div>
+                                <p class="text-[9px] md:text-xs text-slate-500 dark:text-slate-400 uppercase">Especialidad</p>
+                                <p class="text-xs md:text-sm font-bold text-slate-900 dark:text-white truncate">${topCategory}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Goal Progress -->
                         <div class="flex flex-col gap-1">
-                            <div class="flex justify-between text-xs font-medium">
-                                <span class="text-slate-500">Objetivo ${(doc.goal / 1000).toFixed(1)}k€</span>
-                                <span class="text-slate-900 dark:text-white">${progress}%</span>
+                            <div class="flex justify-between items-center text-[9px] md:text-xs">
+                                <span class="text-slate-500 flex items-center gap-1">
+                                    <span>Objetivo ${(doc.goal / 1000).toFixed(0)}k€</span>
+                                    <span class="hidden md:inline px-1.5 py-0.5 rounded-full bg-${statusColor}-100 dark:bg-${statusColor}-900/20 text-${statusColor}-700 dark:text-${statusColor}-400 text-[9px] font-bold">${statusText}</span>
+                                </span>
+                                <span class="font-bold text-slate-900 dark:text-white">${progress}%</span>
                             </div>
                             <div class="relative h-1.5 md:h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
-                                <div class="absolute left-0 top-0 h-full rounded-full ${barColor}" style="width: ${progress}%"></div>
+                                <div class="absolute left-0 top-0 h-full rounded-full ${barColor} transition-all duration-500" style="width: ${progress}%"></div>
                             </div>
+                            ${CURRENT_TEAM_PERIOD === 'mes' && daysLeft > 0 ? `
+                                <p class="text-[8px] md:text-[10px] text-slate-400 mt-0.5 hidden md:block">
+                                    ${remaining > 0 ? `Necesita ${dailyPaceNeeded.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}/día • ${daysLeft} días restantes` : '¡Objetivo alcanzado! 🎉'}
+                                </p>
+                            ` : ''}
                         </div>
-                         <button onclick="deleteDoctor(${doc.id})" class="self-end text-xs text-red-400 hover:text-red-500 mt-1 transition-colors">Eliminar</button>
+                        
+                        <button onclick="deleteDoctor(${doc.id})" class="hidden md:block self-end text-xs text-red-400 hover:text-red-500 transition-colors">Eliminar</button>
                     </div>
                 `;
             });
 
+            container.innerHTML += `</div>`; // Close grid
+
             // Update Donut Chart
             updateTeamDonut(periodData.team);
+        }
+
+        // Helper function to check if date is in period
+        function isInPeriod(dateStr, period) {
+            const date = new Date(dateStr);
+            const now = new Date();
+
+            switch (period) {
+                case 'hoy':
+                    return date.toDateString() === now.toDateString();
+                case 'ayer':
+                    const yesterday = new Date(now);
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    return date.toDateString() === yesterday.toDateString();
+                case 'semana':
+                    const weekAgo = new Date(now);
+                    weekAgo.setDate(weekAgo.getDate() - 7);
+                    return date >= weekAgo && date <= now;
+                case 'mes':
+                    return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+                default:
+                    return true;
+            }
+        }
+
+        // Helper to calculate previous period data for trends
+        function calculatePreviousPeriodData(currentPeriod) {
+            const now = new Date();
+            let startDate, endDate;
+
+            switch (currentPeriod) {
+                case 'hoy':
+                    startDate = new Date(now);
+                    startDate.setDate(startDate.getDate() - 1);
+                    endDate = startDate;
+                    break;
+                case 'ayer':
+                    startDate = new Date(now);
+                    startDate.setDate(startDate.getDate() - 2);
+                    endDate = startDate;
+                    break;
+                case 'semana':
+                    startDate = new Date(now);
+                    startDate.setDate(startDate.getDate() - 14);
+                    endDate = new Date(now);
+                    endDate.setDate(endDate.getDate() - 7);
+                    break;
+                case 'mes':
+                default:
+                    const prevMonth = now.getMonth() === 0 ? 11 : now.getMonth() - 1;
+                    const prevYear = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
+                    startDate = new Date(prevYear, prevMonth, 1);
+                    endDate = new Date(prevYear, prevMonth + 1, 0);
+                    break;
+            }
+
+            // Reuse existing calculatePeriodData logic but with custom date range
+            const filtered = APP_DATA.transactions.filter(t => {
+                const tDate = new Date(t.date);
+                return tDate >= startDate && tDate <= endDate;
+            });
+
+            const team = APP_DATA.doctors.map(doc => {
+                const docTransactions = filtered.filter(t => t.doctorId === doc.id && t.type === 'ingreso');
+                const generated = docTransactions.reduce((sum, t) => sum + t.amount, 0);
+                return {
+                    id: doc.id,
+                    name: doc.name,
+                    generated: generated
+                };
+            });
+
+            return { team };
         }
 
         function updateTeamDonut(teamData) {
