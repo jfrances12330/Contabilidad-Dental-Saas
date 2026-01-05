@@ -882,9 +882,9 @@
                                     <p class="text-xs text-slate-500">Pega aquí el enlace CSV de tu hoja de cálculo.</p>
                                 </div>
                                 <button onclick="syncFromSheets()" id="btn-sync-now"
-                                    class="px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg text-sm font-bold transition-all flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-sm">sync</span>
-                                    Sincronizar
+                                    class="shrink-0 px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 min-w-[120px]">
+                                    <span class="material-symbols-outlined text-sm" id="sync-icon">sync</span>
+                                    <span id="sync-text">Sincronizar</span>
                                 </button>
                             </div>
                             <input type="text" id="sheets-url-input"
@@ -1385,11 +1385,17 @@
 
             // --- GOOGLE SHEETS SYNC LOGIC ---
             window.syncFromSheets = async function (silent = false) {
+                console.log("Iniciando sincronización...");
                 const urlInput = document.getElementById('sheets-url-input');
                 const url = urlInput ? (urlInput.value.trim() || APP_DATA.sheetsUrl) : APP_DATA.sheetsUrl;
 
                 if (!url) {
                     if (!silent) alert("Por favor, introduce una URL de Google Sheets (formato CSV).");
+                    return;
+                }
+
+                if (!url.includes('output=csv')) {
+                    if (!silent) alert("La URL parece incorrecta. Asegúrate de que termina en 'output=csv'");
                     return;
                 }
 
@@ -1402,6 +1408,7 @@
                         header: true,
                         skipEmptyLines: true,
                         complete: function (results) {
+                            console.log("Datos recibidos de PapaParse:", results.data ? results.data.length : 0);
                             if (results.data && results.data.length > 0) {
                                 processSheetsData(results.data);
                                 updateSyncUI('success');
@@ -1409,7 +1416,7 @@
                                 if (!silent) alert("Sincronización completada con éxito ✅");
                                 resolve(true);
                             } else {
-                                if (!silent) alert("No se encontraron datos en el CSV.");
+                                if (!silent) alert("No se encontraron datos en el CSV. Revisa el documento.");
                                 updateSyncUI('error');
                                 resolve(false);
                             }
@@ -1475,27 +1482,44 @@
                 const label = document.getElementById('sync-status-label');
                 const indicator = document.getElementById('sync-indicator');
                 const btn = document.getElementById('btn-sync-now');
+                const btnIcon = document.getElementById('sync-icon');
+                const btnText = document.getElementById('sync-text');
 
-                if (!text || !label || !indicator) return;
+                if (!label || !indicator) return;
 
                 switch (status) {
                     case 'loading':
-                        text.innerText = "Sincronizando con Google Sheets...";
+                        if (text) text.innerText = "Sincronizando con Google Sheets...";
                         label.innerText = "Cargando";
                         indicator.innerHTML = '<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>';
-                        if (btn) btn.disabled = true;
+                        if (btn) {
+                            btn.disabled = true;
+                            btn.classList.add('opacity-50', 'cursor-not-allowed');
+                        }
+                        if (btnIcon) btnIcon.classList.add('animate-spin');
+                        if (btnText) btnText.innerText = "Cargando...";
                         break;
                     case 'success':
-                        text.innerText = "Última sincronización: " + new Date().toLocaleTimeString();
+                        if (text) text.innerText = "Última sincronización: " + new Date().toLocaleTimeString();
                         label.innerText = "Sincronizado";
                         indicator.innerHTML = '<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>';
-                        if (btn) btn.disabled = false;
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        }
+                        if (btnIcon) btnIcon.classList.remove('animate-spin');
+                        if (btnText) btnText.innerText = "Sincronizar";
                         break;
                     case 'error':
-                        text.innerText = "Error en la última sincronización";
+                        if (text) text.innerText = "Error en la última sincronización";
                         label.innerText = "Error";
                         indicator.innerHTML = '<span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>';
-                        if (btn) btn.disabled = false;
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        }
+                        if (btnIcon) btnIcon.classList.remove('animate-spin');
+                        if (btnText) btnText.innerText = "Reintentar";
                         break;
                 }
             }
