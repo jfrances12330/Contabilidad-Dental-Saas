@@ -1328,18 +1328,30 @@
             let marginChart = null;
 
             // 1. STATE MANAGEMENT
-            function loadData() {
+            async function loadData() {
                 const saved = localStorage.getItem('DENTAL_APP_DATA_V2');
                 if (saved) {
                     APP_DATA = JSON.parse(saved);
+
+                    // Si detectamos que los datos guardados son los mock iniciales (ID 101),
+                    // y tenemos una URL real, intentamos sincronizar automáticamente una vez.
+                    const isMock = APP_DATA.transactions.some(t => t.id === 101);
+                    if (isMock && APP_DATA.sheetsUrl.includes('google.com')) {
+                        console.log("Mock data detected with real URL. Syncing...");
+                        await syncFromSheets(true);
+                    }
                 } else {
-                    initializeMockData();
+                    // Si es la primera vez, intentamos cargar desde el Sheet si hay URL
+                    if (APP_DATA.sheetsUrl) {
+                        console.log("Detectada URL de Sheets, iniciando sync inicial...");
+                        await syncFromSheets(true); // true = silent mode (no alerts)
+                    } else {
+                        initializeMockData();
+                    }
                 }
 
-                // If sheetsUrl exists, we could auto-sync here, but let's keep it manual for now
                 populateDoctorDropdown();
 
-                // Populate the URL input if it exists
                 const urlInput = document.getElementById('sheets-url-input');
                 if (urlInput) urlInput.value = APP_DATA.sheetsUrl || "";
             }
@@ -1372,19 +1384,19 @@
             }
 
             // --- GOOGLE SHEETS SYNC LOGIC ---
-            window.syncFromSheets = async function () {
+            window.syncFromSheets = async function (silent = false) {
                 const urlInput = document.getElementById('sheets-url-input');
-                const url = urlInput.value.trim();
+                const url = urlInput ? (urlInput.value.trim() || APP_DATA.sheetsUrl) : APP_DATA.sheetsUrl;
 
                 if (!url) {
-                    alert("Por favor, introduce una URL de Google Sheets (formato CSV).");
+                    if (!silent) alert("Por favor, introduce una URL de Google Sheets (formato CSV).");
                     return;
                 }
 
                 APP_DATA.sheetsUrl = url;
                 updateSyncUI('loading');
 
-                try {
+                return new Promise((resolve) => {
                     Papa.parse(url, {
                         download: true,
                         header: true,
@@ -1394,21 +1406,22 @@
                                 processSheetsData(results.data);
                                 updateSyncUI('success');
                                 saveData();
-                                alert("Sincronización completada con éxito ✅");
+                                if (!silent) alert("Sincronización completada con éxito ✅");
+                                resolve(true);
                             } else {
-                                throw new Error("No se encontraron datos en el CSV");
+                                if (!silent) alert("No se encontraron datos en el CSV.");
+                                updateSyncUI('error');
+                                resolve(false);
                             }
                         },
                         error: function (err) {
                             console.error("PapaParse Error:", err);
                             updateSyncUI('error');
-                            alert("Error al leer el archivo. Asegúrate de que esté 'Publicado en la web' como CSV.");
+                            if (!silent) alert("Error al leer el archivo. Asegúrate de que esté 'Publicado en la web' como CSV.");
+                            resolve(false);
                         }
                     });
-                } catch (error) {
-                    console.error("Sync Error:", error);
-                    updateSyncUI('error');
-                }
+                });
             }
 
             function processSheetsData(data) {
@@ -2029,7 +2042,7 @@
 
                     // Initialize Manager View if Dashboard is active
                     if (document.getElementById('view-dashboard')) {
-                        switchTimeFilter('hoy');
+                        switchTimeFilter('mes');
                     }
                 } catch (e) {
                     console.error("Initialization error:", e);
