@@ -2130,7 +2130,12 @@
             renderTable();
         }
 
-        function renderTable() {
+        function renderTable(resetPage = false) {
+            // Reset pagination if filters changed
+            if (resetPage) {
+                window.financeCurrentPage = 1;
+            }
+
             const tbody = document.getElementById('finance-table-body');
             const mobileList = document.getElementById('finance-mobile-list');
             const searchVal = document.getElementById('search-input')?.value.toLowerCase() || "";
@@ -2212,7 +2217,16 @@
             // 5. Sort and Render
             filtered = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-            filtered.forEach(t => {
+            // PAGINATION: Show only first 100 by default for performance
+            const ITEMS_PER_PAGE = 100;
+            const totalItems = filtered.length;
+            const currentPage = window.financeCurrentPage || 1;
+            const startIndex = 0; // Always show from start
+            const endIndex = currentPage * ITEMS_PER_PAGE;
+            const paginatedData = filtered.slice(startIndex, endIndex);
+            const hasMore = endIndex < totalItems;
+
+            paginatedData.forEach(t => {
                 const isIngreso = t.type === 'ingreso';
                 const color = isIngreso ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400';
                 const sign = isIngreso ? '+' : '-';
@@ -2264,6 +2278,38 @@
                         </div>`;
                 }
             });
+
+            // Add pagination info and load more button
+            if (mobileList) {
+                if (hasMore) {
+                    mobileList.innerHTML += `
+                        <div class="text-center py-4 border-t border-slate-200 dark:border-white/10">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">Mostrando ${endIndex} de ${totalItems} transacciones</p>
+                            <button onclick="loadMoreTransactions()" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary-dark transition-all">
+                                Cargar más
+                            </button>
+                        </div>
+                    `;
+                } else if (totalItems > ITEMS_PER_PAGE) {
+                    mobileList.innerHTML += `
+                        <div class="text-center py-4 border-t border-slate-200 dark:border-white/10">
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Mostrando todas las ${totalItems} transacciones</p>
+                        </div>
+                    `;
+                }
+            }
+
+            // Reset page counter when filters change (search/date)
+            // This happens automatically because we check window.financeCurrentPage || 1
+        }
+
+        window.loadMoreTransactions = function () {
+            window.financeCurrentPage = (window.financeCurrentPage || 1) + 1;
+            renderTable();
+        }
+
+        window.resetFinancePagination = function () {
+            window.financeCurrentPage = 1;
         }
 
         function handleAddTransaction(e) {
