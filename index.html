@@ -3184,6 +3184,29 @@
                 const projectedMonthlyExpenses = dailyBurn * daysInMonth;
                 burnrateInsight.innerText = `Proyección mes: ${projectedMonthlyExpenses.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}`;
             }
+
+            // NEW: Quick Stats - Profit Margin
+            const quickstatsMargin = document.getElementById('quickstats-margin');
+            const quickstatsInsight = document.getElementById('quickstats-insight');
+
+            if (quickstatsMargin && quickstatsInsight) {
+                const profit = incomeThisMonth - expensesThisMonth;
+                const marginPercent = incomeThisMonth > 0 ? (profit / incomeThisMonth) * 100 : 0;
+
+                quickstatsMargin.innerText = `${marginPercent.toFixed(1)}%`;
+
+                if (marginPercent >= 70) {
+                    quickstatsInsight.innerText = "Excelente rentabilidad";
+                } else if (marginPercent >= 50) {
+                    quickstatsInsight.innerText = "Margen saludable";
+                } else if (marginPercent >= 30) {
+                    quickstatsInsight.innerText = "Margen aceptable";
+                } else if (marginPercent >= 0) {
+                    quickstatsInsight.innerText = "Margen bajo";
+                } else {
+                    quickstatsInsight.innerText = "En pérdidas";
+                }
+            }
         }
 
         function renderTeamRanking(team) {
