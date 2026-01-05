@@ -1425,10 +1425,24 @@
             if (!expUrl || expUrl === "") expUrl = APP_DATA.expensesUrl;
 
             // AUTO-CONVERT pubhtml -> csv for the specific expenses link
-            if (expUrl && expUrl.includes('pubhtml') && expUrl.includes('gid=1425831012')) {
-                console.log("Auto-converting pubhtml URL to CSV format for expenses...");
-                expUrl = expUrl.replace('pubhtml', 'pub').split('?')[0] + '?gid=1425831012&single=true&output=csv';
-            }
+            const convertToCSV = (u) => {
+                if (!u) return u;
+                if (u.includes('output=csv')) return u;
+                // Basic conversion for single sheet pubhtml
+                if (u.includes('pubhtml')) {
+                    // Extract GID if present, otherwise default to 0
+                    const gidMatch = u.match(/gid=(\d+)/);
+                    const gid = gidMatch ? gidMatch[1] : '0';
+                    // Reconstruct into CSV export link
+                    // Base: https://docs.google.com/spreadsheets/d/e/.../pub?
+                    const baseUrl = u.split('?')[0].replace('/pubhtml', '/pub');
+                    return `${baseUrl}?gid=${gid}&single=true&output=csv`;
+                }
+                return u;
+            };
+
+            url = convertToCSV(url);
+            expUrl = convertToCSV(expUrl);
 
             // 2. Validate Main URL
             if (!url || !url.includes('output=csv')) {
@@ -1619,16 +1633,16 @@
                     const day = parts[0].padStart(2, '0');
                     const month = parts[1].padStart(2, '0');
                     const year = parts[2];
-                    return `${year}-${month}-${day}`; // ISO Format YYYY-MM-DD
+                    // Handle 2 digit years if necessary (though usually Sheets gives 4)
+                    const fullYear = year.length === 2 ? `20${year}` : year;
+                    return `${fullYear}-${month}-${day}`;
                 }
             }
 
-            // 2. YYYY-MM-DD (Already ISO)
-            if (dateStr.includes('-')) {
-                return dateStr;
-            }
+            // 2. YYYY-MM-DD
+            if (dateStr.includes('-')) return dateStr;
 
-            return dateStr; // Fallback
+            return dateStr;
         }
 
         function findDoctorIdByName(name) {
@@ -1926,7 +1940,7 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="text-lg md:text-xl font-black tracking-tight text-slate-900 dark:text-white font-serif">${(doc.generated / 1000).toFixed(1)}k€</p>
+                                <p class="text-lg md:text-xl font-black tracking-tight text-slate-900 dark:text-white font-serif">${doc.amount}</p>
                             </div>
                         </div>
                         <div class="flex flex-col gap-1">
@@ -2038,69 +2052,78 @@
                 console.warn('Chart.js not loaded');
                 return;
             }
-            const ctxProfit = document.getElementById('chart-profit-doctor');
-            const ctxMargin = document.getElementById('chart-margin-treatment');
+            const ctxProfit = document.getElementById('chart-profit');
+            const ctxMargin = document.getElementById('chart-margin-treatment'); // Reusing ID for now or check HTML
 
-            if (!ctxProfit || !ctxMargin) return;
+            if (!ctxProfit) return;
 
-            // Destroy existing instances to prevent overlays
+            // --- DYNAMIC LAST 6 MONTHS LABELS ---
+            const today = new Date();
+            const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+            const labels = [];
+            const sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1);
+
+            // Generate labels for the last 6 months
+            for (let i = 0; i < 6; i++) {
+                const d = new Date(sixMonthsAgo.getFullYear(), sixMonthsAgo.getMonth() + i, 1);
+                labels.push(monthNames[d.getMonth()]);
+            }
+
+            // --- CALCULATE REAL DATA FOR THESE MONTHS ---
+            const incomeData = [0, 0, 0, 0, 0, 0];
+            const expenseData = [0, 0, 0, 0, 0, 0];
+
+            APP_DATA.transactions.forEach(t => {
+                const tDate = new Date(t.date); // This is UTC based on YYYY-MM-DD, fine for month extraction
+                // Check if in range
+                const monthDiff = (tDate.getFullYear() - sixMonthsAgo.getFullYear()) * 12 + (tDate.getMonth() - sixMonthsAgo.getMonth());
+                if (monthDiff >= 0 && monthDiff < 6) {
+                    if (t.type === 'ingreso') {
+                        incomeData[monthDiff] += t.amount;
+                    } else {
+                        expenseData[monthDiff] += t.amount;
+                    }
+                }
+            });
+
+            // 1. Profit & Loss Chart
             if (profitChart) profitChart.destroy();
-            if (marginChart) marginChart.destroy();
-
-            // Prepare Data from APP_DATA (respecting current DASHBOARD period for consistency)
-            const period = window.CURRENT_PERIOD || 'mes';
-            const periodData = calculatePeriodData(period);
-
-            const labels = periodData.team.map(d => d.name);
-            const dataProfit = periodData.team.map(d => d.generated);
-
-            // check theme for colors
-            const isDark = document.documentElement.classList.contains('dark');
-            const colorText = isDark ? '#ffffff' : '#0f172a';
-            const colorGrid = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-
-            // 1. Profit Chart (Bar)
             profitChart = new Chart(ctxProfit, {
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Ingresos (€)',
-                        data: dataProfit,
-                        backgroundColor: '#C69C6D',
-                        borderRadius: 6,
-                        barThickness: 40
-                    }]
+                    datasets: [
+                        { label: 'Ingresos', data: incomeData, backgroundColor: '#C69C6D', borderRadius: 6 },
+                        { label: 'Gastos', data: expenseData, backgroundColor: '#cbd5e1', borderRadius: 6 }
+                    ]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false },
+                        legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8 } },
                         tooltip: {
-                            backgroundColor: isDark ? '#15171E' : '#ffffff',
-                            titleColor: isDark ? '#C69C6D' : '#0f172a',
-                            bodyColor: isDark ? '#ffffff' : '#64748b',
-                            borderColor: '#C69C6D',
-                            borderWidth: 1,
-                            padding: 10,
-                            titleFont: { family: 'Playfair Display', size: 14 },
-                            bodyFont: { family: 'Manrope', size: 13 }
+                            callbacks: {
+                                label: function (context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
                         }
                     },
                     scales: {
-                        y: {
-                            grid: { color: colorGrid, borderDash: [5, 5] },
-                            ticks: { color: colorText, font: { family: 'Manrope' } }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: colorText, font: { family: 'Manrope', weight: 'bold' } }
-                        }
+                        y: { display: false, grid: { display: true, drawBorder: false } },
+                        x: { grid: { display: false } }
                     }
                 }
             });
 
             // 2. Margin Chart (Doughnut) - Mock Distribution
+            if (marginChart) marginChart.destroy();
             marginChart = new Chart(ctxMargin, {
                 type: 'doughnut',
                 data: {
@@ -2269,14 +2292,22 @@
         function calculatePeriodData(period) {
             const { start, end } = getPeriodDates(period);
 
+            // Normalize Date Objects to YYYY-MM-DD strings for comparison
+            // IMPORTANT: use local time construction to avoid UTC shifts
+            const fmt = (d) => {
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
+            const startStr = fmt(start);
+            const endStr = fmt(end);
+
             // Filter Transactions
             const relevantTxs = APP_DATA.transactions.filter(t => {
-                const tDate = new Date(t.date);
-                // Use simple string comparison for day precision to avoid timezone headaches
-                const tStr = tDate.toISOString().split('T')[0];
-                const sStr = start.toISOString().split('T')[0];
-                const eStr = end.toISOString().split('T')[0];
-                return tStr >= sStr && tStr <= eStr;
+                // t.date is already YYYY-MM-DD string from convertToISODate
+                return t.date >= startStr && t.date <= endStr;
             });
 
             // Calculate Totals
