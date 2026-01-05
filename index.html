@@ -1329,19 +1329,26 @@
 
             // 1. STATE MANAGEMENT
             async function loadData() {
+                const DEFAULT_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTc7OqZQYtGXYgqiBW3QR8FuTeG70vuUtzzVZGCNvQp5O_upc1kCZRRlVKIbnEso0sY053eWwC-0Efv/pub?gid=0&single=true&output=csv";
+
                 const saved = localStorage.getItem('DENTAL_APP_DATA_V2');
                 if (saved) {
-                    APP_DATA = JSON.parse(saved);
+                    const parsed = JSON.parse(saved);
+                    // Mezclamos para asegurar que si la URL guardada está vacía, use la default
+                    APP_DATA = { ...APP_DATA, ...parsed };
+                    if (!APP_DATA.sheetsUrl || APP_DATA.sheetsUrl === "") {
+                        APP_DATA.sheetsUrl = DEFAULT_URL;
+                    }
 
                     // Si detectamos que los datos guardados son los mock iniciales (ID 101),
                     // y tenemos una URL real, intentamos sincronizar automáticamente una vez.
                     const isMock = APP_DATA.transactions.some(t => t.id === 101);
-                    if (isMock && APP_DATA.sheetsUrl.includes('google.com')) {
+                    if (isMock) {
                         console.log("Mock data detected with real URL. Syncing...");
                         await syncFromSheets(true);
                     }
                 } else {
-                    // Si es la primera vez, intentamos cargar desde el Sheet si hay URL
+                    // Si es la primera vez y ya definimos la URL arriba
                     if (APP_DATA.sheetsUrl) {
                         console.log("Detectada URL de Sheets, iniciando sync inicial...");
                         await syncFromSheets(true); // true = silent mode (no alerts)
@@ -1352,8 +1359,11 @@
 
                 populateDoctorDropdown();
 
+                // Asegurar que el input tenga el valor real, no solo el placeholder
                 const urlInput = document.getElementById('sheets-url-input');
-                if (urlInput) urlInput.value = APP_DATA.sheetsUrl || "";
+                if (urlInput) {
+                    urlInput.value = APP_DATA.sheetsUrl || DEFAULT_URL;
+                }
             }
 
             function initializeMockData() {
@@ -1387,10 +1397,15 @@
             window.syncFromSheets = async function (silent = false) {
                 console.log("Iniciando sincronización...");
                 const urlInput = document.getElementById('sheets-url-input');
-                const url = urlInput ? (urlInput.value.trim() || APP_DATA.sheetsUrl) : APP_DATA.sheetsUrl;
+                // Intentar sacar la URL del input, si no, del estado global
+                let url = urlInput ? urlInput.value.trim() : APP_DATA.sheetsUrl;
+
+                if (!url || url === "") {
+                    url = APP_DATA.sheetsUrl; // Último recurso
+                }
 
                 if (!url) {
-                    if (!silent) alert("Por favor, introduce una URL de Google Sheets (formato CSV).");
+                    if (!silent) alert("Por favor, introduce o pega la URL en el cuadro inferior.");
                     return;
                 }
 
