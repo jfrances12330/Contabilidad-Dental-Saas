@@ -1521,6 +1521,12 @@
         });
 
         // --- APP LOGIC (FULL - v2 ANALYTICS) ---
+        // GLOBAL STATE VARIABLES
+        let CURRENT_TEAM_PERIOD = 'mes';
+        let CURRENT_FINANCE_TYPE = 'all';
+        let searchDebounceTimer = null;
+        let financeCategoryChart = null;
+
         let APP_DATA = {
             transactions: [],
             doctors: [], // Start empty
@@ -2021,9 +2027,8 @@
             panel.classList.toggle('hidden');
         }
 
-        // 2. FINANCE LOGIC
-        let CURRENT_FINANCE_TYPE = 'all';
-        let searchDebounceTimer = null; // For performance optimization
+        // FINANCE VIEW LOGIC
+        // CURRENT_FINANCE_TYPE moved to global scope at top of file
 
         window.debouncedRenderTable = function () {
             clearTimeout(searchDebounceTimer);
@@ -2045,7 +2050,8 @@
             renderTable();
         }
 
-        let financeCategoryChart = null;
+
+        // financeCategoryChart is now declared globally at top of file
 
         function updateFinanceCategoryChart(transactions) {
             const canvas = document.getElementById('chart-finance-categories');
@@ -2399,8 +2405,7 @@
             });
         }
 
-        // 3. TEAM LOGIC (UPDATED V2)
-        let CURRENT_TEAM_PERIOD = 'mes';
+
 
         function renderTeam() {
             const container = document.getElementById('doctors-container');
