@@ -1483,7 +1483,7 @@
             const importedIncome = incomeData
                 .filter(row => {
                     const amountKey = Object.keys(row).find(k => k.toLowerCase() === 'total' || k.toLowerCase().includes('importe'));
-                    const amount = parseFloat(row[amountKey]) || 0;
+                    const amount = cleanNumber(row[amountKey]);
                     return amount > 0;
                 })
                 .map((row, index) => {
@@ -1494,8 +1494,8 @@
                     const patientKey = Object.keys(row).find(k => k.toLowerCase().includes('paciente') || k.toLowerCase().includes('patient')) || 'Paciente';
                     const conceptKey = Object.keys(row).find(k => k.toLowerCase().includes('concepto') || k.toLowerCase().includes('concept')) || 'Concepto';
 
-                    const amount = parseFloat(row[amountKey]) || 0;
-                    const cost = parseFloat(row[costKey]) || 0;
+                    const amount = cleanNumber(row[amountKey]);
+                    const cost = cleanNumber(row[costKey]);
 
                     const concept = row[conceptKey] ? row[conceptKey] : (row[patientKey] ? `Paciente: ${row[patientKey]}` : "Tratamiento");
 
@@ -1517,7 +1517,7 @@
             const importedExpenses = expenseData
                 .filter(row => {
                     const amountKey = Object.keys(row).find(k => k.toLowerCase().includes('importe') || k.toLowerCase().includes('total'));
-                    const amount = parseFloat(row[amountKey]) || 0;
+                    const amount = cleanNumber(row[amountKey]);
                     return amount > 0;
                 })
                 .map((row, index) => {
@@ -1526,7 +1526,7 @@
                     const conceptKey = Object.keys(row).find(k => k.toLowerCase().includes('concepto') || k.toLowerCase().includes('concept')) || 'Concepto';
                     const catKey = Object.keys(row).find(k => k.toLowerCase().includes('categoria') || k.toLowerCase().includes('category')) || 'Categoria';
 
-                    const amount = parseFloat(row[amountKey]) || 0;
+                    const amount = cleanNumber(row[amountKey]);
                     return {
                         id: Date.now() + index + 100000,
                         date: convertToISODate(row[dateKey]),
