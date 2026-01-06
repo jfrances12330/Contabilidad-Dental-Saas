@@ -203,7 +203,7 @@
                         <span class="material-symbols-outlined">smart_toy</span>
                         <span class="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-primary animate-pulse"></span>
                     </div>
-                    Asistente IA
+                    Lobato AI
                 </button>
             </nav>
 
@@ -235,7 +235,7 @@
             <!-- DASHBOARD VIEW -->
             <div id="view-dashboard" class="view-content active w-full">
                 <!-- Increased padding-bottom to pb-48 to clear floating menu -->
-                <div class="container mx-auto max-w-7xl p-4 md:p-10 flex flex-col gap-6 md:gap-8 pb-48 md:pb-10">
+                <div class="container mx-auto max-w-7xl p-4 md:p-6 flex flex-col gap-3 md:gap-4 pb-48 md:pb-6">
                     <!-- Header -->
                     <!-- Header with Global Time Selector -->
                     <header class="flex flex-col md:flex-row items-center justify-between gap-4 mt-2 md:mt-0">
@@ -260,10 +260,10 @@
                     </header>
 
                     <!-- COMPACT CARDS 2x2 on Mobile -->
-                    <section class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
+                    <section class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
                         <!-- Revenue -->
                         <div onclick="switchTab('finance')"
-                            class="cursor-pointer group flex flex-col justify-between gap-3 rounded-2xl bg-white dark:bg-dark-surface p-4 md:p-6 shadow-sm border border-slate-100 dark:border-white/5 hover:scale-[1.02] transition-all hover:shadow-md">
+                            class="cursor-pointer group flex flex-col justify-between gap-2 rounded-2xl bg-white dark:bg-dark-surface p-3 md:p-4 shadow-sm border border-slate-100 dark:border-white/5 hover:scale-[1.02] transition-all hover:shadow-md">
                             <div class="flex items-start justify-between">
                                 <div
                                     class="rounded-full bg-green-50 dark:bg-green-900/20 p-2 md:p-3 text-green-600 dark:text-green-400 group-hover:bg-primary/20 transition-colors">
@@ -286,7 +286,7 @@
 
                         <!-- Expenses -->
                         <div onclick="switchTab('finance')"
-                            class="cursor-pointer group flex flex-col justify-between gap-3 rounded-2xl bg-white dark:bg-dark-surface p-4 md:p-6 shadow-sm border border-slate-100 dark:border-white/5 hover:scale-[1.02] transition-all hover:shadow-md">
+                            class="cursor-pointer group flex flex-col justify-between gap-2 rounded-2xl bg-white dark:bg-dark-surface p-3 md:p-4 shadow-sm border border-slate-100 dark:border-white/5 hover:scale-[1.02] transition-all hover:shadow-md">
                             <div class="flex items-start justify-between">
                                 <div
                                     class="rounded-full bg-red-50 dark:bg-red-900/20 p-2 md:p-3 text-red-600 dark:text-red-400 group-hover:bg-primary/20 transition-colors">
@@ -308,7 +308,7 @@
 
                         <!-- Net Profit (Spans 2 cols on mobile to emphasize importance) -->
                         <div onclick="switchTab('finance')"
-                            class="cursor-pointer col-span-2 md:col-span-1 flex flex-col justify-between gap-3 rounded-2xl bg-white dark:bg-dark-surface p-4 md:p-6 shadow-sm border border-slate-100 dark:border-white/5 relative overflow-hidden group hover:scale-[1.02] transition-all hover:shadow-md">
+                            class="cursor-pointer col-span-2 md:col-span-1 flex flex-col justify-between gap-2 rounded-2xl bg-white dark:bg-dark-surface p-3 md:p-4 shadow-sm border border-slate-100 dark:border-white/5 relative overflow-hidden group hover:scale-[1.02] transition-all hover:shadow-md">
                             <div
                                 class="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-primary/10 transition-transform group-hover:scale-125">
                             </div>
@@ -332,10 +332,10 @@
                     </section>
 
                     <!-- NEW: Comparison & Insights Cards -->
-                    <section class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <section class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                         <!-- Month vs Month Comparison -->
                         <div
-                            class="md:col-span-1 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/10 rounded-xl p-5 border border-blue-200 dark:border-blue-800/30">
+                            class="md:col-span-1 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/10 rounded-xl p-3 md:p-4 border border-blue-200 dark:border-blue-800/30">
                             <div class="flex items-center gap-2 mb-3">
                                 <span
                                     class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-xl">compare_arrows</span>
@@ -354,7 +354,7 @@
 
                         <!-- Month Projection -->
                         <div
-                            class="md:col-span-1 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/10 rounded-xl p-5 border border-purple-200 dark:border-purple-800/30">
+                            class="md:col-span-1 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/10 rounded-xl p-3 md:p-4 border border-purple-200 dark:border-purple-800/30">
                             <div class="flex items-center gap-2 mb-3">
                                 <span
                                     class="material-symbols-outlined text-purple-600 dark:text-purple-400 text-xl">timeline</span>
@@ -380,7 +380,7 @@
 
                         <!-- Burn Rate -->
                         <div
-                            class="md:col-span-1 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/10 rounded-xl p-5 border border-amber-200 dark:border-amber-800/30">
+                            class="md:col-span-1 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/10 rounded-xl p-3 md:p-4 border border-amber-200 dark:border-amber-800/30">
                             <div class="flex items-center gap-2 mb-3">
                                 <span
                                     class="material-symbols-outlined text-amber-600 dark:text-amber-400 text-xl">local_fire_department</span>
@@ -419,7 +419,7 @@
                                         <h3 class="text-lg font-bold text-white font-serif">Alertas IA</h3>
                                         <p
                                             class="ai-alert-text text-white/90 text-sm md:text-base font-medium max-w-2xl leading-relaxed">
-                                            Asistente IA disponible para analizar tus datos financieros
+                                            Lobato AI disponible para analizar tus datos financieros
                                         </p>
                                     </div>
                                 </div>
@@ -433,7 +433,7 @@
 
                     <!-- Charts -->
                     <section
-                        class="flex flex-col gap-4 rounded-xl bg-white dark:bg-dark-surface p-6 shadow-sm border border-slate-100 dark:border-white/5 flex-1 min-h-[400px]">
+                        class="flex flex-col gap-3 rounded-xl bg-white dark:bg-dark-surface p-4 md:p-5 shadow-sm border border-slate-100 dark:border-white/5 flex-1 min-h-[280px]">
                         <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
                             <div>
                                 <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">Balance
@@ -455,7 +455,7 @@
                             </div>
                         </div>
                         <!-- Real Chart Canvas -->
-                        <div class="flex-1 w-full min-h-[300px]">
+                        <div class="flex-1 w-full min-h-[220px]">
                             <canvas id="chart-profit-dash"></canvas>
                         </div>
                     </section>
@@ -871,7 +871,7 @@
 
             <!-- ANALYTICS VIEW (Managers Only) -->
             <div id="view-analytics" class="view-content w-full">
-                <div class="p-6 md:p-8 flex flex-col gap-6 pb-24 md:pb-10 max-w-7xl mx-auto">
+                <div class="p-4 md:p-5 flex flex-col gap-3 md:gap-4 pb-24 md:pb-6 max-w-7xl mx-auto">
                     <header>
                         <h2
                             class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif">
@@ -882,26 +882,26 @@
                         </p>
                     </header>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
                         <!-- Profit per Doctor Chart -->
                         <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm">
+                            class="bg-white dark:bg-dark-surface rounded-xl p-4 md:p-5 border border-slate-100 dark:border-white/5 shadow-sm">
                             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Rentabilidad
                                 por
                                 Doctor (Neto)
                             </h3>
-                            <div style="position: relative; height: 300px; width: 100%;">
+                            <div style="position: relative; height: 240px; width: 100%;">
                                 <canvas id="chart-profit-doctor"></canvas>
                             </div>
                         </div>
 
                         <!-- Margin per Treatment Chart -->
                         <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm">
+                            class="bg-white dark:bg-dark-surface rounded-xl p-4 md:p-5 border border-slate-100 dark:border-white/5 shadow-sm">
                             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Margen por
                                 Tratamiento (%)
                             </h3>
-                            <div style="position: relative; height: 300px; width: 100%;">
+                            <div style="position: relative; height: 240px; width: 100%;">
                                 <canvas id="chart-margin-treatment"></canvas>
                             </div>
                         </div>
@@ -1139,13 +1139,13 @@
     </div>
 
     <!-- CHAT VIEW -->
-    <div id="view-chat" class="view-content w-full">
+    <div id="view-chat" class="view-content flex flex-col h-screen">
         <!-- Header Chat -->
         <header
             class="h-16 bg-white dark:bg-[#1a2c35] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 shrink-0">
             <div class="flex items-center gap-3">
                 <span class="material-symbols-outlined text-primary text-2xl">smart_toy</span>
-                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Asistente IA</h2>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Lobato AI</h2>
                 <span
                     class="hidden md:inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">Online</span>
             </div>
@@ -1160,20 +1160,22 @@
                 </div>
                 <div
                     class="bg-white dark:bg-[#233540] p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700">
-                    <p class="text-sm leading-relaxed text-slate-800 dark:text-white">¡Hola! Soy tu asistente de gestión
-                        dental con IA. Pregúntame sobre:</p>
+                    <p class="text-sm leading-relaxed text-slate-800 dark:text-white">Hola Fernando, soy Lobato AI 👋
+                        ¿En qué
+                        puedo ayudarte hoy?</p>
                     <ul class="text-sm mt-2 space-y-1 text-slate-600 dark:text-slate-300">
-                        <li>💰 Gastos y categorías</li>
-                        <li>👨‍⚕️ Rendimiento de doctores</li>
-                        <li>📊 Proyecciones de ingresos</li>
-                        <li>💡 Recomendaciones de optimización</li>
+                        <li>📈 Análisis de rentabilidad y márgenes</li>
+                        <li>👥 Rendimiento del equipo (doctores/higienistas)</li>
+                        <li>💼 Estrategias de captación de pacientes</li>
+                        <li>🎯 Optimización de gastos y eficiencia</li>
+                        <li>📊 Proyecciones y objetivos de crecimiento</li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <!-- Input Area -->
-        <div class="bg-white dark:bg-[#1a2c35] p-4 border-t border-slate-200 dark:border-slate-800">
+        <div class="bg-white dark:bg-[#1a2c35] p-4 border-t border-slate-200 dark:border-slate-800 shrink-0">
             <div class="flex gap-2 max-w-4xl mx-auto relative">
                 <input id="chat-input" type="text" placeholder="Escribe o decídselo a la IA..."
                     class="w-full rounded-full border-slate-200 bg-slate-50 pl-5 pr-24 py-3 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white transition-all shadow-sm">
@@ -2063,15 +2065,59 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
         // --- HELPER FUNCTIONS FOR AI LOGIC ---
 
         function inferSpecialty(concepts) {
-            const text = concepts.join(' ');
+            const text = concepts.join(' ').toLowerCase();
 
-            if (text.includes('implante') || text.includes('corona') || text.includes('cirugía') || text.includes('elevación')) return "Implantología";
-            if (text.includes('ortodoncia') || text.includes('invisalign') || text.includes('bracket') || text.includes('férula')) return "Ortodoncia";
-            if (text.includes('endodoncia') || text.includes('conducto') || text.includes('pulpectomía')) return "Endodoncia";
-            if (text.includes('limpieza') || text.includes('curetaje') || text.includes('blanqueamiento')) return "Higiene";
-            if (text.includes('prótesis') || text.includes('removible')) return "Prótesis";
+            // Contadores por especialidad
+            const scores = {
+                'Ortodoncia': 0,
+                'Endodoncia': 0,
+                'Higiene': 0,
+                'Estética': 0,
+                'Cirugía': 0,
+                'Implantología': 0,
+                'Prótesis': 0,
+                'Periodoncia': 0
+            };
 
-            return "General";
+            // Ortodoncia (puntajes altos para keywords específicas)
+            if (text.match(/ortodoncia|invisalign|bracket|alineador|férula|aparato|retención/)) scores['Ortodoncia'] += 10;
+
+            // Endodoncia
+            if (text.match(/endodoncia|conducto|pulpectomía|desvitalización|Lima/)) scores['Endodoncia'] += 10;
+
+            // Higiene dental
+            if (text.match(/limpieza|profilaxis|tartrectomía|mantenimiento periodontal|higiene bucal/)) scores['Higiene'] += 10;
+            if (text.match(/curetaje|raspado|alisado radicular/)) scores['Periodoncia'] += 8;
+
+            // Estética dental
+            if (text.match(/blanque[a-z]*|carilla|composite|estética|reconstrucción estética/)) scores['Estética'] += 10;
+
+            // Cirugía (separado de implantología)
+            if (text.match(/extracción|exodoncia|cirugía|quiste|biopsia|frenectomía/)) scores['Cirugía'] += 10;
+
+            // Implantología (específico para implantes)
+            if (text.match(/implante|osteointegración|carga inmediata/)) scores['Implantología'] += 10;
+            if (text.match(/elevación.*seno|regeneración ósea/)) scores['Implantología'] += 8;
+
+            // Prótesis
+            if (text.match(/prótesis|corona|puente|dentadura|removible|sobredentadura/)) scores['Prótesis'] += 10;
+            if (text.match(/metal.*porcelana|zirconio|ceramic/)) scores['Prótesis'] += 5;
+
+            // Periodoncia
+            if (text.match(/periodoncia|encía|gingivitis|periodontitis/)) scores['Periodoncia'] += 10;
+
+            // Encontrar la especialidad con mayor puntuación
+            let maxScore = 0;
+            let specialty = 'General';
+
+            for (const [key, value] of Object.entries(scores)) {
+                if (value > maxScore) {
+                    maxScore = value;
+                    specialty = key;
+                }
+            }
+
+            return specialty;
         }
 
         function assignColor(index) {
@@ -2421,8 +2467,8 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             // 5. Sort and Render
             filtered = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-            // PAGINATION: Show only first 100 by default for performance
-            const ITEMS_PER_PAGE = 100;
+            // PAGINATION: Show only first 10 by default for faster loading
+            const ITEMS_PER_PAGE = 10;
             const totalItems = filtered.length;
             const currentPage = window.financeCurrentPage || 1;
             const startIndex = 0; // Always show from start

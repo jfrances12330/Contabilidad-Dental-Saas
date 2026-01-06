@@ -263,7 +263,7 @@ ${businessInfo}
                         content: context ? `📊 DATOS FINANCIEROS ACTUALES:\n${context}\n\n❓ PREGUNTA DEL USUARIO:\n${message}` : message
                     }
                 ],
-                max_tokens: 200, // Aumentado para respuestas más completas
+                max_tokens: 600, // Suficiente para respuestas desarrolladas
                 temperature: 0.7 // Balance entre creatividad y precisión
             })
         });
