@@ -592,8 +592,7 @@
 
                         <!-- Right: Logic Donut -->
                         <div class="flex flex-col gap-6">
-                            <div
-                                class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-100 dark:bg-dark-surface dark:ring-white/5">
+                            <div class="card-elite p-6 border-0">
                                 <div class="flex items-center justify-between mb-6">
                                     <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">
                                         Distribución
@@ -1101,6 +1100,10 @@
                                         <span id="sync-text">Sincronizar</span>
                                     </button>
                                 </div>
+                                <p id="last-sync-label"
+                                    class="w-full text-[10px] text-slate-400 font-medium mt-1 text-right italic opacity-0 transition-opacity">
+                                    --
+                                </p>
                             </div>
 
                             <!-- HIDDEN EDIT PANEL -->
@@ -1419,10 +1422,16 @@
 
             const textColor = isUser ? "" : "text-slate-800 dark:text-white";
 
+            // Parse Basic Markdown for better readability
+            let formattedText = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                .replace(/\n\n/g, '<br><br>') // Paragraphs
+                .replace(/\n/g, '<br>'); // Line breaks
+
             div.innerHTML = `
                 ${isUser ? '' : avatar}
                 <div class="${bubbleStyle}">
-                    <p class="text-sm leading-relaxed ${textColor}">${text}</p>
+                    <p class="text-sm leading-relaxed ${textColor}">${formattedText}</p>
                 </div>
             `;
 
@@ -1753,6 +1762,26 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                     // Si ya tenemos datos reales pero recargamos, marcamos como sincronizado
                     updateSyncUI('success');
                 }
+
+                // RESTORE TAB LOGIC
+                const restoreTab = localStorage.getItem('TAB_RESTORE');
+                if (restoreTab) {
+                    localStorage.removeItem('TAB_RESTORE'); // One-time use
+                    // Format check: view-settings -> settings
+                    const tabName = restoreTab.replace('view-', '');
+                    switchTab(tabName);
+                }
+
+                // RESTORE SYNC DATE
+                const lastSync = localStorage.getItem('LAST_SYNC');
+                if (lastSync) {
+                    const date = new Date(lastSync);
+                    const label = document.getElementById('last-sync-label');
+                    if (label) {
+                        label.innerText = "Actualizado: " + date.toLocaleDateString() + " " + date.toLocaleTimeString().slice(0, 5);
+                        label.classList.remove('opacity-0');
+                    }
+                }
             } else {
                 // Si es la primera vez y ya definimos la URL arriba
                 if (APP_DATA.sheetsUrl) {
@@ -1910,6 +1939,16 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 processSheetsData(incomeData || [], expenseData || []);
                 updateSyncUI('success');
                 saveData();
+
+                // Save Sync Date
+                const now = new Date();
+                localStorage.setItem('LAST_SYNC', now.toISOString());
+                const label = document.getElementById('last-sync-label');
+                if (label) {
+                    label.innerText = "Actualizado: " + now.toLocaleDateString() + " " + now.toLocaleTimeString().slice(0, 5);
+                    label.classList.remove('opacity-0');
+                }
+
                 if (!silent) alert("Sincronización completada con éxito ✅");
                 return true;
             } catch (error) {
@@ -2763,7 +2802,7 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 const barColor = doc.color === 'purple' ? 'bg-slate-400' : 'bg-primary';
 
                 container.innerHTML += `
-                    <div class="flex flex-col gap-2 md:gap-3 rounded-xl bg-white p-3 md:p-5 shadow-sm border border-slate-100 dark:bg-dark-surface dark:border-white/5 hover:shadow-md transition-shadow">
+                    <div class="card-elite p-3 md:p-5 hover:shadow-lg transition-transform border-0">
                         <!-- Header -->
                         <div class="flex items-start justify-between gap-2">
                             <div class="flex items-center gap-2 min-w-0">
@@ -3547,6 +3586,8 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
         function resetApp() {
             if (confirm("⚠️ ¿BORRAR TODO? Esta acción no se puede deshacer.")) {
                 localStorage.removeItem('DENTAL_APP_DATA');
+                localStorage.removeItem('DENTAL_APP_DATA_V2');
+                localStorage.setItem('TAB_RESTORE', 'view-settings'); // Force return here
                 location.reload();
             }
         }
