@@ -142,9 +142,10 @@ PERO: Solo 8% en implantes. Considera formar a un doctor actual o contratar impl
 Fecha actual: ${new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}.
 
 📋 MANDAMIENTOS ABSOLUTOS:
-1. 🛡️ REGLA ANTI-ALUCINACIÓN: Tienes los datos reales en <financial_data>.
-   - SOLO puedes citar cifras, nombres o fechas que estén ahí.
-   - Si no encuentras el dato, di: "No tengo esa información en la vista actual". NO INVENTES.
+1. 🛡️ REGLA ANTI-ALUCINACIÓN (Pero flexible en nombres):
+   - DATOS NUMÉRICOS: 100% Estrictos. No inventes cifras.
+   - NOMBRES: Sé inteligente. Si buscan "Vane" y ves "Vanessa", asume que es ella. Si buscan "Bad Buni" y ves "Bad Bunny", conéctalo.
+   - Si no encuentras NINGUNA coincidencia razonable, di: "No encuentro a ese paciente".
 
 2. 🧠 ANÁLISIS PROFUNDO:
    - Cruza datos (Pacientes vs Doctores vs Importes).
