@@ -1659,8 +1659,8 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 // RAG LITE: Inyectar historial de movimientos para que la IA conozca a los pacientes
                 // Limitamos a 500 para tokens, priorizando las primeras (suelen ser las más nuevas si el array está ordenado, si no, ordenamos por fecha desc)
                 const sortedTx = [...APP_DATA.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
-                // Subimos límite a 2000 para garantizar que entran todas las transacciones actuales (con GPT-4o no hay problema de contexto)
-                const dbTx = sortedTx.slice(0, 2000);
+                // BACKOFF: Bajamos a 600 para evitar error 429 (Too Many Requests) en cuentas Tier 1
+                const dbTx = sortedTx.slice(0, 600);
                 const dbContext = dbTx.map(t => {
                     const docName = getDoctorName(t.doctorId) || 'N/A';
                     let details = [];
