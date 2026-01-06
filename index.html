@@ -2645,7 +2645,7 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             }
             if (tbody && paginationHTML) {
                 // Add after desktop table
-                const tableContainer = tbody.closest('.bg-white');
+                const tableContainer = tbody.closest('.card-elite');
                 if (tableContainer) {
                     const existingPagination = tableContainer.querySelector('.pagination-container');
                     if (existingPagination) existingPagination.remove();
