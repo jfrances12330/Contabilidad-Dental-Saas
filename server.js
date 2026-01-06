@@ -38,18 +38,49 @@ app.post('/api/chat', async (req, res) => {
         // Aquí puedes añadir información específica de tu clínica/negocio
         const businessInfo = `
 📋 INFORMACIÓN DEL NEGOCIO:
-- Nombre: [Tu nombre de clínica/negocio]
-- Ubicación: [Ciudad/zona]
-- Servicios principales: [Ortodoncia, Implantes, Estética dental, etc.]
-- Rango de precios: [Ejemplo: Limpieza 50-80€, Implante 800-1200€]
-- Equipo: [Número de doctores y especialidades]
-- Público objetivo: [Familias, adultos 25-45, etc.]
-- Competencia principal: [Otras clínicas de la zona]
-- Objetivos 2026: [Aumentar facturación 20%, captar 50 pacientes/mes, etc.]
-- Presupuesto marketing: [Mensual/anual]
-- Canal principal de captación: [Google, Redes, Recomendaciones]
+- Nombre: Lobato Dental
+- Ubicación: Elche (Alicante)
+- Servicios principales: Ortodoncia, Implantes, Estética dental, Odontología General, Ortodoncia Pediátrica, Periodoncia, Endodoncia, Cirugía oral
+- Objetivos 2026: Aumentar facturación 30%
+- Presupuesto marketing anual: 12.000€ (1.000€/mes)
+- Canal principal de captación: Google Ads, SEO Local, Recomendaciones
 
-💡 NOTA: Rellena esta información para personalizar completamente tu asistente IA
+👥 PÚBLICO OBJETIVO (basado en análisis demográfico Elche):
+- Familias con niños (25-45 años) que buscan odontopediatría y ortodoncia
+- Adultos 35-55 años interesados en estética dental e implantes
+- Personas mayores 55+ que necesitan prótesis y rehabilitación
+- Profesionales con poder adquisitivo medio-alto
+- Residentes zona centro y Altabix de Elche
+
+🔍 ANÁLISIS SEO - "dentista en elche":
+COMPETENCIA PRINCIPAL (Top 10 SERP):
+1. Dental Roca (25+ años, fuerte en medicina estética)
+2. Clínica Dental Maruenda & Pérez (reputación de profesionalidad)
+3. Vitaldent Elche (cadena nacional, marca reconocida)
+4. Sanitas Milenium Elche (respaldo de seguro médico)
+5. IGB Dental (empresa familiar, múltiples ubicaciones)
+6. Clínica Dental TrueSmile (centro de Elche)
+7. AN Dental (primera cita gratuita, marketing agresivo)
+8. Dra. Martínez Bru (especialista en odontopediatría)
+9. Oralvium (primera visita gratuita)
+10. Dentisana (alta especialización)
+
+OPORTUNIDADES SEO DETECTADAS:
+- Keywords long-tail: "ortodoncia invisible Elche", "implantes dentales Elche precio"
+- Nicho odontopediatría menos saturado
+- Google My Business optimizable (reseñas, fotos, posts)
+- Contenido local: "mejor dentista Elche", "dentista urgencias Elche"
+
+�‍⚕️ INSTRUCCIÓN ESPECIAL AL AGENTE:
+ANALIZA AUTOMÁTICAMENTE los doctores del equipo basándote en:
+- Los CONCEPTOS de ingresos en los datos financieros proporcionados
+- Identifica qué doctores generan más ingresos
+- Deduce especialidades por tipo de tratamiento/concepto
+- Sugiere optimizaciones de distribución de pacientes
+- Recomienda formación o contrataciones según gaps detectados
+
+Ejemplo: Si ves muchos ingresos de "Ortodoncia - Dr. López" → Ese es tu ortodoncista estrella.
+Si ves pocos ingresos de "Implantes" → Oportunidad de crecimiento o necesidad de especialista.
         `.trim();
 
         // Call OpenAI API
