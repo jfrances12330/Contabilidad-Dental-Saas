@@ -332,7 +332,7 @@
                     </section>
 
                     <!-- NEW: Comparison & Insights Cards -->
-                    <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <section class="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <!-- Month vs Month Comparison -->
                         <div
                             class="md:col-span-1 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/10 rounded-xl p-5 border border-blue-200 dark:border-blue-800/30">
@@ -396,26 +396,6 @@
                                     --</p>
                             </div>
                         </div>
-
-                        <!-- Profit Margin (moved here from separate section) -->
-                        <div
-                            class="md:col-span-1 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/10 rounded-xl p-5 border border-emerald-200 dark:border-emerald-800/30">
-                            <div class="flex items-center gap-2 mb-3">
-                                <span
-                                    class="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-xl">percent</span>
-                                <h3
-                                    class="text-sm font-bold text-emerald-900 dark:text-emerald-100 uppercase tracking-wide">
-                                    Margen</h3>
-                            </div>
-                            <div id="quickstats-content">
-                                <p class="text-xs text-emerald-600 dark:text-emerald-400 mb-1">% Beneficio</p>
-                                <p id="quickstats-margin"
-                                    class="text-2xl font-bold text-emerald-900 dark:text-emerald-100 font-serif mb-2">--
-                                </p>
-                                <p class="text-xs text-emerald-700 dark:text-emerald-300 font-medium"
-                                    id="quickstats-insight">--</p>
-                            </div>
-                        </div>
                     </section>
 
 
@@ -476,7 +456,7 @@
                         </div>
                         <!-- Real Chart Canvas -->
                         <div class="flex-1 w-full min-h-[300px]">
-                            <canvas id="chart-profit"></canvas>
+                            <canvas id="chart-profit-dash"></canvas>
                         </div>
                     </section>
                 </div>
@@ -1645,7 +1625,7 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             }
         }
 
-        // === CHAT AI FUNCTIONALITY ===
+        // === CHAT AI FUNCTIONALITY (OpenAI) ===
         window.handleSend = async function () {
             const input = document.getElementById('chat-input');
             const chatMessages = document.getElementById('chat-messages');
@@ -1678,8 +1658,7 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
             try {
-                if (!geminiModel) await initGeminiAI();
-
+                // Prepare financial context
                 const now = new Date();
                 const thisMonth = now.getMonth();
                 const thisYear = now.getFullYear();
@@ -1695,10 +1674,26 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                     return { name: d.name, income: docIncome, goal: d.goal || 0 };
                 });
 
-                const prompt = `Eres un asistente de gestión dental. DATOS: Ingresos ${incomeThisMonth.toFixed(0)}€, Gastos ${expensesThisMonth.toFixed(0)}€. Doctores: ${doctors.map(d => `${d.name}: ${d.income.toFixed(0)}€`).join(', ')}. PREGUNTA: "${userMessage}". Responde BREVE (máximo 40 palabras) con datos específicos.`;
+                const context = `Ingresos mes actual: ${incomeThisMonth.toFixed(0)}€, Gastos: ${expensesThisMonth.toFixed(0)}€. Doctores: ${doctors.map(d => `${d.name}: ${d.income.toFixed(0)}€ (objetivo: ${d.goal}€)`).join(', ')}.`;
 
-                const result = await geminiModel.generateContent(prompt);
-                const aiAnswer = result.response.text();
+                // Call backend endpoint
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: userMessage,
+                        context: context
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiAnswer = data.message;
 
                 document.getElementById('ai-loading').remove();
                 chatMessages.innerHTML += `
@@ -2947,7 +2942,7 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 return;
             }
 
-            const ctxDash = document.getElementById('chart-profit');
+            const ctxDash = document.getElementById('chart-profit-dash');
             const ctxAdv = document.getElementById('chart-profit-doctor');
             const ctxMargin = document.getElementById('chart-margin-treatment');
 
@@ -3372,29 +3367,6 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             if (burnrateInsight) {
                 const projectedMonthlyExpenses = dailyBurn * daysInMonth;
                 burnrateInsight.innerText = `Proyección mes: ${projectedMonthlyExpenses.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}`;
-            }
-
-            // NEW: Quick Stats - Profit Margin
-            const quickstatsMargin = document.getElementById('quickstats-margin');
-            const quickstatsInsight = document.getElementById('quickstats-insight');
-
-            if (quickstatsMargin && quickstatsInsight) {
-                const profit = incomeThisMonth - expensesThisMonth;
-                const marginPercent = incomeThisMonth > 0 ? (profit / incomeThisMonth) * 100 : 0;
-
-                quickstatsMargin.innerText = `${marginPercent.toFixed(1)}%`;
-
-                if (marginPercent >= 70) {
-                    quickstatsInsight.innerText = "Excelente rentabilidad";
-                } else if (marginPercent >= 50) {
-                    quickstatsInsight.innerText = "Margen saludable";
-                } else if (marginPercent >= 30) {
-                    quickstatsInsight.innerText = "Margen aceptable";
-                } else if (marginPercent >= 0) {
-                    quickstatsInsight.innerText = "Margen bajo";
-                } else {
-                    quickstatsInsight.innerText = "En pérdidas";
-                }
             }
         }
 
