@@ -1547,7 +1547,7 @@
         async function initGeminiAI() {
             try {
                 const { GoogleGenerativeAI } = await import("@google/generative-ai");
-                const genAI = new GoogleGenerativeAI("AIzaSyAeq_4Dt_TY90UQdkivNKLI3phMUyGBp0I");
+                const genAI = new GoogleGenerativeAI("AIzaSyDP04CAVKRjFszxKfGgjGTR1Hu_P9mIDhw");
                 geminiModel = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
                 console.log("✅ Gemini AI initialized");
             } catch (error) {
