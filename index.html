@@ -23,12 +23,19 @@
     <!-- Fonts: Manrope (Sans) & Playfair Display (Serif for Premium Feel) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
-        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" />
+    <!-- Chart.js for Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js&#64;4.4.0"></script>
 
-    <!-- Chart.js for Analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Gemini AI SDK -->
+    <script type="importmap">
+    {
+        "imports": {
+            "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+    }
+    </script>
     <!-- PapaParse for CSV parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 
@@ -431,10 +438,8 @@
                                     <div class="flex flex-col gap-1 text-center md:text-left">
                                         <h3 class="text-lg font-bold text-white font-serif">Alertas IA</h3>
                                         <p
-                                            class="text-white/90 text-sm md:text-base font-medium max-w-2xl leading-relaxed">
-                                            He detectado un sobrecoste inusual en la partida de <span
-                                                class="font-bold text-white underline decoration-white/30 underline-offset-4">Laboratorio
-                                                (+20%)</span>.
+                                            class="ai-alert-text text-white/90 text-sm md:text-base font-medium max-w-2xl leading-relaxed">
+                                            Analizando datos con Gemini AI...
                                         </p>
                                     </div>
                                 </div>
@@ -1537,6 +1542,111 @@
         let profitChartDash = null;
         let profitChartAdv = null;
         let marginChart = null;
+
+        // === GEMINI AI INTEGRATION ===
+        let geminiModel = null;
+
+        // Initialize Gemini AI
+        async function initGeminiAI() {
+            try {
+                const { GoogleGenerativeAI } = await import("@google/generative-ai");
+                const genAI = new GoogleGenerativeAI("AIzaSyAeq_4Dt_TY90UQdkivNKLI3phMUyGBp0I");
+                geminiModel = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+                console.log("✅ Gemini AI initialized");
+            } catch (error) {
+                console.error("❌ Gemini AI init error:", error);
+            }
+        }
+
+        // Analyze financial anomalies with AI
+        async function analyzeFinancialAnomaly() {
+            if (!geminiModel) {
+                console.log("⏳ Initializing Gemini AI...");
+                await initGeminiAI();
+            }
+
+            try {
+                const now = new Date();
+                const thisMonth = now.getMonth();
+                const thisYear = now.getFullYear();
+
+                // Get this month's data
+                const thisMonthData = APP_DATA.transactions.filter(t => {
+                    const tDate = new Date(t.date);
+                    return tDate.getMonth() === thisMonth && tDate.getFullYear() === thisYear;
+                });
+
+                // Get previous month's data
+                const prevMonth = thisMonth === 0 ? 11 : thisMonth - 1;
+                const prevYear = thisMonth === 0 ? thisYear - 1 : thisYear;
+                const prevMonthData = APP_DATA.transactions.filter(t => {
+                    const tDate = new Date(t.date);
+                    return tDate.getMonth() === prevMonth && tDate.getFullYear() === prevYear;
+                });
+
+                // Calculate by category
+                const categorizeData = (data) => {
+                    const categories = {};
+                    data.filter(t => t.type === 'gasto').forEach(t => {
+                        const cat = t.category || 'General';
+                        categories[cat] = (categories[cat] || 0) + parseFloat(t.amount);
+                    });
+                    return categories;
+                };
+
+                const thisMonthCats = categorizeData(thisMonthData);
+                const prevMonthCats = categorizeData(prevMonthData);
+
+                // Build prompt for Gemini
+                const prompt = `Eres un analista financiero experto en clínicas dentales españolas.
+
+GASTOS MES ACTUAL:
+${Object.entries(thisMonthCats).map(([cat, amt]) => `- ${cat}: ${amt.toFixed(0)}€`).join('\n')}
+
+GASTOS MES ANTERIOR:
+${Object.entries(prevMonthCats).map(([cat, amt]) => `- ${cat}: ${amt.toFixed(0)}€`).join('\n')}
+
+INSTRUCCIONES:
+1. Identifica la categoría con MAYOR aumento porcentual (si es >15%)
+2. Si no hay anomalías significativas, sugiere una OPORTUNIDAD de mejora
+3. Genera UNA alerta CORTA y ACCIONABLE (máximo 15 palabras)
+4. Sé ESPECÍFICO con números
+
+FORMATO DE RESPUESTA (JSON puro, sin markdown):
+{
+  "alerta": "texto breve y accionable",
+  "categoria": "nombre de la categoría",
+  "variacion": "+X%" o "sin anomalías",
+  "criticidad": "alta" o "media" o "baja"
+}`;
+
+                const result = await geminiModel.generateContent(prompt);
+                const response = await result.response;
+                let text = response.text();
+
+                // Clean JSON from markdown
+                text = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+                const aiResponse = JSON.parse(text);
+
+                // Update UI
+                const alertText = document.querySelector('.ai-alert-text');
+                if (alertText) {
+                    alertText.innerHTML = aiResponse.alerta;
+                }
+
+                console.log('✅ Gemini AI Alert:', aiResponse);
+                return aiResponse;
+
+            } catch (error) {
+                console.error('❌ Gemini AI Error:', error);
+                const alertText = document.querySelector('.ai-alert-text');
+                if (alertText) {
+                    alertText.innerHTML = 'Monitoreando datos financieros automáticamente...';
+                }
+                return null;
+            }
+        }
 
         // 1. STATE MANAGEMENT
         async function loadData() {
@@ -3101,6 +3211,11 @@
 
             // NEW: Calculate insights for comparison, projection, and burn rate
             updateDashboardInsights(period);
+
+            // AI: Analyze financial anomalies automatically
+            if (APP_DATA.transactions.length > 0) {
+                analyzeFinancialAnomaly().catch(err => console.warn('AI analysis skipped:', err));
+            }
 
             // Update Team Ranking too
             renderTeamRanking(data.team);
