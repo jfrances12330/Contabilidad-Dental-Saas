@@ -4,6 +4,9 @@
 # Node modules
 node_modules/
 
+# Conversaciones (privado, no subir a GitHub)
+conversations.json
+
 # OS files
 .DS_Store
 Thumbs.db

@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs'); // ✅ Añadido para memoria persistente
 require('dotenv').config();
 
 const app = express();
@@ -13,15 +14,33 @@ const PORT = process.env.PORT || 3000;
 // Serve static files from the current directory
 app.use(express.static(__dirname));
 
+// ============================================================
+// 🧠 MEMORIA NIVEL 2: Persistencia de Conversaciones
+// ============================================================
+const CONVERSATIONS_FILE = './conversations.json';
+let allConversations = [];
+
+// Cargar conversaciones previas al iniciar
+if (fs.existsSync(CONVERSATIONS_FILE)) {
+    try {
+        const data = fs.readFileSync(CONVERSATIONS_FILE, 'utf8');
+        allConversations = JSON.parse(data);
+        console.log(`✅ Cargadas ${allConversations.length} conversaciones previas`);
+    } catch (error) {
+        console.error('Error cargando conversaciones:', error);
+        allConversations = [];
+    }
+}
+
 // Main route -> Serves the Unified HTML structure
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// OpenAI Chat Endpoint
+// OpenAI Chat Endpoint (con memoria)
 app.post('/api/chat', async (req, res) => {
     try {
-        const { message, context } = req.body;
+        const { message, context, conversationHistory = [] } = req.body; // ✅ Añadido conversationHistory
 
         if (!message) {
             return res.status(400).json({ error: 'Message is required' });
@@ -237,6 +256,8 @@ ${businessInfo}
 
 ⚡ OBJETIVO FINAL: Cada interacción debe acercar a Fernando y Lobato Dental a sus objetivos de crecimiento 30%, optimizar su tiempo como gerente, y mantener su bienestar profesional.`
                     },
+                    // ✅ MEMORIA NIVEL 1: Historial de conversación
+                    ...conversationHistory,
                     {
                         role: 'user',
                         content: context ? `📊 DATOS FINANCIEROS ACTUALES:\n${context}\n\n❓ PREGUNTA DEL USUARIO:\n${message}` : message
@@ -256,11 +277,66 @@ ${businessInfo}
         const data = await response.json();
         const aiMessage = data.choices[0].message.content;
 
+        // ============================================================
+        // 🧠 MEMORIA NIVEL 2: Guardar conversación persistente
+        // ============================================================
+        const conversation = {
+            id: Date.now(),
+            timestamp: new Date().toISOString(),
+            user: 'Fernando',
+            userMessage: message,
+            aiResponse: aiMessage,
+            context: context || null,
+            conversationLength: conversationHistory.length + 1
+        };
+
+        allConversations.push(conversation);
+
+        // Guardar en archivo JSON
+        try {
+            fs.writeFileSync(CONVERSATIONS_FILE, JSON.stringify(allConversations, null, 2));
+        } catch (error) {
+            console.error('Error guardando conversación:', error);
+        }
+
         res.json({ message: aiMessage });
     } catch (error) {
         console.error('Chat endpoint error:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
+});
+
+// ============================================================
+// 📊 ENDPOINTS DE GESTIÓN DE CONVERSACIONES
+// ============================================================
+
+// Ver historial completo
+app.get('/api/history', (req, res) => {
+    res.json({
+        total: allConversations.length,
+        conversations: allConversations
+    });
+});
+
+// Exportar para fine-tuning OpenAI
+app.get('/api/export-training', (req, res) => {
+    const trainingData = allConversations.map(conv => ({
+        messages: [
+            { role: 'system', content: 'Asistente IA Lobato Dental' },
+            { role: 'user', content: conv.userMessage },
+            { role: 'assistant', content: conv.aiResponse }
+        ]
+    }));
+    res.json(trainingData);
+});
+
+// Estadísticas
+app.get('/api/stats', (req, res) => {
+    res.json({
+        totalConversations: allConversations.length,
+        firstDate: allConversations[0]?.timestamp || null,
+        lastDate: allConversations[allConversations.length - 1]?.timestamp || null
+    });
 });
 
 // Health check endpoint (optional but good for monitoring)
