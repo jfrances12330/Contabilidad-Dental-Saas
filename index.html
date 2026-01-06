@@ -1981,6 +1981,13 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                     };
                     APP_DATA.doctors.push(newDoc);
                     console.log(`[Auto-Discovery] Created profile for: ${newDoc.name} (${newDoc.role})`);
+                } else {
+                    // AUTO-UPDATE: Re-check specialty based on new data logic
+                    const detectedRole = inferSpecialty(stats.concepts);
+                    // Only update if finding something specific (prefer not to downgrade to 'General' if manually set)
+                    if (detectedRole !== 'General') {
+                        doctor.role = detectedRole;
+                    }
                 }
             });
 
