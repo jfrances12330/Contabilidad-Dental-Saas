@@ -980,68 +980,107 @@
                         </div>
                     </div>
 
-                    <!-- KPI Summary Cards (Elite Style) -->
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3">
-                        <div class="card-elite p-4 relative overflow-hidden group">
-                            <div class="absolute left-0 top-0 w-1 h-full bg-blue-500/30"></div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">Ticket
-                                Promedio</p>
+                    <!-- STRATEGIC BI CARDS -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
+                        <!-- Laboratorio Ratio -->
+                        <div class="card-elite p-4 md:p-5 relative overflow-hidden group border-0 shadow-md">
+                            <div id="ratio-lab-indicator" class="absolute left-0 top-0 w-1 h-full bg-orange-500"></div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span
+                                    class="material-symbols-outlined text-orange-500 text-sm">precision_manufacturing</span>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
+                                    Ratio Laboratorio</p>
+                            </div>
+                            <p id="kpi-ratio-lab"
+                                class="text-2xl font-medium text-slate-900 dark:text-white num-font tracking-tight">--%
+                            </p>
+                            <p id="kpi-ratio-lab-text" class="text-[9px] text-slate-500 mt-1 font-bold italic">
+                                Cargando...</p>
+                        </div>
+
+                        <!-- EBITDA Estimado -->
+                        <div class="card-elite p-4 md:p-5 relative overflow-hidden group border-0 shadow-md">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-emerald-500"></div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span
+                                    class="material-symbols-outlined text-emerald-500 text-sm">account_balance_wallet</span>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
+                                    EBITDA Estimado</p>
+                            </div>
+                            <p id="kpi-ebitda"
+                                class="text-2xl font-medium text-slate-900 dark:text-white num-font tracking-tight">€0
+                            </p>
+                            <p class="text-[9px] text-slate-500 mt-1 font-bold uppercase italic">Rentabilidad Operativa
+                            </p>
+                        </div>
+
+                        <!-- Ticket Promedio -->
+                        <div class="card-elite p-4 md:p-5 relative overflow-hidden group border-0 shadow-md">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-blue-500 font-serif"></div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="material-symbols-outlined text-blue-500 text-sm">receipt_long</span>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
+                                    Ticket Medio</p>
+                            </div>
                             <p id="kpi-avg-ticket"
-                                class="text-2xl font-medium text-slate-900 dark:text-white mt-2 num-font tracking-tight">
-                                €0</p>
+                                class="text-2xl font-medium text-slate-900 dark:text-white num-font tracking-tight">€0
+                            </p>
+                            <p class="text-[9px] text-slate-500 mt-1 font-bold italic">Por paciente único</p>
                         </div>
-                        <div class="card-elite p-4 relative overflow-hidden group">
-                            <div class="absolute left-0 top-0 w-1 h-full bg-emerald-500/30"></div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
-                                Transacciones</p>
-                            <p id="kpi-transaction-count"
-                                class="text-2xl font-medium text-slate-900 dark:text-white mt-2 num-font tracking-tight">
-                                0</p>
-                        </div>
-                        <div class="card-elite p-4 relative overflow-hidden group">
-                            <div class="absolute left-0 top-0 w-1 h-full bg-amber-500/30"></div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">Mejor
-                                Tratamiento</p>
-                            <p id="kpi-top-treatment"
-                                class="text-sm font-bold text-amber-900 dark:text-amber-100 mt-2 truncate">-</p>
-                        </div>
-                        <div
-                            class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/10 rounded-xl p-4 border border-purple-200 dark:border-purple-800/30">
-                            <p class="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wide">
-                                Mejor Doctor</p>
-                            <p id="kpi-top-doctor"
-                                class="text-sm font-bold text-purple-900 dark:text-purple-100 mt-2 truncate">-</p>
+
+                        <!-- Mix de Pagos -->
+                        <div class="card-elite p-3 md:p-4 border-0 shadow-md relative group">
+                            <h3
+                                class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans mb-3 text-center">
+                                Mix de Pagos</h3>
+                            <div style="position: relative; height: 80px; width: 100%;">
+                                <canvas id="chart-payment-mix"></canvas>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Revenue Trend Chart -->
-                    <div
-                        class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Tendencia de
-                            Ingresos (Últimos 12 Meses)</h3>
-                        <div style="position: relative; height: 300px; width: 100%;">
-                            <canvas id="chart-revenue-trend"></canvas>
+                    <!-- MAIN ANALYTICS GRID -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <!-- Revenue & Expense Trend -->
+                        <div class="card-elite p-5 md:p-6 border-0 shadow-md h-[400px] flex flex-col">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">Historia de
+                                    Ingresos y Gastos</h3>
+                                <div class="flex items-center gap-3 text-[10px] font-bold uppercase">
+                                    <div class="flex items-center gap-1"><span
+                                            class="h-2 w-2 rounded-full bg-primary"></span> Ingresos</div>
+                                    <div class="flex items-center gap-1"><span
+                                            class="h-2 w-2 rounded-full bg-red-400"></span> Gastos</div>
+                                </div>
+                            </div>
+                            <div class="flex-1 min-h-0">
+                                <canvas id="chart-revenue-trend"></canvas>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Top Services & Cash Flow -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Top Performing Services -->
-                        <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm">
-                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Servicios Más
-                                Rentables</h3>
-                            <div style="position: relative; height: 300px; width: 100%;">
+                        <!-- Top Services Performance -->
+                        <div class="card-elite p-5 md:p-6 border-0 shadow-md h-[400px] flex flex-col">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 font-serif">Tratamientos
+                                más Rentables</h3>
+                            <div class="flex-1 min-h-0">
                                 <canvas id="chart-top-services"></canvas>
                             </div>
                         </div>
 
-                        <!-- Cash Flow Analysis -->
-                        <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm">
-                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Flujo de Caja
-                                Mensual</h3>
-                            <div style="position: relative; height: 300px; width: 100%;">
+                        <!-- Rentabilidad por Doctor -->
+                        <div class="card-elite p-5 md:p-6 border-0 shadow-md h-[350px] flex flex-col">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 font-serif">Beneficio Neto
+                                por Doctor</h3>
+                            <div class="flex-1 min-h-0">
+                                <canvas id="chart-profit-doctor"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Flujo de Caja Mensual -->
+                        <div class="card-elite p-5 md:p-6 border-0 shadow-md h-[350px] flex flex-col">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 font-serif">Flujo de Caja
+                                (Cash Flow)</h3>
+                            <div class="flex-1 min-h-0">
                                 <canvas id="chart-cash-flow"></canvas>
                             </div>
                         </div>
@@ -3185,50 +3224,87 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 });
             }
 
-            // --- NEW ANALYTICS FEATURES ---
+            // --- STRATEGIC BI ANALYTICS (Elite) ---
 
-            // Get filtered data based on period
+            // 1. Get filtered data based on period
             const periodData = getAnalyticsPeriodData();
-
-            // Calculate KPIs
             const incomeTransactions = periodData.filter(t => t.type === 'ingreso');
+            const expenseTransactions = periodData.filter(t => t.type === 'gasto');
             const totalIncome = incomeTransactions.reduce((sum, t) => sum + t.amount, 0);
-            const avgTicket = incomeTransactions.length > 0 ? totalIncome / incomeTransactions.length : 0;
-            const totalTransactions = periodData.length;
+            const totalExpenses = expenseTransactions.reduce((sum, t) => sum + t.amount, 0);
+            const profitValue = totalIncome - totalExpenses;
 
-            // Top Treatment by Revenue
-            const treatmentRevenue = {};
-            incomeTransactions.forEach(t => {
-                const cat = t.category || 'Otros';
-                treatmentRevenue[cat] = (treatmentRevenue[cat] || 0) + t.amount;
-            });
-            const topTreatment = Object.keys(treatmentRevenue).length > 0 ?
-                Object.entries(treatmentRevenue).sort((a, b) => b[1] - a[1])[0][0] : 'N/A';
+            // 2. Unique Patients Ticket Mean
+            const uniquePatients = new Set(incomeTransactions.map(t => (t.patient || 'Anon').trim().toLowerCase())).size;
+            const avgTicket = uniquePatients > 0 ? totalIncome / uniquePatients : 0;
 
-            // Best Doctor by Net Profit
-            const doctorNet = {};
-            periodData.forEach(t => {
-                if (t.doctorId) {
-                    doctorNet[t.doctorId] = (doctorNet[t.doctorId] || 0) + (t.type === 'ingreso' ? t.amount : -t.amount);
+            // 3. Ratio de Laboratorio (KPI PRO)
+            const labExpenses = expenseTransactions
+                .filter(t => (t.category || '').toLowerCase().includes('lab') || (t.concept || '').toLowerCase().includes('lab'))
+                .reduce((sum, t) => sum + t.amount, 0);
+
+            // Prosthetic income heuristic (Orthodontics, Implants, General often require lab)
+            const prostheticCategories = ['prótesis', 'implantes', 'estética', 'ortodoncia'];
+            const prostheticIncome = incomeTransactions
+                .filter(t => prostheticCategories.some(kw => (t.category || '').toLowerCase().includes(kw)))
+                .reduce((sum, t) => sum + t.amount, 0);
+
+            const labRatio = prostheticIncome > 0 ? (labExpenses / prostheticIncome) * 100 : totalIncome > 0 ? (labExpenses / totalIncome) * 100 : 0;
+
+            // Update UI: Lab Ratio
+            const kpiRatioLab = document.getElementById('kpi-ratio-lab');
+            const ratioLabText = document.getElementById('kpi-ratio-lab-text');
+            const ratioIndicator = document.getElementById('ratio-lab-indicator');
+
+            if (kpiRatioLab) kpiRatioLab.innerText = `${labRatio.toFixed(1)}%`;
+            if (ratioLabText && ratioIndicator) {
+                if (labRatio < 20) {
+                    ratioLabText.innerText = 'Rango Óptimo 💎';
+                    ratioIndicator.className = 'absolute left-0 top-0 w-1 h-full bg-emerald-500';
+                } else if (labRatio < 30) {
+                    ratioLabText.innerText = 'Coste Aceptable';
+                    ratioIndicator.className = 'absolute left-0 top-0 w-1 h-full bg-amber-500';
+                } else {
+                    ratioLabText.innerText = 'Revisar Márgenes ⚠️';
+                    ratioIndicator.className = 'absolute left-0 top-0 w-1 h-full bg-red-500';
                 }
-            });
-            const bestDoctorId = Object.keys(doctorNet).length > 0 ?
-                Object.entries(doctorNet).sort((a, b) => b[1] - a[1])[0][0] : null;
-            const bestDoctor = bestDoctorId ? getDoctorName(parseInt(bestDoctorId)) : 'N/A';
+            }
 
-            // Update KPI DOM
+            // 4. EBITDA & Ticket DOM
+            const kpiEbitda = document.getElementById('kpi-ebitda');
+            if (kpiEbitda) kpiEbitda.innerText = profitValue.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
             const kpiAvg = document.getElementById('kpi-avg-ticket');
-            const kpiCount = document.getElementById('kpi-transaction-count');
-            const kpiTreatment = document.getElementById('kpi-top-treatment');
-            const kpiDoctor = document.getElementById('kpi-top-doctor');
-
             if (kpiAvg) kpiAvg.innerText = avgTicket.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
-            if (kpiCount) kpiCount.innerText = totalTransactions;
-            if (kpiTreatment) kpiTreatment.innerText = topTreatment;
-            if (kpiDoctor) kpiDoctor.innerText = bestDoctor;
 
-            // 3. Revenue Trend Chart (Last 12 Months)
-            // Prepare data for trend charts (used by both Revenue and Cash Flow)
+            // 5. Payment Mix Chart
+            const paymentTotals = { cash: 0, card: 0, financing: 0 };
+            incomeTransactions.forEach(t => {
+                const concept = (t.concept || '').toLowerCase();
+                const category = (t.category || '').toLowerCase();
+                if (concept.includes('efectivo') || category.includes('efectivo')) paymentTotals.cash += t.amount;
+                else if (concept.includes('finan') || category.includes('finan')) paymentTotals.financing += t.amount;
+                else paymentTotals.card += t.amount;
+            });
+
+            const ctxPayment = document.getElementById('chart-payment-mix');
+            if (ctxPayment) {
+                if (paymentMixChart) paymentMixChart.destroy();
+                paymentMixChart = new Chart(ctxPayment, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Efectivo', 'Tarjeta/Banco', 'Financiación'],
+                        datasets: [{
+                            data: [paymentTotals.cash, paymentTotals.card, paymentTotals.financing],
+                            backgroundColor: ['#A87F55', '#C69C6D', '#E5C4A0'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { cutout: '70%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            }
+
+            // 6. Trend Charts (Last 12 Months)
             const last12 = new Date(today.getFullYear(), today.getMonth() - 11, 1);
             const trendLabels = [];
             const trendIncome = Array(12).fill(0);
@@ -3243,11 +3319,8 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 const tDate = new Date(t.date);
                 const monthDiff = (tDate.getFullYear() - last12.getFullYear()) * 12 + (tDate.getMonth() - last12.getMonth());
                 if (monthDiff >= 0 && monthDiff < 12) {
-                    if (t.type === 'ingreso') {
-                        trendIncome[monthDiff] += t.amount;
-                    } else {
-                        trendExpense[monthDiff] += t.amount;
-                    }
+                    if (t.type === 'ingreso') trendIncome[monthDiff] += t.amount;
+                    else trendExpense[monthDiff] += t.amount;
                 }
             });
 
@@ -3259,126 +3332,80 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                     data: {
                         labels: trendLabels,
                         datasets: [
-                            {
-                                label: 'Ingresos',
-                                data: trendIncome,
-                                borderColor: '#C69C6D',
-                                backgroundColor: 'rgba(198, 156, 109, 0.1)',
-                                tension: 0.4,
-                                fill: true
-                            },
-                            {
-                                label: 'Gastos',
-                                data: trendExpense,
-                                borderColor: '#ef4444',
-                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                                tension: 0.4,
-                                fill: true
-                            }
+                            { label: 'Ingresos', data: trendIncome, borderColor: '#C69C6D', backgroundColor: 'rgba(198, 156, 109, 0.1)', tension: 0.4, fill: true, pointRadius: 2 },
+                            { label: 'Gastos', data: trendExpense, borderColor: '#f87171', backgroundColor: 'rgba(248, 113, 113, 0.05)', tension: 0.4, fill: true, pointRadius: 0 }
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8 } },
-                            tooltip: {
-                                callbacks: {
-                                    label: function (context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) label += ': ';
-                                        if (context.parsed.y !== null) {
-                                            label += new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(context.parsed.y);
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: { beginAtZero: true, grid: { display: true, drawBorder: false } },
-                            x: { grid: { display: false } }
-                        }
+                        plugins: { legend: { display: false } },
+                        scales: { y: { grid: { color: 'rgba(0,0,0,0.03)' }, ticks: { font: { size: 10 } } }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }
                     }
                 });
             }
 
-            // 4. Top Performing Services Chart
+            // 7. Top Services Performance
+            const treatmentRevenueMap = {};
+            incomeTransactions.forEach(t => {
+                const cat = t.category || 'Otros';
+                treatmentRevenueMap[cat] = (treatmentRevenueMap[cat] || 0) + t.amount;
+            });
+            const topServicesDataList = Object.entries(treatmentRevenueMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
             const ctxServices = document.getElementById('chart-top-services');
             if (ctxServices) {
-                const topServicesData = Object.entries(treatmentRevenue)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 5);
-
                 if (topServicesChart) topServicesChart.destroy();
                 topServicesChart = new Chart(ctxServices, {
                     type: 'bar',
                     data: {
-                        labels: topServicesData.map(s => s[0]),
-                        datasets: [{
-                            label: 'Ingresos',
-                            data: topServicesData.map(s => s[1]),
-                            backgroundColor: ['#C69C6D', '#A87F55', '#E5C4A0', '#8B6B4D', '#D4AF37'],
-                            borderRadius: 6
-                        }]
+                        labels: topServicesDataList.map(s => s[0]),
+                        datasets: [{ data: topServicesDataList.map(s => s[1]), backgroundColor: '#C69C6D', borderRadius: 8 }]
                     },
                     options: {
                         indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function (context) {
-                                        return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(context.parsed.x);
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: { beginAtZero: true, grid: { display: true } },
-                            y: { grid: { display: false } }
-                        }
+                        plugins: { legend: { display: false } },
+                        scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
                     }
                 });
             }
 
-            // 5. Cash Flow Chart (Monthly Cash Flow for Last 12 Months)
-            const ctxCashFlow = document.getElementById('chart-cash-flow');
-            if (ctxCashFlow) {
-                const cashFlowData = trendIncome.map((income, i) => income - trendExpense[i]);
+            // 8. Profit per Doctor
+            const doctorNetMap = {};
+            periodData.forEach(t => {
+                if (t.doctorId) {
+                    doctorNetMap[t.doctorId] = (doctorNetMap[t.doctorId] || 0) + (t.type === 'ingreso' ? t.amount : -t.amount);
+                }
+            });
+            const topDoctorsAnalytics = Object.entries(doctorNetMap).sort((a, b) => b[1] - a[1]);
 
+            const ctxDoc = document.getElementById('chart-profit-doctor');
+            if (ctxDoc) {
+                if (profitDoctorChart) profitDoctorChart.destroy();
+                profitDoctorChart = new Chart(ctxDoc, {
+                    type: 'bar',
+                    data: {
+                        labels: topDoctorsAnalytics.map(d => getDoctorName(parseInt(d[0]))),
+                        datasets: [{ data: topDoctorsAnalytics.map(d => d[1]), backgroundColor: '#818cf8', borderRadius: 8 }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            }
+
+            // 9. Cash Flow Analysis
+            const ctxCashAnalytic = document.getElementById('chart-cash-flow');
+            if (ctxCashAnalytic) {
+                const cashFlowValues = trendIncome.map((inc, i) => inc - trendExpense[i]);
                 if (cashFlowChart) cashFlowChart.destroy();
-                cashFlowChart = new Chart(ctxCashFlow, {
+                cashFlowChart = new Chart(ctxCashAnalytic, {
                     type: 'bar',
                     data: {
                         labels: trendLabels,
-                        datasets: [{
-                            label: 'Flujo de Caja',
-                            data: cashFlowData,
-                            backgroundColor: cashFlowData.map(v => v >= 0 ? '#10b981' : '#ef4444'),
-                            borderRadius: 6
-                        }]
+                        datasets: [{ data: cashFlowValues, backgroundColor: cashFlowValues.map(v => v >= 0 ? '#10b981' : '#f87171'), borderRadius: 6 }]
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function (context) {
-                                        return 'Flujo: ' + new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(context.parsed.y);
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: { beginAtZero: true, grid: { display: true, drawBorder: false } },
-                            x: { grid: { display: false } }
-                        }
-                    }
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
                 });
             }
         }
