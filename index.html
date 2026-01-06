@@ -1645,6 +1645,80 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             }
         }
 
+        // === CHAT AI FUNCTIONALITY ===
+        window.handleSend = async function () {
+            const input = document.getElementById('chat-input');
+            const chatMessages = document.getElementById('chat-messages');
+
+            if (!input || !chatMessages || !input.value.trim()) return;
+
+            const userMessage = input.value.trim();
+            input.value = '';
+
+            // Add user message
+            chatMessages.innerHTML += `
+                <div class="flex justify-end items-end gap-3">
+                    <div class="bg-primary text-white p-4 rounded-2xl rounded-tr-none shadow-md max-w-xl">
+                        <p class="text-sm leading-relaxed">${userMessage}</p>
+                    </div>
+                </div>
+            `;
+
+            // Add loading
+            chatMessages.innerHTML += `
+                <div class="flex justify-start items-end gap-3 max-w-2xl" id="ai-loading">
+                    <div class="size-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-white">
+                        <span class="material-symbols-outlined text-[18px]">smart_toy</span>
+                    </div>
+                    <div class="bg-white dark:bg-[#233540] p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700">
+                        <p class="text-sm text-slate-600">Analizando...</p>
+                    </div>
+                </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                if (!geminiModel) await initGeminiAI();
+
+                const now = new Date();
+                const thisMonth = now.getMonth();
+                const thisYear = now.getFullYear();
+                const thisMonthData = APP_DATA.transactions.filter(t => {
+                    const tDate = new Date(t.date);
+                    return tDate.getMonth() === thisMonth && tDate.getFullYear() === thisYear;
+                });
+
+                const incomeThisMonth = thisMonthData.filter(t => t.type === 'ingreso').reduce((s, t) => s + parseFloat(t.amount), 0);
+                const expensesThisMonth = thisMonthData.filter(t => t.type === 'gasto').reduce((s, t) => s + parseFloat(t.amount), 0);
+                const doctors = APP_DATA.doctors.map(d => {
+                    const docIncome = thisMonthData.filter(t => t.doctorId === d.id && t.type === 'ingreso').reduce((s, t) => s + parseFloat(t.amount), 0);
+                    return { name: d.name, income: docIncome, goal: d.goal || 0 };
+                });
+
+                const prompt = `Eres un asistente de gestión dental. DATOS: Ingresos ${incomeThisMonth.toFixed(0)}€, Gastos ${expensesThisMonth.toFixed(0)}€. Doctores: ${doctors.map(d => `${d.name}: ${d.income.toFixed(0)}€`).join(', ')}. PREGUNTA: "${userMessage}". Responde BREVE (máximo 40 palabras) con datos específicos.`;
+
+                const result = await geminiModel.generateContent(prompt);
+                const aiAnswer = result.response.text();
+
+                document.getElementById('ai-loading').remove();
+                chatMessages.innerHTML += `
+                    <div class="flex justify-start items-end gap-3 max-w-2xl">
+                        <div class="size-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-white">
+                            <span class="material-symbols-outlined text-[18px]">smart_toy</span>
+                        </div>
+                        <div class="bg-white dark:bg-[#233540] p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700">
+                            <p class="text-sm text-slate-800 dark:text-white">${aiAnswer}</p>
+                        </div>
+                    </div>
+                `;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (error) {
+                console.error('Chat error:', error);
+                document.getElementById('ai-loading')?.remove();
+                chatMessages.innerHTML += `<div class="flex justify-start items-end gap-3 max-w-2xl"><div class="size-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-white"><span class="material-symbols-outlined text-[18px]">smart_toy</span></div><div class="bg-white dark:bg-[#233540] p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700"><p class="text-sm text-red-600">Error. Intenta de nuevo.</p></div></div>`;
+            }
+        };
+
         // 1. STATE MANAGEMENT
         async function loadData() {
             const DEFAULT_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTc7OqZQYtGXYgqiBW3QR8FuTeG70vuUtzzVZGCNvQp5O_upc1kCZRRlVKIbnEso0sY053eWwC-0Efv/pub?gid=0&single=true&output=csv";
