@@ -690,7 +690,7 @@
                     <!-- Compact Finance Summary Mobile Gap -->
                     <div class="grid grid-cols-3 gap-2 md:gap-4 overflow-hidden w-full">
                         <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-5 border border-slate-100 dark:border-white/5 shadow-sm text-center md:text-left min-w-0">
+                            class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-5 border border-slate-100 dark:border-white/5 border-l-4 border-l-emerald-500 shadow-sm text-center md:text-left min-w-0">
                             <p
                                 class="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-medium uppercase truncate">
                                 Entradas</p>
@@ -699,7 +699,7 @@
                                 €0</p>
                         </div>
                         <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-5 border border-slate-100 dark:border-white/5 shadow-sm text-center md:text-left min-w-0">
+                            class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-5 border border-slate-100 dark:border-white/5 border-l-4 border-l-red-500 shadow-sm text-center md:text-left min-w-0">
                             <p
                                 class="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-medium uppercase truncate">
                                 Salidas</p>
@@ -708,7 +708,7 @@
                                 €0</p>
                         </div>
                         <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-5 border border-slate-100 dark:border-white/5 shadow-sm text-center md:text-left min-w-0">
+                            class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-5 border border-slate-100 dark:border-white/5 border-l-4 border-l-primary shadow-sm text-center md:text-left min-w-0">
                             <p
                                 class="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-medium uppercase truncate">
                                 Neto</p>
@@ -724,9 +724,9 @@
                         <!-- Transaction Statistics Cards (Elite Style) -->
                         <div class="grid grid-cols-2 gap-4">
                             <!-- Total Visible (Net Flow) -->
-                            <div class="card-elite p-5 flex flex-col justify-center">
+                            <div class="card-elite p-5 flex flex-col justify-center border-l-4 border-l-emerald-500">
                                 <div class="flex items-center gap-2 mb-2">
-                                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-600"></div>
+                                    <div class="size-1.5 rounded-full bg-emerald-600"></div>
                                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
                                         Flujo Neto</p>
                                 </div>
@@ -736,9 +736,9 @@
                             </div>
 
                             <!-- Average -->
-                            <div class="card-elite p-5 flex flex-col justify-center">
+                            <div class="card-elite p-5 flex flex-col justify-center border-l-4 border-l-blue-500">
                                 <div class="flex items-center gap-2 mb-2">
-                                    <div class="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
+                                    <div class="size-1.5 rounded-full bg-blue-600"></div>
                                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
                                         Ticket Medio</p>
                                 </div>
@@ -748,9 +748,9 @@
                             </div>
 
                             <!-- Largest -->
-                            <div class="card-elite p-5 flex flex-col justify-center">
+                            <div class="card-elite p-5 flex flex-col justify-center border-l-4 border-l-primary">
                                 <div class="flex items-center gap-2 mb-2">
-                                    <div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                                    <div class="size-1.5 rounded-full bg-primary"></div>
                                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
                                         Mayor Ingreso</p>
                                 </div>
@@ -760,9 +760,9 @@
                             </div>
 
                             <!-- Count -->
-                            <div class="card-elite p-5 flex flex-col justify-center">
+                            <div class="card-elite p-5 flex flex-col justify-center border-l-4 border-l-slate-400">
                                 <div class="flex items-center gap-2 mb-2">
-                                    <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+                                    <div class="size-1.5 rounded-full bg-slate-400"></div>
                                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
                                         Movimientos</p>
                                 </div>
@@ -1297,7 +1297,7 @@
     <!-- Chat Moved To Top of Main -->
 
     <!-- DOCTOR EDIT MODAL -->
-    <div id="doctor-edit-modal" class="fixed inset-0 z-[60] hidden">
+    <div id="doctor-edit-modal" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md transition-opacity" onclick="closeDoctorModal()">
         </div>
         <div
@@ -1351,16 +1351,35 @@
             </form>
         </div>
     </div>
-    <button onclick="switchTab('view-chat')" id="nav-mobile-chat"
-        class="flex-1 flex flex-col items-center justify-center gap-1 h-full text-slate-400 dark:text-slate-500 transition-colors">
-        <span class="material-symbols-outlined text-[26px]">smart_toy</span>
-    </button>
 
-    <button onclick="switchTab('view-settings')" id="nav-mobile-settings"
-        class="flex-1 flex flex-col items-center justify-center gap-1 h-full text-slate-400 dark:text-slate-500 transition-colors">
-        <span class="material-symbols-outlined text-[26px]">settings</span>
-    </button>
-    </div>
+    <!-- DOCK NAVIGATION (Mobile Only) -->
+    <nav
+        class="md:hidden fixed bottom-0 w-full nav-float z-50 pb-[env(safe-area-inset-bottom)] border-t border-slate-200/50 dark:border-white/5">
+        <div class="flex justify-around items-center h-16 px-1">
+            <button onclick="switchTab('view-dashboard')" id="nav-mobile-dashboard"
+                class="flex-1 flex flex-col items-center justify-center transition-colors text-slate-400 dark:text-slate-500">
+                <span class="material-symbols-outlined text-[26px]">grid_view</span>
+            </button>
+            <button onclick="switchTab('view-team')" id="nav-mobile-team"
+                class="flex-1 flex flex-col items-center justify-center transition-colors text-slate-400 dark:text-slate-500">
+                <span class="material-symbols-outlined text-[26px]">groups</span>
+            </button>
+            <button onclick="switchTab('view-finance')" id="nav-mobile-finance"
+                class="flex-1 flex flex-col items-center justify-center transition-colors text-slate-400 dark:text-slate-500">
+                <span class="material-symbols-outlined text-[26px]">payments</span>
+            </button>
+            <button onclick="switchTab('view-chat')" id="nav-mobile-chat"
+                class="flex-1 flex flex-col items-center justify-center transition-all">
+                <div
+                    class="size-11 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center shadow-lg shadow-amber-500/20 border-2 border-white dark:border-dark-surface -mt-6">
+                    <span class="material-symbols-outlined text-white text-[24px]">smart_toy</span>
+                </div>
+            </button>
+            <button onclick="switchTab('view-settings')" id="nav-mobile-settings"
+                class="flex-1 flex flex-col items-center justify-center transition-colors text-slate-400 dark:text-slate-500">
+                <span class="material-symbols-outlined text-[26px]">settings</span>
+            </button>
+        </div>
     </nav>
 
     <!-- Safe Area Padding for iPhone Home Indicator -->
@@ -1403,17 +1422,13 @@
             window.scrollTo(0, 0);
 
             // 3. Update Desktop Navigation State
-            const type = targetId.replace('view-', '');
             document.querySelectorAll('.nav-item').forEach(btn => {
                 btn.className = "nav-item group flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left";
                 const icon = btn.querySelector('.material-symbols-outlined');
                 if (icon) icon.classList.remove('filled');
             });
 
-            const activeDesktopBtn = document.getElementById(`nav-${type}`); // Changed from nav-desktop- to nav- for consistency if needed, but keeping nav-ID logic from HTML
-            // Actually the HTML IDs are nav-dashboard, nav-analytics etc.
-            // Let's check lines 157, 164 etc. IDs are "nav-dashboard", "nav-analytics".
-
+            const type = targetId.replace('view-', '');
             const navBtn = document.getElementById(`nav-${type}`);
             if (navBtn) {
                 if (type === 'chat') {
@@ -1429,17 +1444,36 @@
             ['dashboard', 'team', 'finance', 'chat', 'settings'].forEach(t => {
                 const btn = document.getElementById(`nav-mobile-${t}`);
                 if (btn) {
+                    // Reset all to default text color
                     btn.classList.remove('text-primary');
                     btn.classList.add('text-slate-400', 'dark:text-slate-500');
                     const icon = btn.querySelector('.material-symbols-outlined');
                     if (icon) icon.classList.remove('filled');
+
+                    // Special handling for chat button's unique styling
+                    if (t === 'chat') {
+                        const chatDiv = btn.querySelector('div');
+                        if (chatDiv) {
+                            chatDiv.classList.remove('border-primary'); // Remove active border if it was there
+                            chatDiv.classList.add('border-white', 'dark:border-dark-surface'); // Ensure default border
+                        }
+                    }
                 }
             });
 
             const activeMobileBtn = document.getElementById(`nav-mobile-${type}`);
             if (activeMobileBtn) {
-                activeMobileBtn.classList.remove('text-slate-400', 'dark:text-slate-500');
-                activeMobileBtn.classList.add('text-primary');
+                if (type === 'chat') {
+                    // Chat button on mobile is special (gold, raised)
+                    const chatDiv = activeMobileBtn.querySelector('div');
+                    if (chatDiv) {
+                        chatDiv.classList.remove('border-white', 'dark:border-dark-surface');
+                        chatDiv.classList.add('border-primary'); // Add active border
+                    }
+                } else {
+                    activeMobileBtn.classList.remove('text-slate-400', 'dark:text-slate-500');
+                    activeMobileBtn.classList.add('text-primary');
+                }
                 const icon = activeMobileBtn.querySelector('.material-symbols-outlined');
                 if (icon) icon.classList.add('filled');
             }
@@ -2181,7 +2215,12 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
 
             // Skip header row
             incomeData.slice(1).forEach((row) => {
-                if (!row[1] || row[1].trim() === '' || row[1].toLowerCase() === 'clínica' || row[1].toLowerCase().includes('total')) return;
+                // Robust check for empty rows or rows with 'total' in doctor name
+                if (!row[0] || row[0].trim() === '') return; // Skip rows without date
+                if (!row[1] || row[1].trim() === '' || row[1].toLowerCase().includes('total')) return; // Skip rows without doctor name or with 'total'
+                const isActuallyEmpty = row.every(cell => !cell || cell.trim() === '');
+                if (isActuallyEmpty) return;
+
                 const name = row[1].trim().toUpperCase();
 
                 if (!detectedDoctors.has(name)) {
@@ -2225,9 +2264,15 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             // 3. Create Transactions (INCOME) - STRICT INDEX MAPPING [0-10]
             const importedIncome = incomeData.slice(1)
                 .filter(row => {
-                    const amount = cleanNumber(row[9]);
-                    if (!row[1] || row[1].toLowerCase().includes('total')) return false;
-                    return !isNaN(amount);
+                    // Filter logic: Must have a date and either a doctor name or a patient/concept
+                    if (!row[0] || row[0].trim() === '') return false;
+                    if (row[1] && row[1].toLowerCase().includes('total')) return false;
+
+                    // If all columns are empty, skip
+                    const isActuallyEmpty = row.every(cell => !cell || String(cell).trim() === '');
+                    if (isActuallyEmpty) return false;
+
+                    return true;
                 })
                 .map((row, index) => {
                     const amount = cleanNumber(row[9]);
@@ -2739,7 +2784,7 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             if (kpiExp) kpiExp.innerText = totalExpenses.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
             if (kpiNet) {
                 kpiNet.innerText = (netValue >= 0 ? '+' : '') + netValue.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
-                kpiNet.className = `text-sm md:text-2xl font-bold mt-0.5 md:mt-1 font-serif truncate ${netValue >= 0 ? 'text-primary' : 'text-red-500'}`;
+                kpiNet.className = `text-sm md:text-2xl font-bold mt-0.5 md:mt-1 font-serif truncate ${netValue >= 0 ? 'text-indigo-900 dark:text-indigo-100' : 'text-red-500'}`;
             }
 
             // NEW: Calculate transaction statistics
@@ -2921,9 +2966,9 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
 
         // Helper
         function getDoctorName(id) {
-            if (!id) return 'Clínica';
-            const doc = APP_DATA.doctors.find(d => d.id === id);
-            return doc ? doc.name : 'Desconocido';
+            if (!id) return "Clínica";
+            const doc = APP_DATA.doctors.find(d => d.id == id); // Use == for loose comparison
+            return doc ? doc.name : "Clínica";
         }
 
         function populateDoctorDropdown() {
