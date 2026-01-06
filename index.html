@@ -3534,6 +3534,16 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                         }
                     });
                 }
+
+                // AUTO-SYNC: Sincronización automática cada hora
+                setInterval(async () => {
+                    console.log('🔄 Auto-sincronización programada ejecutándose...');
+                    if (window.syncFromSheets) {
+                        await syncFromSheets(true); // true = silent mode (sin alertas)
+                    }
+                }, 60 * 60 * 1000); // 60 minutos = 1 hora
+
+                console.log('✅ Auto-sincronización configurada (cada 1 hora)');
             } catch (e) {
                 console.error("Initialization error:", e);
             }
