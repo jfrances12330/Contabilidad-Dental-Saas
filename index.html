@@ -207,14 +207,19 @@
                     Equipo
                 </button>
 
-                <!-- Chat AI -->
+                <!-- Chat AI - GOLD PREMIUM STYLE -->
                 <button onclick="switchTab('chat')" id="nav-chat"
-                    class="nav-item group flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white transition-all">
+                    class="nav-item group flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-medium text-slate-500 hover:bg-amber-50 dark:hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400 transition-all border border-transparent hover:border-amber-200/50 dark:hover:border-amber-500/20">
                     <div class="relative">
-                        <span class="material-symbols-outlined">smart_toy</span>
-                        <span class="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+                        <span
+                            class="material-symbols-outlined text-amber-500 group-hover:scale-110 transition-transform">auto_awesome</span>
+                        <span class="absolute -right-1.5 -top-1.5 flex h-3 w-3">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                        </span>
                     </div>
-                    Lobato AI
+                    <span class="font-bold">Lobato AI</span>
                 </button>
             </nav>
 
@@ -456,7 +461,8 @@
                         </div>
 
                         <!-- Burn Rate / Daily Efficiency -->
-                        <div class="card-elite p-3 md:p-5 relative overflow-hidden group border-0 shadow-md">
+                        <div
+                            class="card-elite p-3 md:p-5 relative overflow-hidden group border-0 shadow-md col-span-2 md:col-span-1">
                             <div class="absolute left-0 top-0 w-1 h-full bg-amber-500/50"></div>
                             <div class="flex items-center gap-2 mb-3">
                                 <span
@@ -475,16 +481,6 @@
                         </div>
                     </section>
 
-
-                    <!-- Lobato AI Access Button (Compact) -->
-                    <section class="w-full flex justify-center">
-                        <button onclick="switchTab('chat')"
-                            class="group flex items-center gap-3 px-6 py-3 rounded-xl bg-gradient-to-r from-[#A87F55] to-[#C69C6D] text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]">
-                            <span class="material-symbols-outlined filled">auto_awesome</span>
-                            <span>Consultar Lobato AI</span>
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                        </button>
-                    </section>
 
                     <!-- Charts -->
                     <section class="card-elite p-4 md:p-5 flex flex-col gap-3 flex-1 min-h-[280px]">
@@ -1335,7 +1331,11 @@
 
             const navBtn = document.getElementById(`nav-${type}`);
             if (navBtn) {
-                navBtn.className = "nav-item group flex items-center gap-3 rounded-lg bg-primary px-4 py-3 text-white shadow-md shadow-primary/20 transition-all text-left";
+                if (type === 'chat') {
+                    navBtn.className = "nav-item group flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-bold bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/30 transition-all text-left";
+                } else {
+                    navBtn.className = "nav-item group flex items-center gap-3 rounded-lg bg-primary px-4 py-3 text-white shadow-md shadow-primary/20 transition-all text-left font-bold";
+                }
                 const icon = navBtn.querySelector('.material-symbols-outlined');
                 if (icon) icon.classList.add('filled');
             }
@@ -1543,6 +1543,7 @@
         let CURRENT_FINANCE_TYPE = 'all';
         let searchDebounceTimer = null;
         let financeCategoryChart = null;
+        let CURRENT_ANALYTICS_PERIOD = 'month';
 
         let APP_DATA = {
             transactions: [],
@@ -1554,6 +1555,11 @@
         let profitChartDash = null;
         let profitChartAdv = null;
         let marginChart = null;
+        let paymentMixChart = null;
+        let revenueTrendChart = null;
+        let topServicesChart = null;
+        let cashFlowChart = null;
+        let profitDoctorChart = null;
 
         // === GEMINI AI INTEGRATION ===
         let geminiModel = null;
@@ -3058,11 +3064,6 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
         }
 
         // 3.5 Render Analytics (New)
-        let CURRENT_ANALYTICS_PERIOD = 'month'; // month, quarter, year, all
-        let revenueTrendChart = null;
-        let topServicesChart = null;
-        let cashFlowChart = null;
-
         window.switchAnalyticsPeriod = function (period) {
             CURRENT_ANALYTICS_PERIOD = period;
             document.querySelectorAll('.analytics-period-filter').forEach(btn => {
