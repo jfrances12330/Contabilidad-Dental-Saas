@@ -45,6 +45,27 @@ app.post('/api/chat', async (req, res) => {
 - Presupuesto marketing anual: 12.000€ (1.000€/mes)
 - Canal principal de captación: Google Ads, SEO Local, Recomendaciones
 
+👥 EQUIPO ACTUAL DE LOBATO DENTAL:
+
+RECEPCIÓN Y ADMINISTRACIÓN:
+- Alejandra: Recepcionista principal (gestión de pacientes, cobros, presupuestos, citas)
+  → Ya cubre toda la gestión administrativa, no sugerir contratar más recepción
+
+EQUIPO CLÍNICO:
+- 3 Higienistas dentales (limpiezas, profilaxis, mantenimientos)
+- Varios Doctores/Odontólogos: Los nombres y especialidades están en la columna de INGRESOS
+  → El agente DEBE leer los conceptos de ingresos para identificar:
+    * Qué doctores hay (aparecen en descripciones de transacciones)
+    * Especialidad de cada uno (según tipo de tratamiento que facturan)
+    * Rendimiento individual (volumen de ingresos generados)
+
+INSTRUCCIÓN AL AGENTE:
+- Cuando analices datos financieros, IDENTIFICA automáticamente los doctores
+- Ejemplo: Si ves "Implante - Dr. Martínez" → ese es el implantólogo
+- Usa estos datos para análisis de rendimiento, distribución de carga, etc.
+- NO sugieras contratar recepcionista (ya tiene a Alejandra)
+- Sugiere optimizaciones de equipo clínico basadas en datos reales
+
 👥 PÚBLICO OBJETIVO (basado en análisis demográfico Elche):
 - Familias con niños (25-45 años) que buscan odontopediatría y ortodoncia
 - Adultos 35-55 años interesados en estética dental e implantes
@@ -71,16 +92,19 @@ OPORTUNIDADES SEO DETECTADAS:
 - Google My Business optimizable (reseñas, fotos, posts)
 - Contenido local: "mejor dentista Elche", "dentista urgencias Elche"
 
-�‍⚕️ INSTRUCCIÓN ESPECIAL AL AGENTE:
-ANALIZA AUTOMÁTICAMENTE los doctores del equipo basándote en:
-- Los CONCEPTOS de ingresos en los datos financieros proporcionados
-- Identifica qué doctores generan más ingresos
-- Deduce especialidades por tipo de tratamiento/concepto
-- Sugiere optimizaciones de distribución de pacientes
-- Recomienda formación o contrataciones según gaps detectados
+👨‍⚕️ ANÁLISIS AUTOMÁTICO DE EQUIPO:
+El agente debe:
+1. Leer columna de ingresos y extraer nombres de doctores
+2. Clasificar por especialidad según tratamientos
+3. Calcular rendimiento individual (facturación)
+4. Identificar gaps en el equipo (servicios poco cubiertos)
+5. Sugerir redistribución de pacientes si hay desequilibrios
+6. Proponer formación o contratación SOLO si hay gaps claros
 
-Ejemplo: Si ves muchos ingresos de "Ortodoncia - Dr. López" → Ese es tu ortodoncista estrella.
-Si ves pocos ingresos de "Implantes" → Oportunidad de crecimiento o necesidad de especialista.
+Ejemplo de análisis esperado:
+"Veo que Dr. X genera 45% de ingresos con ortodoncia (es tu estrella). 
+Higienistas cubren bien mantenimientos (20% ingresos estables). 
+PERO: Solo 8% en implantes. Considera formar a un doctor actual o contratar implantólogo."
         `.trim();
 
         // Call OpenAI API
