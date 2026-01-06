@@ -419,11 +419,11 @@
                                         <h3 class="text-lg font-bold text-white font-serif">Alertas IA</h3>
                                         <p
                                             class="ai-alert-text text-white/90 text-sm md:text-base font-medium max-w-2xl leading-relaxed">
-                                            Analizando datos con Gemini AI...
+                                            Asistente IA disponible para analizar tus datos financieros
                                         </p>
                                     </div>
                                 </div>
-                                <button
+                                <button onclick="switchTab('chat')"
                                     class="shrink-0 whitespace-nowrap rounded-lg bg-white/10 backdrop-blur-md border border-white/20 px-5 py-2 text-sm font-bold text-white shadow-sm hover:bg-white/20 transition-colors cursor-pointer w-full md:w-auto">
                                     Ver análisis
                                 </button>
@@ -3101,30 +3101,31 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             if (kpiDoctor) kpiDoctor.innerText = bestDoctor;
 
             // 3. Revenue Trend Chart (Last 12 Months)
+            // Prepare data for trend charts (used by both Revenue and Cash Flow)
+            const last12 = new Date(today.getFullYear(), today.getMonth() - 11, 1);
+            const trendLabels = [];
+            const trendIncome = Array(12).fill(0);
+            const trendExpense = Array(12).fill(0);
+
+            for (let i = 0; i < 12; i++) {
+                const d = new Date(last12.getFullYear(), last12.getMonth() + i, 1);
+                trendLabels.push(monthNames[d.getMonth()]);
+            }
+
+            APP_DATA.transactions.forEach(t => {
+                const tDate = new Date(t.date);
+                const monthDiff = (tDate.getFullYear() - last12.getFullYear()) * 12 + (tDate.getMonth() - last12.getMonth());
+                if (monthDiff >= 0 && monthDiff < 12) {
+                    if (t.type === 'ingreso') {
+                        trendIncome[monthDiff] += t.amount;
+                    } else {
+                        trendExpense[monthDiff] += t.amount;
+                    }
+                }
+            });
+
             const ctxRevenue = document.getElementById('chart-revenue-trend');
             if (ctxRevenue) {
-                const last12 = new Date(today.getFullYear(), today.getMonth() - 11, 1);
-                const trendLabels = [];
-                const trendIncome = Array(12).fill(0);
-                const trendExpense = Array(12).fill(0);
-
-                for (let i = 0; i < 12; i++) {
-                    const d = new Date(last12.getFullYear(), last12.getMonth() + i, 1);
-                    trendLabels.push(monthNames[d.getMonth()]);
-                }
-
-                APP_DATA.transactions.forEach(t => {
-                    const tDate = new Date(t.date);
-                    const monthDiff = (tDate.getFullYear() - last12.getFullYear()) * 12 + (tDate.getMonth() - last12.getMonth());
-                    if (monthDiff >= 0 && monthDiff < 12) {
-                        if (t.type === 'ingreso') {
-                            trendIncome[monthDiff] += t.amount;
-                        } else {
-                            trendExpense[monthDiff] += t.amount;
-                        }
-                    }
-                });
-
                 if (revenueTrendChart) revenueTrendChart.destroy();
                 revenueTrendChart = new Chart(ctxRevenue, {
                     type: 'line',
@@ -3278,10 +3279,10 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             // NEW: Calculate insights for comparison, projection, and burn rate
             updateDashboardInsights(period);
 
-            // AI: Analyze financial anomalies automatically
-            if (APP_DATA.transactions.length > 0) {
-                analyzeFinancialAnomaly().catch(err => console.warn('AI analysis skipped:', err));
-            }
+            // AI: Analyze financial anomalies automatically (DISABLED - migrated to OpenAI chat)
+            // if (APP_DATA.transactions.length > 0) {
+            //     analyzeFinancialAnomaly().catch(err => console.warn('AI analysis skipped:', err));
+            // }
 
             // Update Team Ranking too
             renderTeamRanking(data.team);
