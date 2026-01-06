@@ -1654,7 +1654,17 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                     return { name: d.name, income: docIncome, goal: d.goal || 0 };
                 });
 
-                const context = `Ingresos mes actual: ${incomeThisMonth.toFixed(0)}€, Gastos: ${expensesThisMonth.toFixed(0)}€. Doctores: ${doctors.map(d => `${d.name}: ${d.income.toFixed(0)}€ (objetivo: ${d.goal}€)`).join(', ')}.`;
+                const financialSummary = `Ingresos mes actual: ${incomeThisMonth.toFixed(0)}€, Gastos: ${expensesThisMonth.toFixed(0)}€. Doctores: ${doctors.map(d => `${d.name}: ${d.income.toFixed(0)}€ (objetivo: ${d.goal}€)`).join(', ')}.`;
+
+                // RAG LITE: Inyectar historial de movimientos para que la IA conozca a los pacientes
+                // Limitamos a 500 para tokens, priorizando las primeras (suelen ser las más nuevas si el array está ordenado, si no, ordenamos por fecha desc)
+                const sortedTx = [...APP_DATA.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+                const dbTx = sortedTx.slice(0, 500);
+                const dbContext = dbTx.map(t => {
+                    return `[${t.date}] ${t.patient || 'Paciente'} (${t.concept}): ${t.amount}€`;
+                }).join('\n');
+
+                const context = `RESUMEN KPI: ${financialSummary}\n\nBBDD MOVIMIENTOS (Últimos 500):\n${dbContext}`;
 
                 // --- MEMORIA DEL CHAT ---
                 // Inicializar si no existe
@@ -1944,7 +1954,7 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
 
             incomeData.forEach(row => {
                 const dentistKey = Object.keys(row).find(k => k.toLowerCase().includes('dentista') || k.toLowerCase().includes('doctor')) || 'Dentista';
-                if (!row[dentistKey] || row[dentistKey].trim() === '' || row[dentistKey].toLowerCase() === 'clínica') return;
+                if (!row[dentistKey] || row[dentistKey].trim() === '' || row[dentistKey].toLowerCase() === 'clínica' || row[dentistKey].toLowerCase().includes('total')) return;
                 const name = row[dentistKey].trim().toUpperCase(); // Normalize
 
                 if (!detectedDoctors.has(name)) {
@@ -1996,8 +2006,12 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             // Fecha, Dentista, Paciente, Concepto, Efectivo, Tarjeta, Financiación, Laboratorio, Observación, Total
             const importedIncome = incomeData
                 .filter(row => {
-                    const amountKey = Object.keys(row).find(k => k.toLowerCase() === 'total' || k.toLowerCase().includes('importe'));
                     const amount = cleanNumber(row[amountKey]);
+
+                    // Excluir filas de TOTAL (resumen del Excel)
+                    const dentistKey = Object.keys(row).find(k => k.toLowerCase().includes('dentista') || k.toLowerCase().includes('doctor')) || 'Dentista';
+                    if (row[dentistKey] && row[dentistKey].toLowerCase().includes('total')) return false;
+
                     // Permitir valores negativos (devoluciones) y ceros (revisiones gratuitas)
                     // Solo filtrar si NO es un número válido (NaN)
                     return !isNaN(amount);
@@ -2019,6 +2033,7 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                         id: Date.now() + index,
                         date: convertToISODate(row[dateKey]),
                         concept: concept,
+                        patient: row[patientKey] || '', // Guardar nombre paciente explícito
                         amount: amount,
                         cost: cost,
                         type: "ingreso",
