@@ -404,66 +404,71 @@
                     <!-- NEW: Comparison & Insights Cards -->
                     <section class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                         <!-- Month vs Month Comparison -->
-                        <div
-                            class="md:col-span-1 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/10 rounded-xl p-3 md:p-4 border border-blue-200 dark:border-blue-800/30">
+                        <div class="card-elite p-3 md:p-5 relative overflow-hidden group">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-blue-500/50"></div>
                             <div class="flex items-center gap-2 mb-3">
                                 <span
                                     class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-xl">compare_arrows</span>
-                                <h3 class="text-sm font-bold text-blue-900 dark:text-blue-100 uppercase tracking-wide">
-                                    vs Mes Anterior</h3>
+                                <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">vs
+                                    Mes Anterior</h3>
                             </div>
                             <div id="comparison-content">
-                                <p class="text-xs text-blue-600 dark:text-blue-400 mb-1">Ingresos</p>
-                                <p id="comparison-income"
-                                    class="text-2xl font-bold text-blue-900 dark:text-blue-100 font-serif mb-2">--</p>
-                                <p class="text-xs text-blue-600 dark:text-blue-400 mb-1">Beneficio</p>
-                                <p id="comparison-profit"
-                                    class="text-2xl font-bold text-blue-900 dark:text-blue-100 font-serif">--</p>
+                                <div class="flex flex-col mb-3">
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Ingresos</p>
+                                    <p id="comparison-income"
+                                        class="text-2xl font-medium text-slate-900 dark:text-white num-font tracking-tight">
+                                        --</p>
+                                </div>
+                                <div class="flex flex-col">
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Beneficio</p>
+                                    <p id="comparison-profit"
+                                        class="text-2xl font-medium text-slate-900 dark:text-white num-font tracking-tight">
+                                        --</p>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Month Projection -->
-                        <div
-                            class="md:col-span-1 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/10 rounded-xl p-3 md:p-4 border border-purple-200 dark:border-purple-800/30">
+                        <div class="card-elite p-3 md:p-5 relative overflow-hidden group">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-purple-500/50"></div>
                             <div class="flex items-center gap-2 mb-3">
                                 <span
                                     class="material-symbols-outlined text-purple-600 dark:text-purple-400 text-xl">timeline</span>
-                                <h3
-                                    class="text-sm font-bold text-purple-900 dark:text-purple-100 uppercase tracking-wide">
+                                <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
                                     Proyección Mes</h3>
                             </div>
                             <div id="projection-content">
-                                <p class="text-xs text-purple-600 dark:text-purple-400 mb-1">Estimado al cierre</p>
+                                <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Estimado al cierre</p>
                                 <p id="projection-amount"
-                                    class="text-2xl font-bold text-purple-900 dark:text-purple-100 font-serif mb-2">--
-                                </p>
-                                <div class="bg-purple-200 dark:bg-purple-900/40 rounded-full h-2 overflow-hidden">
+                                    class="text-2xl font-medium text-slate-900 dark:text-white num-font tracking-tight mb-3">
+                                    --</p>
+                                <div class="bg-slate-100 dark:bg-white/5 rounded-full h-1.5 overflow-hidden">
                                     <div id="projection-progress"
-                                        class="h-full bg-purple-600 dark:bg-purple-500 transition-all duration-500"
-                                        style="width: 0%"></div>
+                                        class="h-full bg-purple-500 transition-all duration-500" style="width: 0%">
+                                    </div>
                                 </div>
                                 <p id="projection-text"
-                                    class="text-xs text-purple-700 dark:text-purple-300 mt-1 font-medium">Cargando...
+                                    class="text-[10px] text-slate-500 dark:text-slate-400 mt-2 font-medium">Cargando...
                                 </p>
                             </div>
                         </div>
 
                         <!-- Burn Rate -->
-                        <div
-                            class="md:col-span-1 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/10 rounded-xl p-3 md:p-4 border border-amber-200 dark:border-amber-800/30">
+                        <div class="card-elite p-3 md:p-5 relative overflow-hidden group">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-amber-500/50"></div>
                             <div class="flex items-center gap-2 mb-3">
                                 <span
                                     class="material-symbols-outlined text-amber-600 dark:text-amber-400 text-xl">local_fire_department</span>
-                                <h3
-                                    class="text-sm font-bold text-amber-900 dark:text-amber-100 uppercase tracking-wide">
+                                <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
                                     Burn Rate</h3>
                             </div>
                             <div id="burnrate-content">
-                                <p class="text-xs text-amber-600 dark:text-amber-400 mb-1">Gasto diario promedio</p>
+                                <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Gasto diario promedio</p>
                                 <p id="burnrate-daily"
-                                    class="text-2xl font-bold text-amber-900 dark:text-amber-100 font-serif mb-2">--</p>
-                                <p class="text-xs text-amber-700 dark:text-amber-300 font-medium" id="burnrate-insight">
+                                    class="text-2xl font-medium text-slate-900 dark:text-white num-font tracking-tight mb-2">
                                     --</p>
+                                <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium"
+                                    id="burnrate-insight">--</p>
                             </div>
                         </div>
                     </section>
@@ -480,8 +485,7 @@
                     </section>
 
                     <!-- Charts -->
-                    <section
-                        class="flex flex-col gap-3 rounded-xl bg-white dark:bg-dark-surface p-4 md:p-5 shadow-sm border border-slate-100 dark:border-white/5 flex-1 min-h-[280px]">
+                    <section class="card-elite p-4 md:p-5 flex flex-col gap-3 flex-1 min-h-[280px]">
                         <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
                             <div>
                                 <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">Balance
@@ -938,13 +942,10 @@
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-3">
                         <!-- Profit per Doctor Chart -->
-                        <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-4 border border-slate-100 dark:border-white/5 shadow-sm">
+                        <div class="card-elite p-4 md:p-6">
                             <h3
-                                class="text-base md:text-lg font-bold text-slate-900 dark:text-white mb-2 md:mb-3 font-serif">
-                                Rentabilidad
-                                por
-                                Doctor (Neto)
+                                class="text-base md:text-lg font-bold text-slate-900 dark:text-white mb-2 md:mb-4 font-serif">
+                                Rentabilidad por Doctor (Neto)
                             </h3>
                             <div style="position: relative; height: 200px; width: 100%;">
                                 <canvas id="chart-profit-doctor"></canvas>
@@ -952,12 +953,10 @@
                         </div>
 
                         <!-- Margin per Treatment Chart -->
-                        <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-3 md:p-4 border border-slate-100 dark:border-white/5 shadow-sm">
+                        <div class="card-elite p-4 md:p-6">
                             <h3
-                                class="text-base md:text-lg font-bold text-slate-900 dark:text-white mb-2 md:mb-3 font-serif">
-                                Margen por
-                                Tratamiento (%)
+                                class="text-base md:text-lg font-bold text-slate-900 dark:text-white mb-2 md:mb-4 font-serif">
+                                Margen por Tratamiento (%)
                             </h3>
                             <div style="position: relative; height: 200px; width: 100%;">
                                 <canvas id="chart-margin-treatment"></canvas>
@@ -979,26 +978,28 @@
                         </div>
                     </div>
 
-                    <!-- KPI Summary Cards -->
+                    <!-- KPI Summary Cards (Elite Style) -->
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3">
-                        <div
-                            class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/10 rounded-xl p-2 md:p-3 border border-blue-200 dark:border-blue-800/30">
-                            <p class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wide">Ticket
+                        <div class="card-elite p-4 relative overflow-hidden group">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-blue-500/30"></div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">Ticket
                                 Promedio</p>
                             <p id="kpi-avg-ticket"
-                                class="text-2xl font-bold text-blue-900 dark:text-blue-100 mt-2 font-serif">€0</p>
+                                class="text-2xl font-medium text-slate-900 dark:text-white mt-2 num-font tracking-tight">
+                                €0</p>
                         </div>
-                        <div
-                            class="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/10 rounded-xl p-4 border border-emerald-200 dark:border-emerald-800/30">
-                            <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
+                        <div class="card-elite p-4 relative overflow-hidden group">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-emerald-500/30"></div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
                                 Transacciones</p>
                             <p id="kpi-transaction-count"
-                                class="text-2xl font-bold text-emerald-900 dark:text-emerald-100 mt-2 font-serif">0</p>
+                                class="text-2xl font-medium text-slate-900 dark:text-white mt-2 num-font tracking-tight">
+                                0</p>
                         </div>
-                        <div
-                            class="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/10 rounded-xl p-4 border border-amber-200 dark:border-amber-800/30">
-                            <p class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wide">
-                                Mejor Tratamiento</p>
+                        <div class="card-elite p-4 relative overflow-hidden group">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-amber-500/30"></div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">Mejor
+                                Tratamiento</p>
                             <p id="kpi-top-treatment"
                                 class="text-sm font-bold text-amber-900 dark:text-amber-100 mt-2 truncate">-</p>
                         </div>
@@ -1095,13 +1096,15 @@
                                         Configurar
                                     </button>
                                     <button onclick="syncFromSheets()" id="btn-sync-now"
-                                        class="shrink-0 px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
-                                        <span class="material-symbols-outlined text-sm" id="sync-icon">sync</span>
-                                        <span id="sync-text">Sincronizar</span>
+                                        class="shrink-0 px-6 py-2 bg-primary text-white hover:bg-primary-dark rounded-xl text-sm font-bold transition-all flex flex-col items-center justify-center gap-1 shadow-lg shadow-primary/20">
+                                        <div class="flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-sm" id="sync-icon">sync</span>
+                                            <span id="sync-text">Sincronizar</span>
+                                        </div>
                                     </button>
                                 </div>
                                 <p id="last-sync-label"
-                                    class="w-full text-[10px] text-slate-400 font-medium mt-1 text-right italic opacity-0 transition-opacity">
+                                    class="w-full text-[10px] text-slate-400 font-bold mt-2 text-center bg-slate-100 dark:bg-white/5 py-1 rounded-md opacity-0 transition-opacity">
                                     --
                                 </p>
                             </div>
