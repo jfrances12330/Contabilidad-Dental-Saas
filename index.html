@@ -2016,6 +2016,7 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             // Fecha, Dentista, Paciente, Concepto, Efectivo, Tarjeta, Financiación, Laboratorio, Observación, Total
             const importedIncome = incomeData
                 .filter(row => {
+                    const amountKey = Object.keys(row).find(k => k.toLowerCase() === 'total' || k.toLowerCase().includes('importe'));
                     const amount = cleanNumber(row[amountKey]);
 
                     // Excluir filas de TOTAL (resumen del Excel)
