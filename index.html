@@ -232,6 +232,65 @@
         <main class="flex-1 relative bg-slate-50 dark:bg-dark-bg w-full">
 
             <!-- DASHBOARD VIEW -->
+            <!-- CHAT VIEW (Moved Here) -->
+            <div id="view-chat"
+                class="view-content flex-col w-full h-[100dvh] md:h-screen bg-gray-50 dark:bg-dark-bg z-30">
+                <!-- Header Chat -->
+                <header
+                    class="h-16 bg-white dark:bg-[#1a2c35] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 shrink-0">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary text-2xl">smart_toy</span>
+                        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Lobato AI</h2>
+                        <span
+                            class="hidden md:inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">Online</span>
+                    </div>
+                </header>
+
+                <!-- Chat Area -->
+                <div id="chat-messages"
+                    class="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 bg-slate-50 dark:bg-[#15232b]">
+                    <!-- AI Welcome Message -->
+                    <div class="flex justify-start items-end gap-3 max-w-2xl">
+                        <div
+                            class="size-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-white">
+                            <span class="material-symbols-outlined text-[18px]">smart_toy</span>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-[#233540] p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700">
+                            <p class="text-sm leading-relaxed text-slate-800 dark:text-white">Hola Fernando, soy Lobato
+                                AI 👋 ¿En qué puedo ayudarte hoy?</p>
+                            <ul class="text-sm mt-2 space-y-1 text-slate-600 dark:text-slate-300">
+                                <li>📈 Análisis de rentabilidad y márgenes</li>
+                                <li>👥 Rendimiento del equipo</li>
+                                <li>💼 Estrategias de captación</li>
+                                <li>🎯 Optimización de gastos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div
+                    class="bg-white dark:bg-[#1a2c35] p-4 border-t border-slate-200 dark:border-slate-800 shrink-0 pb-20 md:pb-4">
+                    <div class="flex gap-2 max-w-4xl mx-auto relative">
+                        <input id="chat-input" type="text" placeholder="Escribe o decídselo a la IA..."
+                            class="w-full rounded-full border-slate-200 bg-slate-50 pl-5 pr-24 py-3 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white transition-all shadow-sm">
+                        <!-- Buttons -->
+                        <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1 pr-1">
+                            <button id="mic-btn" onclick="toggleVoiceInput()"
+                                class="p-2 rounded-full text-slate-400 hover:text-primary transition-colors"><span
+                                    class="material-symbols-outlined" id="mic-icon">mic</span></button>
+                            <button onclick="handleSend()"
+                                class="bg-primary text-white p-2 rounded-full hover:bg-primary-dark transition-colors h-9 w-9 flex items-center justify-center"><span
+                                    class="material-symbols-outlined text-[18px]">send</span></button>
+                        </div>
+                    </div>
+                    <p id="voice-status"
+                        class="text-center text-[10px] text-emerald-600 font-bold mt-2 opacity-0 transition-opacity">
+                        Escuchando... 🎤</p>
+                </div>
+            </div>
+
             <!-- DASHBOARD VIEW -->
             <div id="view-dashboard" class="view-content active w-full">
                 <!-- Increased padding-bottom to pb-48 to clear floating menu -->
@@ -1122,72 +1181,7 @@
 
     <!-- CHAT VIEW -->
     <!-- CHAT VIEW -->
-    <div id="view-chat"
-        class="view-content flex-col h-[100dvh] relative md:h-screen w-full bg-gray-50 dark:bg-dark-bg z-10">
-        <!-- Header Chat -->
-        <header
-            class="h-16 bg-white dark:bg-[#1a2c35] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 shrink-0">
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-primary text-2xl">smart_toy</span>
-                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Lobato AI</h2>
-                <span
-                    class="hidden md:inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">Online</span>
-            </div>
-        </header>
-
-        <!-- Chat Area -->
-        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 bg-slate-50 dark:bg-[#15232b]">
-            <!-- AI Welcome Message -->
-            <div class="flex justify-start items-end gap-3 max-w-2xl">
-                <div class="size-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-white">
-                    <span class="material-symbols-outlined text-[18px]">smart_toy</span>
-                </div>
-                <div
-                    class="bg-white dark:bg-[#233540] p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700">
-                    <p class="text-sm leading-relaxed text-slate-800 dark:text-white">Hola Fernando, soy Lobato AI 👋
-                        ¿En qué
-                        puedo ayudarte hoy?</p>
-                    <ul class="text-sm mt-2 space-y-1 text-slate-600 dark:text-slate-300">
-                        <li>📈 Análisis de rentabilidad y márgenes</li>
-                        <li>👥 Rendimiento del equipo (doctores/higienistas)</li>
-                        <li>💼 Estrategias de captación de pacientes</li>
-                        <li>🎯 Optimización de gastos y eficiencia</li>
-                        <li>📊 Proyecciones y objetivos de crecimiento</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Input Area -->
-        <div class="bg-white dark:bg-[#1a2c35] p-4 border-t border-slate-200 dark:border-slate-800 shrink-0">
-            <div class="flex gap-2 max-w-4xl mx-auto relative">
-                <input id="chat-input" type="text" placeholder="Escribe o decídselo a la IA..."
-                    class="w-full rounded-full border-slate-200 bg-slate-50 pl-5 pr-24 py-3 text-sm focus:border-primary focus:ring-primary dark:bg-[#233540] dark:border-slate-700 dark:text-white transition-all shadow-sm">
-
-                <!-- Voice & Send Buttons Container -->
-                <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1 pr-1">
-                    <!-- Microphone Button -->
-                    <button id="mic-btn" onclick="toggleVoiceInput()"
-                        class="p-2 rounded-full text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors relative group">
-                        <span class="material-symbols-outlined" id="mic-icon">mic</span>
-                        <!-- Tooltip -->
-                        <span
-                            class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Dictar
-                            nota</span>
-                    </button>
-
-                    <!-- Send Button -->
-                    <button onclick="handleSend()"
-                        class="bg-primary text-white p-2 rounded-full hover:bg-primary-dark transition-colors shadow-sm flex items-center justify-center h-9 w-9">
-                        <span class="material-symbols-outlined text-[18px]">send</span>
-                    </button>
-                </div>
-            </div>
-            <p id="voice-status"
-                class="text-center text-[10px] text-emerald-600 font-bold mt-2 opacity-0 transition-opacity">
-                Escuchando... 🎤</p>
-        </div>
-    </div>
+    <!-- Chat Moved To Top of Main -->
 
     </main>
 
@@ -2443,9 +2437,17 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             }
 
             // NEW: Calculate transaction statistics
-            const total = filtered.reduce((sum, t) => sum + t.amount, 0);
-            const avg = filtered.length > 0 ? total / filtered.length : 0;
-            const largest = filtered.length > 0 ? Math.max(...filtered.map(t => t.amount)) : 0;
+            // NEW: Calculate transaction statistics (CORREGIDO: Lógica financiera real)
+            // 1. Flujo Neto (Ingresos - Gastos)
+            const total = filtered.reduce((sum, t) => sum + (t.type === 'gasto' ? -t.amount : t.amount), 0);
+
+            // 2. Ticket Medio (Solo INGRESOS, ignorar gastos para no desvirtuar)
+            const incomeTx = filtered.filter(t => t.type === 'ingreso');
+            const avg = incomeTx.length > 0 ? incomeTx.reduce((s, t) => s + t.amount, 0) / incomeTx.length : 0;
+
+            // 3. Mayor Ingreso (Solo INGRESOS)
+            const largest = incomeTx.length > 0 ? Math.max(...incomeTx.map(t => t.amount)) : 0;
+
             const count = filtered.length;
 
             const statTotal = document.getElementById('stat-total-amount');
@@ -2453,7 +2455,10 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             const statLargest = document.getElementById('stat-largest-amount');
             const statCount = document.getElementById('stat-count');
 
-            if (statTotal) statTotal.innerText = total.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+            if (statTotal) {
+                statTotal.innerText = (total >= 0 ? '+' : '') + total.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+                statTotal.className = `text-2xl font-bold font-serif ${total >= 0 ? 'text-indigo-900 dark:text-indigo-100' : 'text-red-600 dark:text-red-400'}`;
+            }
             if (statAvg) statAvg.innerText = avg.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
             if (statLargest) statLargest.innerText = largest.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
             if (statCount) statCount.innerText = count;
@@ -2736,7 +2741,7 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                             </div>
                             <div>
                                 <p class="text-[9px] md:text-xs text-slate-500 dark:text-slate-400 uppercase">Especialidad</p>
-                                <p class="text-xs md:text-sm font-bold text-slate-900 dark:text-white truncate">${topCategory}</p>
+                                <p class="text-xs md:text-sm font-bold text-slate-900 dark:text-white truncate">${doc.role}</p>
                             </div>
                         </div>
                         
