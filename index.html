@@ -1371,7 +1371,7 @@
             <button onclick="switchTab('view-chat')" id="nav-mobile-chat"
                 class="flex-1 flex flex-col items-center justify-center transition-all">
                 <div
-                    class="size-11 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center shadow-lg shadow-amber-500/20 border-2 border-white dark:border-dark-surface -mt-6">
+                    class="size-11 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center shadow-lg shadow-amber-500/20 border-2 border-white dark:border-dark-surface">
                     <span class="material-symbols-outlined text-white text-[24px]">smart_toy</span>
                 </div>
             </button>
@@ -2210,16 +2210,26 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
         }
 
         function processSheetsData(incomeData, expenseData) {
+            // Deduplicate existing doctors first to clean up any past mess
+            const seenInAppData = new Set();
+            APP_DATA.doctors = APP_DATA.doctors.filter(d => {
+                const norm = d.name.replace(/dr\.|dra\./gi, '').trim().toUpperCase();
+                if (norm === '' || seenInAppData.has(norm)) return false;
+                seenInAppData.add(norm);
+                return true;
+            });
+
             // 1. First Pass: Discovery & Smart Role Assignment
             const detectedDoctors = new Map(); // Name -> { name, concepts: [], total: 0 }
 
             // Skip header row
             incomeData.slice(1).forEach((row) => {
                 // Robust check for empty rows or rows with 'total' in doctor name
-                if (!row[0] || row[0].trim() === '') return; // Skip rows without date
-                if (!row[1] || row[1].trim() === '' || row[1].toLowerCase().includes('total')) return; // Skip rows without doctor name or with 'total'
-                const isActuallyEmpty = row.every(cell => !cell || cell.trim() === '');
-                if (isActuallyEmpty) return;
+                if (!row[1] || row[1].trim() === '' || row[1].toLowerCase().includes('total')) return;
+
+                // Extra check for completely empty rows (PapaParse skipEmptyLines handles most but not all edge cases)
+                const textContent = row.join('').trim();
+                if (textContent === '' || textContent.length < 2) return;
 
                 const name = row[1].trim().toUpperCase();
 
@@ -2233,8 +2243,10 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             });
 
             // 2. Update Doctors List intelligently without wiping existing ones
+            const normalize = (s) => s.replace(/dr\.|dra\./gi, '').trim().toUpperCase();
+
             detectedDoctors.forEach((stats, name) => {
-                let existingDoctor = APP_DATA.doctors.find(d => d.name.toUpperCase() === name);
+                let existingDoctor = APP_DATA.doctors.find(d => normalize(d.name) === normalize(name));
 
                 if (!existingDoctor) {
                     const role = inferSpecialty(stats.concepts);
@@ -2304,23 +2316,43 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                     };
                 });
 
-            // 4. Create Transactions (EXPENSES) - Assuming [0] Fecha, [1] Concepto, [2] Importe, [3] Categoria
+            // 4. Create Transactions (EXPENSES)
+            let expenseDateIdx = 0;
+            let expenseConceptIdx = 1;
+            let expenseAmountIdx = 2;
+            let expenseCategoryIdx = 3;
+
+            // Optional: Dynamic Header Detection for Expenses
+            if (expenseData.length > 0) {
+                const header = expenseData[0].map(h => String(h).toLowerCase());
+                const fIdx = header.findIndex(h => h.includes('fecha'));
+                const cIdx = header.findIndex(h => h.includes('concepto'));
+                const aIdx = header.findIndex(h => h.includes('importe') || h.includes('monto') || h.includes('total'));
+                const catIdx = header.findIndex(h => h.includes('categor'));
+
+                if (fIdx !== -1) expenseDateIdx = fIdx;
+                if (cIdx !== -1) expenseConceptIdx = cIdx;
+                if (aIdx !== -1) expenseAmountIdx = aIdx;
+                if (catIdx !== -1) expenseCategoryIdx = catIdx;
+            }
+
             const importedExpenses = expenseData.slice(1)
                 .filter(row => {
-                    const amount = cleanNumber(row[2]);
-                    return amount > 0;
+                    if (row.length <= Math.max(expenseDateIdx, expenseAmountIdx)) return false;
+                    const amount = cleanNumber(row[expenseAmountIdx]);
+                    return amount > 0 && row[expenseDateIdx];
                 })
                 .map((row, index) => {
-                    const amount = cleanNumber(row[2]);
+                    const amount = cleanNumber(row[expenseAmountIdx]);
                     return {
                         id: Date.now() + index + 500000,
-                        date: convertToISODate(row[0]),
-                        concept: row[1] || "Gasto Operativo",
+                        date: convertToISODate(row[expenseDateIdx]),
+                        concept: row[expenseConceptIdx] || "Gasto Operativo",
                         amount: amount,
                         cost: 0,
                         doctorId: null,
                         type: "gasto",
-                        category: row[3] || "Operativo",
+                        category: row[expenseCategoryIdx] || "Operativo",
                         source: "sheet"
                     };
                 });
@@ -2472,18 +2504,17 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             document.getElementById('doctor-edit-modal').classList.remove('hidden');
         }
 
-        function closeDoctorModal() {
-            document.getElementById('doctor-edit-modal').classList.add('hidden');
-        }
-
-        function handleSaveDoctor(e) {
+        window.handleSaveDoctor = function (e) {
             e.preventDefault();
-            const id = parseInt(document.getElementById('modal-doc-id').value);
+            const idInput = document.getElementById('modal-doc-id');
+            if (!idInput) return;
+
+            const id = parseInt(idInput.value);
             const role = document.getElementById('modal-doc-role').value;
             const goal = parseFloat(document.getElementById('modal-doc-goal').value);
             const capacity = parseFloat(document.getElementById('modal-doc-capacity').value);
 
-            const docIndex = APP_DATA.doctors.findIndex(d => d.id === id);
+            const docIndex = APP_DATA.doctors.findIndex(d => d.id == id);
             if (docIndex !== -1) {
                 APP_DATA.doctors[docIndex].role = role;
                 APP_DATA.doctors[docIndex].goal = goal;
@@ -2496,9 +2527,15 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 // Refresh views if they are active
                 if (document.getElementById('view-team').classList.contains('active')) renderTeam();
                 if (document.getElementById('view-dashboard').classList.contains('active')) updateDashboard();
+                if (document.getElementById('view-analytics').classList.contains('active')) renderAnalytics();
 
                 alert("Ajustes guardados correctamente ✅");
             }
+        }
+
+        window.closeDoctorModal = function () {
+            const modal = document.getElementById('doctor-edit-modal');
+            if (modal) modal.classList.add('hidden');
         }
 
         function cleanNumber(val) {
@@ -3402,10 +3439,10 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             }
 
             const ctxDash = document.getElementById('chart-profit-dash');
-            const ctxAdv = document.getElementById('chart-profit-doctor');
+            const ctxAdv = null; // No longer using chart-revenue-trend as a target for the bar chart
             const ctxMargin = document.getElementById('chart-margin-treatment');
 
-            if (!ctxDash && !ctxAdv) return;
+            if (!ctxDash && !ctxMargin && !document.getElementById('chart-revenue-trend')) return;
 
             // --- DYNAMIC LAST 6 MONTHS LABELS ---
             const today = new Date();
