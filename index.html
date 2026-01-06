@@ -1998,7 +1998,9 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 .filter(row => {
                     const amountKey = Object.keys(row).find(k => k.toLowerCase() === 'total' || k.toLowerCase().includes('importe'));
                     const amount = cleanNumber(row[amountKey]);
-                    return amount > 0;
+                    // Permitir valores negativos (devoluciones) y ceros (revisiones gratuitas)
+                    // Solo filtrar si NO es un número válido (NaN)
+                    return !isNaN(amount);
                 })
                 .map((row, index) => {
                     const dateKey = Object.keys(row).find(k => k.toLowerCase().includes('fecha') || k.toLowerCase().includes('date')) || 'Fecha';
