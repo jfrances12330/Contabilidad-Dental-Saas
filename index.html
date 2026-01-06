@@ -1661,7 +1661,17 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 const sortedTx = [...APP_DATA.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
                 const dbTx = sortedTx.slice(0, 500);
                 const dbContext = dbTx.map(t => {
-                    return `[${t.date}] ${t.patient || 'Paciente'} (${t.concept}): ${t.amount}€`;
+                    const docName = getDoctorName(t.doctorId) || 'N/A';
+                    let details = [];
+                    if (t.methods) {
+                        if (t.methods.cash > 0) details.push(`Efec:${t.methods.cash}`);
+                        if (t.methods.card > 0) details.push(`Tarj:${t.methods.card}`);
+                        if (t.methods.finance > 0) details.push(`Fin:${t.methods.finance}`);
+                    }
+                    const paymentInfo = details.length > 0 ? ` [${details.join(' ')}]` : '';
+                    const obsInfo = t.observation ? ` {Nota: ${t.observation}}` : '';
+
+                    return `[${t.date}] ${t.patient || 'Paciente'} (${t.concept}) | Dr.${docName} | ${t.amount}€${paymentInfo}${obsInfo}`;
                 }).join('\n');
 
                 const context = `RESUMEN KPI: ${financialSummary}\n\nBBDD MOVIMIENTOS (Últimos 500):\n${dbContext}`;
@@ -2024,6 +2034,12 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                     const patientKey = Object.keys(row).find(k => k.toLowerCase().includes('paciente') || k.toLowerCase().includes('patient')) || 'Paciente';
                     const conceptKey = Object.keys(row).find(k => k.toLowerCase().includes('concepto') || k.toLowerCase().includes('concept')) || 'Concepto';
 
+                    // Columnas extra para IA
+                    const cashKey = Object.keys(row).find(k => k.toLowerCase().includes('efectivo') || k.toLowerCase().includes('cash'));
+                    const cardKey = Object.keys(row).find(k => k.toLowerCase().includes('tarjeta') || k.toLowerCase().includes('card'));
+                    const financeKey = Object.keys(row).find(k => k.toLowerCase().includes('financia'));
+                    const obsKey = Object.keys(row).find(k => k.toLowerCase().includes('observa') || k.toLowerCase().includes('nota'));
+
                     const amount = cleanNumber(row[amountKey]);
                     const cost = cleanNumber(row[costKey]);
 
@@ -2033,8 +2049,17 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                         id: Date.now() + index,
                         date: convertToISODate(row[dateKey]),
                         concept: concept,
-                        patient: row[patientKey] || '', // Guardar nombre paciente explícito
+                        patient: row[patientKey] || '',
+                        // Detalles completos para IA
+                        methods: {
+                            cash: cashKey ? cleanNumber(row[cashKey]) : 0,
+                            card: cardKey ? cleanNumber(row[cardKey]) : 0,
+                            finance: financeKey ? cleanNumber(row[financeKey]) : 0
+                        },
+                        observation: obsKey ? (row[obsKey] || '') : '',
+
                         amount: amount,
+
                         cost: cost,
                         type: "ingreso",
                         doctorId: findDoctorIdByName(row[dentistKey]),
