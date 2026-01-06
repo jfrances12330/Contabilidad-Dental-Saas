@@ -1159,7 +1159,7 @@
     </div>
 
     <!-- CHAT VIEW -->
-    <div id="view-chat" class="view-content w-full">
+    <div id="view-chat" class="view-content w-full flex flex-col">
         <!-- Header Chat -->
         <header
             class="h-16 bg-white dark:bg-[#1a2c35] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 shrink-0">
@@ -3504,6 +3504,17 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 renderAnalytics();
                 updateClock();
                 loadSettings();
+
+                // Setup chat input Enter key
+                const chatInput = document.getElementById('chat-input');
+                if (chatInput) {
+                    chatInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            if (window.handleSend) window.handleSend();
+                        }
+                    });
+                }
             } catch (e) {
                 console.error("Initialization error:", e);
             }
