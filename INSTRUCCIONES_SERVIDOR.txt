@@ -1,0 +1,29 @@
+GUÍA DEFINITIVA DE ACTUALIZACIÓN - LOBATO AI
+==========================================
+
+MÉTODO RECOMENDADO (El más fácil y rápido)
+------------------------------------------
+1. Entra en tu panel de Hostinger (hPanel).
+2. Ve a la sección 'Node.js'.
+3. Pulsa el botón 'Terminal' o icono de consola de tu aplicación.
+4. En esa pantalla negra, pega estos dos comandos:
+
+   git pull origin main
+   pm2 restart all
+
+(Este método NUNCA falla porque el panel ya te deja dentro de la carpeta correcta con todo activado).
+
+
+MÉTODO DE EMERGENCIA (Desde la Terminal de Mac)
+-----------------------------------------------
+Usa esto solo si no puedes entrar al panel de Hostinger:
+
+1. Conexión: ssh -p 65002 u161740544@62.72.37.42
+2. Entrar: cd domains/medium*98.hostingersite.com/public_html
+3. Actualizar: git pull origin main
+4. Reiniciar (Comando largo): 
+   export PATH=$PATH:/opt/alt/alt-nodejs18/root/usr/bin && pm2 restart all
+
+
+¡LISTO! ✅
+Si ves una tabla verde que dice "online", la web ya está actualizada.

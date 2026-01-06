@@ -482,6 +482,23 @@
                     </section>
 
 
+                    <!-- Yield Global Alert (NEW) -->
+                    <section id="yield-alert-container" class="hidden">
+                        <div
+                            class="card-elite bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20 p-4 flex items-center gap-4 animate-pulse">
+                            <div class="bg-amber-500 text-white rounded-full p-2">
+                                <span class="material-symbols-outlined">warning</span>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-amber-800 dark:text-amber-400">Eficiencia Global
+                                    Crítica</h4>
+                                <p class="text-xs text-amber-700 dark:text-amber-500">El Yield medio de la clínica ha
+                                    caído por debajo de <span class="font-bold">100€/h</span>. Se recomienda revisar la
+                                    duración de los tratamientos.</p>
+                            </div>
+                        </div>
+                    </section>
+
                     <!-- Charts -->
                     <section class="card-elite p-4 md:p-5 flex flex-col gap-3 flex-1 min-h-[280px]">
                         <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
@@ -536,8 +553,6 @@
                         <button onclick="switchTimeFilter('año')" id="btn-team-año"
                             class="team-time-filter px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 transition-all duration-300">AÑO</button>
                     </div>
-
-                    <!-- Removed Add Doctor button - auto-discovery from sheets -->
                 </header>
 
                 <div class="flex flex-col gap-6 p-6 md:p-8 w-full pb-24 md:pb-10">
@@ -547,57 +562,12 @@
                             <!-- JS RENDERED DOCTORS HERE -->
                         </div>
 
-                        <!-- ADD DOCTOR MODAL -->
-                        <div id="doctor-modal" class="fixed inset-0 z-50 hidden">
-                            <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"
-                                onclick="closeDoctorModal()"></div>
-                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-6 border border-slate-100 dark:border-white/10 md:scale-100 scale-95 opacity-0 transition-all duration-200"
-                                id="doctor-modal-content">
-                                <div class="flex items-center justify-between mb-4">
-                                    <h3 class="text-xl font-bold text-slate-900 dark:text-white font-serif">Nuevo Doctor
-                                    </h3>
-                                    <button onclick="closeDoctorModal()"
-                                        class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                                        <span class="material-symbols-outlined">close</span>
-                                    </button>
-                                </div>
-                                <form onsubmit="handleAddDoctor(event)" class="flex flex-col gap-4">
-                                    <div>
-                                        <label
-                                            class="block text-xs font-bold text-slate-500 uppercase mb-1">Nombre</label>
-                                        <input name="name" required type="text" placeholder="Ej: Dr. Smith"
-                                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white dark:placeholder-slate-600">
-                                    </div>
-                                    <div>
-                                        <label
-                                            class="block text-xs font-bold text-slate-500 uppercase mb-1">Especialidad</label>
-                                        <select name="role"
-                                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
-                                            <option value="General">Odontología General</option>
-                                            <option value="Ortodoncia">Ortodoncia</option>
-                                            <option value="Implantes">Implantes</option>
-                                            <option value="Estética">Estética</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Objetivo
-                                            Mensual (€)</label>
-                                        <input name="goal" required type="number" placeholder="10000"
-                                            class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white dark:placeholder-slate-600">
-                                    </div>
-                                    <button type="submit"
-                                        class="mt-2 w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-dark transition-colors">Guardar
-                                        Doctor</button>
-                                </form>
-                            </div>
-                        </div>
-
-                        <!-- Right: Logic Donut -->
+                        <!-- Right Sidebar: Stats & Charts -->
                         <div class="flex flex-col gap-6">
+                            <!-- Production Donut -->
                             <div class="card-elite p-6 border-0">
                                 <div class="flex items-center justify-between mb-6">
-                                    <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">
-                                        Distribución
+                                    <h3 class="text-lg font-bold text-slate-900 dark:text-white font-serif">Distribución
                                     </h3>
                                     <span
                                         class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded-md"
@@ -605,21 +575,40 @@
                                 </div>
                                 <div class="relative flex items-center justify-center py-4">
                                     <div class="relative h-48 w-48 rounded-full transition-all duration-500"
-                                        id="team-donut-chart" style="background: conic-gradient(#C69C6D 0% 100%);">
+                                        id="team-donut-chart">
                                         <div
                                             class="absolute inset-4 rounded-full bg-white dark:bg-dark-surface flex flex-col items-center justify-center z-10 shadow-inner">
                                             <p
                                                 class="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-tighter">
                                                 Total Periodo</p>
                                             <p class="text-2xl font-black text-slate-900 dark:text-white font-serif"
-                                                id="team-donut-total">
-                                                0€
-                                            </p>
+                                                id="team-donut-total">0€</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mt-4 flex flex-col gap-2" id="team-donut-legend">
                                     <!-- Dynamic Legend -->
+                                </div>
+                            </div>
+
+                            <!-- Performance Scatter Plot (Yield vs Volume) -->
+                            <div class="card-elite p-6 border-0 flex flex-col gap-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3
+                                        class="text-lg font-bold text-slate-900 dark:text-white font-serif italic text-primary">
+                                        Matriz de Eficiencia</h3>
+                                    <span class="material-symbols-outlined text-primary/50">bubble_chart</span>
+                                </div>
+                                <p
+                                    class="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none mb-2">
+                                    Producción vs Eficiencia (€/h)</p>
+                                <div class="h-[250px] w-full">
+                                    <canvas id="chart-efficiency-dispersion"></canvas>
+                                </div>
+                                <div
+                                    class="mt-4 p-3 bg-slate-50 dark:bg-white/5 rounded-xl text-[10px] text-slate-500 leading-relaxed italic border border-slate-100 dark:border-white/5">
+                                    <p>Objetivo: Desplazar a los doctores hacia el cuadrante superior derecho (Alta
+                                        Facturación + Alta Eficiencia).</p>
                                 </div>
                             </div>
                         </div>
@@ -1044,9 +1033,11 @@
                                     Ingresos y Gastos</h3>
                                 <div class="flex items-center gap-3 text-[10px] font-bold uppercase">
                                     <div class="flex items-center gap-1"><span
-                                            class="h-2 w-2 rounded-full bg-primary"></span> Ingresos</div>
+                                            class="h-2 w-2 rounded-full bg-primary"></span>
+                                        Ingresos</div>
                                     <div class="flex items-center gap-1"><span
-                                            class="h-2 w-2 rounded-full bg-red-400"></span> Gastos</div>
+                                            class="h-2 w-2 rounded-full bg-red-400"></span>
+                                        Gastos</div>
                                 </div>
                             </div>
                             <div class="flex-1 min-h-0">
@@ -1082,6 +1073,46 @@
                         </div>
                     </div>
 
+                    <!-- NUEVA TABLA: Rentabilidad de Servicios -->
+                    <div class="card-elite p-6 md:p-8 border-0 shadow-md">
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white font-serif tracking-tight">
+                                    Rentabilidad de Servicios</h3>
+                                <p
+                                    class="text-xs text-slate-500 mt-1 uppercase tracking-widest font-black text-primary">
+                                    Análisis Yield por Procedimiento</p>
+                            </div>
+                            <div class="bg-primary/5 text-primary px-4 py-2 rounded-xl border border-primary/10">
+                                <span class="text-xs font-bold">Total Tratamientos: <span id="yield-total-count"
+                                        class="num-font text-sm">--</span></span>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto -mx-6 md:mx-0">
+                            <table class="w-full text-left min-w-[600px]">
+                                <thead>
+                                    <tr class="border-b border-slate-100 dark:border-white/5">
+                                        <th
+                                            class="pb-4 pt-1 px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                            Procedimiento</th>
+                                        <th
+                                            class="pb-4 pt-1 px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                            Precio Medio</th>
+                                        <th
+                                            class="pb-4 pt-1 px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
+                                            Duración Media</th>
+                                        <th
+                                            class="pb-4 pt-1 px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">
+                                            Rentabilidad €/h</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="yield-services-table" class="divide-y divide-slate-50 dark:divide-white/5">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <!-- Integration Status -->
                     <div
                         class="bg-blue-50 dark:bg-blue-900/10 rounded-xl p-6 border border-blue-100 dark:border-blue-900/20 flex items-center justify-between">
@@ -1111,98 +1142,119 @@
                         <p class="text-sm text-slate-500 dark:text-slate-400">Personaliza tu experiencia dental.</p>
                     </header>
 
+                    <!-- NEW: TEAM MANAGEMENT PANEL -->
                     <section class="flex flex-col gap-4">
-                        <!-- CONNECTION STATUS CARD -->
                         <div
                             class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex flex-col gap-6">
-                            <div class="flex items-center justify-between flex-wrap gap-4">
+                            <div class="flex items-center justify-between">
                                 <div class="flex flex-col gap-1">
-                                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Conexión Google
-                                        Sheets</h3>
-                                    <p class="text-xs text-slate-500">Gestión de enlaces de sincronización.</p>
+                                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Gestión de Equipo
+                                    </h3>
+                                    <p class="text-xs text-slate-500">Configura objetivos y jornadas del personal.</p>
                                 </div>
-                                <div class="flex items-center gap-2">
-                                    <button onclick="resetSyncUrls()"
-                                        class="p-2 text-slate-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50"
-                                        title="Restablecer valores por defecto">
-                                        <span class="material-symbols-outlined text-sm">restart_alt</span>
-                                    </button>
-                                    <button onclick="toggleUrlEdit()"
-                                        class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-300 transition-all">
-                                        <span class="material-symbols-outlined text-sm">settings_ethernet</span>
-                                        Configurar
-                                    </button>
-                                    <button onclick="syncFromSheets()" id="btn-sync-now"
-                                        class="shrink-0 px-6 py-2 bg-primary text-white hover:bg-primary-dark rounded-xl text-sm font-bold transition-all flex flex-col items-center justify-center gap-1 shadow-lg shadow-primary/20">
-                                        <div class="flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-sm" id="sync-icon">sync</span>
-                                            <span id="sync-text">Sincronizar</span>
-                                        </div>
-                                    </button>
-                                </div>
-                                <p id="last-sync-label"
-                                    class="w-full text-[10px] text-slate-400 font-bold mt-2 text-center bg-slate-100 dark:bg-white/5 py-1 rounded-md opacity-0 transition-opacity">
-                                    --
-                                </p>
+                                <button onclick="renderDoctorSettingsList()"
+                                    class="px-4 py-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-xl text-xs font-black text-primary uppercase tracking-widest transition-all">
+                                    Administrar
+                                </button>
                             </div>
 
-                            <!-- HIDDEN EDIT PANEL -->
-                            <div id="url-edit-panel"
-                                class="hidden flex flex-col gap-4 pt-4 border-t border-slate-100 dark:border-white/5 animate-in fade-in slide-in-from-top-2">
-                                <div class="flex flex-col gap-2">
-                                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Enlace
-                                        Ingresos (CSV)</label>
-                                    <input type="password" id="sheets-url-input"
-                                        placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv"
-                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
-                                </div>
-                                <div class="flex flex-col gap-2">
-                                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Enlace
-                                        Gastos (CSV)</label>
-                                    <input type="password" id="expenses-url-input"
-                                        placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv"
-                                        class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
-                                </div>
-                                <p class="text-[10px] text-amber-600 font-medium">⚠️ Los cambios se guardarán al pulsar
-                                    el botón de Sincronizar fuera de este menú.</p>
+                            <div id="doctor-settings-list"
+                                class="hidden flex flex-col gap-2 pt-4 border-t border-slate-100 dark:border-white/5">
+                                <!-- JS Rendered Doctor List for editing -->
                             </div>
+                        </div>
+                    </section>
+                    <!-- CONNECTION STATUS CARD -->
+                    <div
+                        class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex flex-col gap-6">
+                        <div class="flex items-center justify-between flex-wrap gap-4">
+                            <div class="flex flex-col gap-1">
+                                <h3 class="text-base font-bold text-slate-900 dark:text-white">Conexión Google
+                                    Sheets</h3>
+                                <p class="text-xs text-slate-500">Gestión de enlaces de sincronización.</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="resetSyncUrls()"
+                                    class="p-2 text-slate-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50"
+                                    title="Restablecer valores por defecto">
+                                    <span class="material-symbols-outlined text-sm">restart_alt</span>
+                                </button>
+                                <button onclick="toggleUrlEdit()"
+                                    class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-300 transition-all">
+                                    <span class="material-symbols-outlined text-sm">settings_ethernet</span>
+                                    Configurar
+                                </button>
+                                <button onclick="syncFromSheets()" id="btn-sync-now"
+                                    class="shrink-0 px-6 py-2 bg-primary text-white hover:bg-primary-dark rounded-xl text-sm font-bold transition-all flex flex-col items-center justify-center gap-1 shadow-lg shadow-primary/20">
+                                    <div class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-sm" id="sync-icon">sync</span>
+                                        <span id="sync-text">Sincronizar</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <p id="last-sync-label"
+                                class="w-full text-[10px] text-slate-400 font-bold mt-2 text-center bg-slate-100 dark:bg-white/5 py-1 rounded-md opacity-0 transition-opacity">
+                                --
+                            </p>
+                        </div>
 
-                            <div
-                                class="flex items-center justify-between p-3 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20">
-                                <div class="flex items-center gap-3">
-                                    <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                                    <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">Estado:
-                                        Configurado</span>
-                                </div>
-                                <span
-                                    class="text-[10px] font-medium text-emerald-600 dark:text-emerald-500/70 italic">Protegido</span>
+                        <!-- HIDDEN EDIT PANEL -->
+                        <div id="url-edit-panel"
+                            class="hidden flex flex-col gap-4 pt-4 border-t border-slate-100 dark:border-white/5 animate-in fade-in slide-in-from-top-2">
+                            <div class="flex flex-col gap-2">
+                                <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Enlace
+                                    Ingresos (CSV)</label>
+                                <input type="password" id="sheets-url-input"
+                                    placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv"
+                                    class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
                             </div>
+                            <div class="flex flex-col gap-2">
+                                <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Enlace
+                                    Gastos (CSV)</label>
+                                <input type="password" id="expenses-url-input"
+                                    placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv"
+                                    class="w-full rounded-lg border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:border-primary focus:ring-primary dark:bg-[#0B0C10] dark:border-white/10 dark:text-white">
+                            </div>
+                            <p class="text-[10px] text-amber-600 font-medium">⚠️ Los cambios se guardarán al pulsar
+                                el botón de Sincronizar fuera de este menú.</p>
                         </div>
 
                         <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex items-center justify-between">
-                            <div>
-                                <h3 class="text-base font-bold text-slate-900 dark:text-white">Modo Oscuro</h3>
-                                <p class="text-xs text-slate-500">Alternar entre tema claro y oscuro.</p>
+                            class="flex items-center justify-between p-3 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20">
+                            <div class="flex items-center gap-3">
+                                <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">Estado:
+                                    Configurado</span>
                             </div>
-                            <button onclick="document.documentElement.classList.toggle('dark')"
-                                class="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-200 dark:bg-primary transition-colors">
-                                <span
-                                    class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1 dark:translate-x-6"></span>
-                            </button>
+                            <span
+                                class="text-[10px] font-medium text-emerald-600 dark:text-emerald-500/70 italic">Protegido</span>
                         </div>
+                    </div>
 
-                        <div
-                            class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex items-center justify-between">
-                            <div>
-                                <h3 class="text-base font-bold text-red-600">Restablecer Datos</h3>
-                                <p class="text-xs text-slate-500">Borrar todos los movimientos y empezar de cero.</p>
-                            </div>
-                            <button onclick="resetApp()"
-                                class="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-sm font-bold transition-colors">
-                                Borrar Todo
-                            </button>
+                    <div
+                        class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex items-center justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-slate-900 dark:text-white">Modo Oscuro</h3>
+                            <p class="text-xs text-slate-500">Alternar entre tema claro y oscuro.</p>
                         </div>
+                        <button onclick="document.documentElement.classList.toggle('dark')"
+                            class="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-200 dark:bg-primary transition-colors">
+                            <span
+                                class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1 dark:translate-x-6"></span>
+                        </button>
+                    </div>
+
+                    <div
+                        class="bg-white dark:bg-dark-surface rounded-xl p-6 border border-slate-100 dark:border-white/5 shadow-sm flex items-center justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-red-600">Restablecer Datos</h3>
+                            <p class="text-xs text-slate-500">Borrar todos los movimientos y empezar de cero.</p>
+                        </div>
+                        <button onclick="resetApp()"
+                            class="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-sm font-bold transition-colors">
+                            Borrar Todo
+                        </button>
+                    </div>
                     </section>
 
                     <div class="text-center text-xs text-slate-400 mt-10">
@@ -1244,38 +1296,71 @@
     <!-- CHAT VIEW -->
     <!-- Chat Moved To Top of Main -->
 
-    </main>
-
-    <!-- FLOATING PILL NAVIGATION (Mobile Only - New Design) -->
-    <!-- DOCK NAVIGATION (Mobile Only - iOS Native Feel) -->
-    <nav
-        class="md:hidden fixed bottom-0 w-full nav-float z-50 pb-[env(safe-area-inset-bottom)] border-t border-slate-200/50 dark:border-white/5">
-        <div class="flex justify-around items-center h-16 px-1">
-            <button onclick="switchTab('view-dashboard')" id="nav-mobile-dashboard"
-                class="flex-1 flex flex-col items-center justify-center gap-1 h-full text-slate-400 dark:text-slate-500 transition-colors">
-                <span class="material-symbols-outlined text-[26px]">grid_view</span>
-            </button>
-
-            <button onclick="switchTab('view-team')" id="nav-mobile-team"
-                class="flex-1 flex flex-col items-center justify-center gap-1 h-full text-slate-400 dark:text-slate-500 transition-colors">
-                <span class="material-symbols-outlined text-[26px]">groups</span>
-            </button>
-
-            <button onclick="switchTab('view-finance')" id="nav-mobile-finance"
-                class="flex-1 flex flex-col items-center justify-center gap-1 h-full text-slate-400 dark:text-slate-500 transition-colors">
-                <span class="material-symbols-outlined text-[26px]">payments</span>
-            </button>
-
-            <button onclick="switchTab('view-chat')" id="nav-mobile-chat"
-                class="flex-1 flex flex-col items-center justify-center gap-1 h-full text-slate-400 dark:text-slate-500 transition-colors">
-                <span class="material-symbols-outlined text-[26px]">smart_toy</span>
-            </button>
-
-            <button onclick="switchTab('view-settings')" id="nav-mobile-settings"
-                class="flex-1 flex flex-col items-center justify-center gap-1 h-full text-slate-400 dark:text-slate-500 transition-colors">
-                <span class="material-symbols-outlined text-[26px]">settings</span>
-            </button>
+    <!-- DOCTOR EDIT MODAL -->
+    <div id="doctor-edit-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md transition-opacity" onclick="closeDoctorModal()">
         </div>
+        <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-dark-surface rounded-3xl shadow-2xl p-8 border border-white/20">
+            <div class="flex items-center gap-4 mb-8">
+                <div id="modal-doc-avatar"
+                    class="size-14 rounded-2xl bg-primary/10 flex items-center justify-center text-2xl font-black text-primary">
+                    L</div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white font-serif">Ajustes de Doctor</h3>
+                    <p id="modal-doc-name"
+                        class="text-sm text-slate-500 font-bold uppercase tracking-widest text-primary/70">Dr. Name</p>
+                </div>
+            </div>
+
+            <form onsubmit="handleSaveDoctor(event)" class="space-y-6">
+                <input type="hidden" id="modal-doc-id">
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Especialidad /
+                        Rol</label>
+                    <input type="text" id="modal-doc-role"
+                        class="w-full rounded-xl border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:bg-[#0B0C10] dark:border-white/10 dark:text-white font-bold"
+                        required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Objetivo Mensual
+                            (€)</label>
+                        <input type="number" id="modal-doc-goal"
+                            class="w-full rounded-xl border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:bg-[#0B0C10] dark:border-white/10 dark:text-white num-font font-bold"
+                            required>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Capacidad
+                            (Horas/Mes)</label>
+                        <input type="number" id="modal-doc-capacity"
+                            class="w-full rounded-xl border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:bg-[#0B0C10] dark:border-white/10 dark:text-white num-font font-bold"
+                            required>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="closeDoctorModal()"
+                        class="flex-1 py-3.5 text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 rounded-2xl text-sm font-bold transition-all">Cancelar</button>
+                    <button type="submit"
+                        class="flex-1 py-3.5 bg-primary text-white rounded-2xl text-sm font-extrabold hover:bg-primary-dark transition-all shadow-xl shadow-primary/30">Guardar
+                        Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <button onclick="switchTab('view-chat')" id="nav-mobile-chat"
+        class="flex-1 flex flex-col items-center justify-center gap-1 h-full text-slate-400 dark:text-slate-500 transition-colors">
+        <span class="material-symbols-outlined text-[26px]">smart_toy</span>
+    </button>
+
+    <button onclick="switchTab('view-settings')" id="nav-mobile-settings"
+        class="flex-1 flex flex-col items-center justify-center gap-1 h-full text-slate-400 dark:text-slate-500 transition-colors">
+        <span class="material-symbols-outlined text-[26px]">settings</span>
+    </button>
+    </div>
     </nav>
 
     <!-- Safe Area Padding for iPhone Home Indicator -->
@@ -1416,6 +1501,51 @@
         }
 
         // --- CHAT LOGIC ---
+        function generateSystemContext() {
+            const periodData = calculatePeriodData('mes');
+            const totalIncome = periodData.income;
+            const totalExpenses = periodData.expenses;
+            const profit = totalIncome - totalExpenses;
+
+            // Get Top Services by Yield
+            const incomeTxs = APP_DATA.transactions.filter(t => t.type === 'ingreso');
+            const serviceStats = {};
+            incomeTxs.forEach(t => {
+                const name = t.concept || 'Sin concepto';
+                if (!serviceStats[name]) serviceStats[name] = { revenue: 0, duration: 0 };
+                serviceStats[name].revenue += t.amount;
+                serviceStats[name].duration += (t.duration || 0);
+            });
+            const topYieldServices = Object.entries(serviceStats)
+                .map(([name, s]) => ({ name, yield: s.duration > 0 ? (s.revenue / s.duration) * 60 : 0 }))
+                .sort((a, b) => b.yield - a.yield)
+                .slice(0, 3);
+
+            let context = `Eres Lobato AI, el cerebro estratégico de la clínica dental. Tus respuestas deben ser ejecutivas, motivadoras y basadas en DATOS.
+            ESTADO ACTUAL DE LA CLÍNICA (MES):
+            - Ingresos: ${totalIncome.toFixed(0)}€
+            - Gastos: ${totalExpenses.toFixed(0)}€
+            - Beneficio Neto: ${profit.toFixed(0)}€ (Margen: ${totalIncome > 0 ? ((profit / totalIncome) * 100).toFixed(1) : 0}%)
+            
+            ANÁLISIS POR DOCTOR:
+            ${periodData.team.map(d => {
+                const saturation = d.capacityHours > 0 ? ((d.duration / (d.capacityHours * 60)) * 100).toFixed(0) : 0;
+                const goalProgress = d.goal > 0 ? ((d.generated / d.goal) * 100).toFixed(0) : 0;
+                return `- ${d.name}: ${d.amount} (Eficiencia: ${Math.round(d.yield)}€/h, Saturación: ${saturation}%, Obj: ${goalProgress}%)`;
+            }).join('\n')}
+            
+            PROCEDIMIENTOS MÁS RENTABLES (€/H):
+            ${topYieldServices.map(s => `- ${s.name}: ${Math.round(s.yield)}€/h`).join('\n')}
+            
+            REGLAS:
+            1. Si la eficiencia es < 100€/h, sugiere optimizar tiempos o revisar precios.
+            2. Si la saturación > 85%, avisa de posible cuello de botella.
+            3. Si un doctor está cerca de su obj (>90%), felicítale.
+            4. Sé breve y profesional. Usa emojis estratégicos.`;
+
+            return context;
+        }
+
         async function handleSend() {
             const input = document.getElementById('chat-input');
             const text = input.value.trim();
@@ -1431,13 +1561,12 @@
             try {
                 // If API Key is placeholder, show simulated response
                 if (GEMINI_API_KEY === "TU_API_KEY_AQUI") {
-                    await new Promise(r => setTimeout(r, 1500)); // Simulate delay
+                    await new Promise(r => setTimeout(r, 1500));
                     removeLoadingIndicator();
-                    addMessageToUI("⚠️ <b>Modo Demo:</b> Para que te responda de verdad, abre el archivo `03_index.html` con un editor de texto y pega tu API Key de Google (Gemini) en la línea 480 donde dice `const GEMINI_API_KEY = ...`", 'model');
-                    addMessageToUI("🤖 <b>Respuesta Simulada:</b> Basado en tus datos, el Dr. Fernando ha facturado 12.500€ este mes.", 'model');
+                    addMessageToUI("🤖 <b>Asistente BI:</b> " + (text.toLowerCase().includes('hola') ? "¡Hola Dr. Lobato! Estoy listo para analizar tu rentabilidad." : "Para un análisis real, activa tu API Key. En modo demo, veo que tu facturación este mes es de " + APP_DATA.transactions.filter(t => t.type === 'ingreso').reduce((s, t) => s + t.amount, 0).toLocaleString() + "€."), 'model');
                 } else {
-                    // REAL CALL TO GEMINI API
-                    const response = await callGeminiAPI(text);
+                    const fullPrompt = `${generateSystemContext()}\n\nPREGUNTA DEL DOCTOR: ${text}`;
+                    const response = await callGeminiAPI(fullPrompt);
                     removeLoadingIndicator();
                     addMessageToUI(response, 'model');
                 }
@@ -2029,7 +2158,7 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             return new Promise((resolve, reject) => {
                 Papa.parse(url, {
                     download: true,
-                    header: true,
+                    header: false, // Changed to false for strict index mapping
                     skipEmptyLines: true,
                     complete: (results) => resolve(results.data),
                     error: (err) => reject(err)
@@ -2047,151 +2176,111 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
         }
 
         function processSheetsData(incomeData, expenseData) {
-            // CLEAR OLD DOCTORS to avoid duplicates from mock data
-            APP_DATA.doctors = [];
-
             // 1. First Pass: Discovery & Smart Role Assignment
-            // We scan all rows to find unique doctors and analyze their work patterns
             const detectedDoctors = new Map(); // Name -> { name, concepts: [], total: 0 }
 
-            incomeData.forEach(row => {
-                const dentistKey = Object.keys(row).find(k => k.toLowerCase().includes('dentista') || k.toLowerCase().includes('doctor')) || 'Dentista';
-                if (!row[dentistKey] || row[dentistKey].trim() === '' || row[dentistKey].toLowerCase() === 'clínica' || row[dentistKey].toLowerCase().includes('total')) return;
-                const name = row[dentistKey].trim().toUpperCase(); // Normalize
+            // Skip header row
+            incomeData.slice(1).forEach((row) => {
+                if (!row[1] || row[1].trim() === '' || row[1].toLowerCase() === 'clínica' || row[1].toLowerCase().includes('total')) return;
+                const name = row[1].trim().toUpperCase();
 
                 if (!detectedDoctors.has(name)) {
                     detectedDoctors.set(name, { name, concepts: [], total: 0 });
                 }
 
                 const entry = detectedDoctors.get(name);
-                const conceptKey = Object.keys(row).find(k => k.toLowerCase().includes('concepto')) || 'Concepto';
-                const totalKey = Object.keys(row).find(k => k.toLowerCase() === 'total' || k.toLowerCase().includes('importe')) || 'Total';
-
-                if (row[conceptKey]) entry.concepts.push(row[conceptKey].toLowerCase());
-                if (row[totalKey]) entry.total += cleanNumber(row[totalKey]);
+                if (row[3]) entry.concepts.push(row[3].toLowerCase());
+                if (row[9]) entry.total += cleanNumber(row[9]);
             });
 
-            // 2. Update Doctors List intelligently
+            // 2. Update Doctors List intelligently without wiping existing ones
             detectedDoctors.forEach((stats, name) => {
-                // Check if doctor already exists
-                let doctor = APP_DATA.doctors.find(d => d.name.toUpperCase() === name);
+                let existingDoctor = APP_DATA.doctors.find(d => d.name.toUpperCase() === name);
 
-                if (!doctor) {
-                    // NEW DOCTOR DETECTED!
+                if (!existingDoctor) {
                     const role = inferSpecialty(stats.concepts);
                     const color = assignColor(APP_DATA.doctors.length);
-
-                    // Default goal logic: Scale based on volume? For now static.
-                    const goal = 10000;
+                    const goal = 14000; // Default goal
 
                     const newDoc = {
                         id: Date.now() + Math.floor(Math.random() * 1000),
                         name: properCase(name),
                         role: role,
                         goal: goal,
+                        capacityHours: 140, // Default capacity
                         color: color
                     };
                     APP_DATA.doctors.push(newDoc);
-                    console.log(`[Auto-Discovery] Created profile for: ${newDoc.name} (${newDoc.role})`);
                 } else {
-                    // AUTO-UPDATE: Re-check specialty based on new data logic
+                    // Update role if it was inferred as General but now we see a specialty
                     const detectedRole = inferSpecialty(stats.concepts);
-                    // Only update if finding something specific (prefer not to downgrade to 'General' if manually set)
-                    if (detectedRole !== 'General') {
-                        doctor.role = detectedRole;
+                    if (existingDoctor.role === 'General' && detectedRole !== 'General') {
+                        existingDoctor.role = detectedRole;
                     }
+                    // Ensure capacityHours exists for migration
+                    if (existingDoctor.capacityHours === undefined) existingDoctor.capacityHours = 140;
                 }
             });
 
-            // 3. Create Transactions (INCOME)
-            // Mapeo específico para tus columnas:
-            // Fecha, Dentista, Paciente, Concepto, Efectivo, Tarjeta, Financiación, Laboratorio, Observación, Total
-            const importedIncome = incomeData
+            // 3. Create Transactions (INCOME) - STRICT INDEX MAPPING [0-10]
+            const importedIncome = incomeData.slice(1)
                 .filter(row => {
-                    const amountKey = Object.keys(row).find(k => k.toLowerCase() === 'total' || k.toLowerCase().includes('importe'));
-                    const amount = cleanNumber(row[amountKey]);
-
-                    // Excluir filas de TOTAL (resumen del Excel)
-                    const dentistKey = Object.keys(row).find(k => k.toLowerCase().includes('dentista') || k.toLowerCase().includes('doctor')) || 'Dentista';
-                    if (row[dentistKey] && row[dentistKey].toLowerCase().includes('total')) return false;
-
-                    // Permitir valores negativos (devoluciones) y ceros (revisiones gratuitas)
-                    // Solo filtrar si NO es un número válido (NaN)
+                    const amount = cleanNumber(row[9]);
+                    if (!row[1] || row[1].toLowerCase().includes('total')) return false;
                     return !isNaN(amount);
                 })
                 .map((row, index) => {
-                    const dateKey = Object.keys(row).find(k => k.toLowerCase().includes('fecha') || k.toLowerCase().includes('date')) || 'Fecha';
-                    const amountKey = Object.keys(row).find(k => k.toLowerCase() === 'total' || k.toLowerCase().includes('importe'));
-                    const costKey = Object.keys(row).find(k => k.toLowerCase().includes('laboratorio') || k.toLowerCase().includes('coste')) || 'Laboratorio';
-                    const dentistKey = Object.keys(row).find(k => k.toLowerCase().includes('dentista') || k.toLowerCase().includes('doctor')) || 'Dentista';
-                    const patientKey = Object.keys(row).find(k => k.toLowerCase().includes('paciente') || k.toLowerCase().includes('patient')) || 'Paciente';
-                    const conceptKey = Object.keys(row).find(k => k.toLowerCase().includes('concepto') || k.toLowerCase().includes('concept')) || 'Concepto';
+                    const amount = cleanNumber(row[9]);
+                    const cost = cleanNumber(row[7]);
+                    const minutes = parseInt(row[10]) || 0;
 
-                    // Columnas extra para IA
-                    const cashKey = Object.keys(row).find(k => k.toLowerCase().includes('efectivo') || k.toLowerCase().includes('cash'));
-                    const cardKey = Object.keys(row).find(k => k.toLowerCase().includes('tarjeta') || k.toLowerCase().includes('card'));
-                    const financeKey = Object.keys(row).find(k => k.toLowerCase().includes('financia'));
-                    const obsKey = Object.keys(row).find(k => k.toLowerCase().includes('observa') || k.toLowerCase().includes('nota'));
-
-                    const amount = cleanNumber(row[amountKey]);
-                    const cost = cleanNumber(row[costKey]);
-
-                    const concept = row[conceptKey] ? row[conceptKey] : (row[patientKey] ? `Paciente: ${row[patientKey]}` : "Tratamiento");
+                    // Yield Calculation: (Total / Minutes) * 60
+                    const yieldPerHour = minutes > 0 ? (amount / minutes) * 60 : 0;
 
                     return {
                         id: Date.now() + index,
-                        date: convertToISODate(row[dateKey]),
-                        concept: concept,
-                        patient: row[patientKey] || '',
-                        // Detalles completos para IA
+                        date: convertToISODate(row[0]),
+                        concept: row[3] || "Tratamiento",
+                        patient: row[2] || '',
                         methods: {
-                            cash: cashKey ? cleanNumber(row[cashKey]) : 0,
-                            card: cardKey ? cleanNumber(row[cardKey]) : 0,
-                            finance: financeKey ? cleanNumber(row[financeKey]) : 0
+                            cash: cleanNumber(row[4]),
+                            card: cleanNumber(row[5]),
+                            finance: cleanNumber(row[6])
                         },
-                        observation: obsKey ? (row[obsKey] || '') : '',
-
+                        observation: row[8] || '',
                         amount: amount,
-
                         cost: cost,
+                        duration: minutes,
+                        yield: yieldPerHour,
                         type: "ingreso",
-                        doctorId: findDoctorIdByName(row[dentistKey]),
+                        doctorId: findDoctorIdByName(row[1]),
                         category: "General",
                         source: "sheet"
                     };
                 });
 
-            // 4. Create Transactions (EXPENSES)
-            // Assumed headers: Fecha, Concepto, Importe, Categoria (optional)
-            const importedExpenses = expenseData
+            // 4. Create Transactions (EXPENSES) - Assuming [0] Fecha, [1] Concepto, [2] Importe, [3] Categoria
+            const importedExpenses = expenseData.slice(1)
                 .filter(row => {
-                    const amountKey = Object.keys(row).find(k => k.toLowerCase().includes('importe') || k.toLowerCase().includes('total'));
-                    const amount = cleanNumber(row[amountKey]);
+                    const amount = cleanNumber(row[2]);
                     return amount > 0;
                 })
                 .map((row, index) => {
-                    const dateKey = Object.keys(row).find(k => k.toLowerCase().includes('fecha') || k.toLowerCase().includes('date')) || 'Fecha';
-                    const amountKey = Object.keys(row).find(k => k.toLowerCase().includes('importe') || k.toLowerCase().includes('total'));
-                    const conceptKey = Object.keys(row).find(k => k.toLowerCase().includes('concepto') || k.toLowerCase().includes('concept')) || 'Concepto';
-                    const catKey = Object.keys(row).find(k => k.toLowerCase().includes('categoria') || k.toLowerCase().includes('category')) || 'Categoria';
-
-                    const amount = cleanNumber(row[amountKey]);
+                    const amount = cleanNumber(row[2]);
                     return {
-                        id: Date.now() + index + 500000, // Different range to avoid conflicts with income
-                        date: convertToISODate(row[dateKey]),
-                        concept: row[conceptKey] || "Gasto Operativo",
+                        id: Date.now() + index + 500000,
+                        date: convertToISODate(row[0]),
+                        concept: row[1] || "Gasto Operativo",
                         amount: amount,
-                        cost: 0, // Expenses don't have cost
-                        doctorId: null, // Expenses not assigned to doctor
+                        cost: 0,
+                        doctorId: null,
                         type: "gasto",
-                        category: row[catKey] || "Operativo",
+                        category: row[3] || "Operativo",
                         source: "sheet"
                     };
                 });
 
             APP_DATA.transactions = [...importedIncome, ...importedExpenses];
-
-            // Force UI update for dropdowns
             populateDoctorDropdown();
         }
 
@@ -2290,6 +2379,81 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             if (dateStr.includes('-')) return dateStr;
 
             return dateStr;
+        }
+
+        // --- TEAM MANAGEMENT LOGIC ---
+        function renderDoctorSettingsList() {
+            const list = document.getElementById('doctor-settings-list');
+            if (list.classList.contains('hidden')) {
+                list.classList.remove('hidden');
+            } else {
+                list.classList.add('hidden');
+                return;
+            }
+
+            list.innerHTML = APP_DATA.doctors.map(doc => `
+                <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-primary/30 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-black text-sm">${doc.name[0]}</div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">${doc.name}</p>
+                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight">${doc.role}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div class="hidden sm:block text-right">
+                            <p class="text-[9px] font-black text-slate-400 uppercase">Objetivo</p>
+                            <p class="text-xs font-bold text-slate-700 dark:text-slate-300 num-font">${(doc.goal || 0).toLocaleString()}€</p>
+                        </div>
+                        <button onclick="openDoctorEditModal(${doc.id})" class="size-9 rounded-full bg-white dark:bg-white/10 flex items-center justify-center text-slate-400 hover:text-primary transition-all shadow-sm border border-slate-100 dark:border-white/5">
+                            <span class="material-symbols-outlined text-sm">edit</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openDoctorEditModal(docId) {
+            const doc = APP_DATA.doctors.find(d => d.id === docId);
+            if (!doc) return;
+
+            document.getElementById('modal-doc-id').value = doc.id;
+            document.getElementById('modal-doc-name').innerText = doc.name;
+            document.getElementById('modal-doc-avatar').innerText = doc.name[0];
+            document.getElementById('modal-doc-role').value = doc.role;
+            document.getElementById('modal-doc-goal').value = doc.goal || 14000;
+            document.getElementById('modal-doc-capacity').value = doc.capacityHours || 140;
+
+            document.getElementById('doctor-edit-modal').classList.remove('hidden');
+        }
+
+        function closeDoctorModal() {
+            document.getElementById('doctor-edit-modal').classList.add('hidden');
+        }
+
+        function handleSaveDoctor(e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('modal-doc-id').value);
+            const role = document.getElementById('modal-doc-role').value;
+            const goal = parseFloat(document.getElementById('modal-doc-goal').value);
+            const capacity = parseFloat(document.getElementById('modal-doc-capacity').value);
+
+            const docIndex = APP_DATA.doctors.findIndex(d => d.id === id);
+            if (docIndex !== -1) {
+                APP_DATA.doctors[docIndex].role = role;
+                APP_DATA.doctors[docIndex].goal = goal;
+                APP_DATA.doctors[docIndex].capacityHours = capacity;
+
+                saveData();
+                closeDoctorModal();
+                renderDoctorSettingsList();
+
+                // Refresh views if they are active
+                if (document.getElementById('view-team').classList.contains('active')) renderTeam();
+                if (document.getElementById('view-dashboard').classList.contains('active')) updateDashboard();
+
+                alert("Ajustes guardados correctamente ✅");
+            }
         }
 
         function cleanNumber(val) {
@@ -2788,7 +2952,6 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             // Calculate days remaining for projections
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             const daysPassed = now.getDate();
-            const daysLeft = daysInMonth - daysPassed;
 
             container.innerHTML = `
                 <div class="flex items-center justify-between mb-6">
@@ -2811,6 +2974,18 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 const trendIcon = trend >= 0 ? 'trending_up' : 'trending_down';
                 const trendColor = trend >= 0 ? 'text-emerald-500' : 'text-red-500';
 
+                // Efficiency Badge logic
+                const effYield = doc.yield || 0;
+                let effColorClass = 'bg-red-500';
+                let effLabel = 'Baja Eficiencia';
+                if (effYield > 150) {
+                    effColorClass = 'bg-emerald-500';
+                    effLabel = 'Alta Eficiencia';
+                } else if (effYield >= 100) {
+                    effColorClass = 'bg-amber-500';
+                    effLabel = 'Eficiencia Normal';
+                }
+
                 // Real efficiency: Unique Patients vs Transactions
                 const doctorTransactions = APP_DATA.transactions.filter(t =>
                     t.doctorId === doc.id &&
@@ -2831,6 +3006,10 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 const rankBadges = ["🥇", "🥈", "🥉"];
                 const rankBadge = index < 3 && doc.generated > 0 ? rankBadges[index] : "";
 
+                // Saturation logic (Current minutes vs Estimated capacity)
+                const monthlyCapacityMinutes = (doc.capacityHours || 140) * 60;
+                const saturation = Math.min((doc.duration / monthlyCapacityMinutes) * 100, 100).toFixed(0);
+
                 container.innerHTML += `
                     <div class="card-elite p-5 md:p-6 border-0 shadow-lg relative overflow-hidden group hover:scale-[1.01] transition-all">
                         <!-- Top Header -->
@@ -2850,40 +3029,50 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                                 </div>
                             </div>
                             <div class="text-right">
+                                <div class="flex items-center justify-end gap-2 mb-1">
+                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-black text-white ${effColorClass} uppercase animate-pulse shadow-sm">${effLabel}</span>
+                                </div>
                                 <p class="text-xl md:text-2xl font-black text-slate-900 dark:text-white num-font">${doc.amount}</p>
-                                <p class="flex items-center justify-end gap-1 text-[10px] font-bold ${trendColor} uppercase tracking-tighter">
-                                    <span class="material-symbols-outlined text-xs">${trendIcon}</span>
-                                    ${Math.abs(trend).toFixed(1)}% vs anterior
-                                </p>
                             </div>
                         </div>
 
                         <!-- Main KPIs Grid -->
                         <div class="grid grid-cols-2 gap-3 mb-6 relative z-10">
                             <div class="bg-slate-50 dark:bg-white/5 p-3 rounded-xl border border-slate-100 dark:border-white/5">
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Producción / Hora</p>
+                                <p class="text-lg font-bold text-slate-900 dark:text-white num-font">${Math.round(effYield)}€/h</p>
+                            </div>
+                            <div class="bg-slate-50 dark:bg-white/5 p-3 rounded-xl border border-slate-100 dark:border-white/5">
                                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Ticket / Paciente</p>
                                 <p class="text-lg font-bold text-slate-900 dark:text-white num-font">${avgTicket.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}</p>
                             </div>
-                            <div class="bg-slate-50 dark:bg-white/5 p-3 rounded-xl border border-slate-100 dark:border-white/5">
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Pacientes Únicos</p>
-                                <p class="text-lg font-bold text-slate-900 dark:text-white num-font">${uniquePatients}</p>
-                            </div>
                         </div>
 
-                        <!-- Progress Bar (Elite Design) -->
-                        <div class="space-y-2 relative z-10">
-                            <div class="flex justify-between items-end">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[10px] font-black text-slate-500 uppercase">Cumplimiento</span>
-                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-black text-white ${statusColorClass} uppercase">${statusLabel}</span>
+                        <!-- Progress Bars (Elite Design) -->
+                        <div class="space-y-4 relative z-10">
+                            <!-- Revenue Progress -->
+                            <div class="space-y-1.5">
+                                <div class="flex justify-between items-end">
+                                    <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Cumplimiento Objetivo</span>
+                                    <span class="text-[10px] font-black text-slate-900 dark:text-white num-font">${progress}%</span>
                                 </div>
-                                <div class="text-right">
-                                    <span class="text-xs font-black text-slate-900 dark:text-white num-font">${progress}%</span>
-                                    <p class="text-[9px] text-slate-400 font-bold">Objetivo: ${(doc.goal / 1000).toFixed(0)}k€</p>
+                                <div class="h-1.5 w-full bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full ${statusColorClass} rounded-full transition-all duration-1000 shadow-sm" style="width: ${progress}%"></div>
                                 </div>
                             </div>
-                            <div class="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden p-0.5 shadow-inner">
-                                <div class="h-full ${statusColorClass} rounded-full transition-all duration-1000 shadow-lg" style="width: ${progress}%"></div>
+
+                            <!-- Saturation Progress -->
+                            <div class="space-y-1.5">
+                                <div class="flex justify-between items-end">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Ratio Saturación</span>
+                                        ${saturation > 85 ? '<span class="size-1.5 rounded-full bg-red-500 animate-ping"></span>' : ''}
+                                    </div>
+                                    <span class="text-[10px] font-black text-slate-900 dark:text-white num-font">${saturation}%</span>
+                                </div>
+                                <div class="h-1.5 w-full bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full ${saturation > 85 ? 'bg-red-500' : 'bg-slate-400'} rounded-full transition-all duration-1000 shadow-sm" style="width: ${saturation}%"></div>
+                                </div>
                             </div>
                         </div>
 
@@ -2895,8 +3084,66 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
 
             container.innerHTML += `</div>`; // Close grid
 
-            // Update the global donut chart for the team
+            // Update the global charts
             updateTeamDonut(periodData.team);
+            updateEfficiencyScatter(periodData.team);
+
+            // Check global yield for dashboard alert
+            const globalYield = periodData.totalMinutes > 0 ? (periodData.income / periodData.totalMinutes) * 60 : 0;
+            const alertContainer = document.getElementById('yield-alert-container');
+            if (alertContainer) {
+                if (globalYield > 0 && globalYield < 100) {
+                    alertContainer.classList.remove('hidden');
+                } else {
+                    alertContainer.classList.add('hidden');
+                }
+            }
+        }
+
+        // New Scatter Plot Logic
+        function updateEfficiencyScatter(teamData) {
+            const ctx = document.getElementById('chart-efficiency-dispersion');
+            if (!ctx) return;
+
+            if (efficiencyDispersionChart) efficiencyDispersionChart.destroy();
+
+            const data = teamData.map(doc => ({
+                x: doc.generated,
+                y: doc.yield,
+                label: doc.name
+            }));
+
+            efficiencyDispersionChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Doctores',
+                        data: data,
+                        backgroundColor: '#C69C6D',
+                        pointRadius: 8,
+                        pointHoverRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const d = context.raw;
+                                    return `${d.label}: ${Math.round(d.x)}€ | ${Math.round(d.y)}€/h`;
+                                }
+                            }
+                        },
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Facturación Total (€)', font: { size: 10, weight: 'bold' } }, grid: { display: false } },
+                        y: { title: { display: true, text: 'Rendimiento (€/h)', font: { size: 10, weight: 'bold' } }, grid: { color: 'rgba(0,0,0,0.05)' } }
+                    }
+                }
+            });
         }
 
         // Helper function to check if date is in period
@@ -3346,7 +3593,50 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 });
             }
 
-            // 7. Top Services Performance
+            // 7. Yield Analysis for Services (Detailed Table)
+            const serviceStats = {};
+            incomeTransactions.forEach(t => {
+                const name = t.concept || 'Sin concepto';
+                if (!serviceStats[name]) {
+                    serviceStats[name] = { count: 0, revenue: 0, duration: 0 };
+                }
+                serviceStats[name].count++;
+                serviceStats[name].revenue += t.amount;
+                serviceStats[name].duration += (t.duration || 0);
+            });
+
+            const yieldList = Object.entries(serviceStats)
+                .map(([name, stats]) => ({
+                    name,
+                    avgPrice: stats.revenue / stats.count,
+                    avgDuration: stats.duration / stats.count,
+                    yield: stats.duration > 0 ? (stats.revenue / stats.duration) * 60 : 0
+                }))
+                .sort((a, b) => b.yield - a.yield);
+
+            const yieldTable = document.getElementById('yield-services-table');
+            const yieldTotalCount = document.getElementById('yield-total-count');
+            if (yieldTable) {
+                yieldTotalCount.innerText = yieldList.length;
+                yieldTable.innerHTML = yieldList.map(s => `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                        <td class="py-4 px-4">
+                            <p class="text-sm font-bold text-slate-900 dark:text-white capitalize">${s.name.toLowerCase()}</p>
+                        </td>
+                        <td class="py-4 px-4">
+                            <p class="text-sm font-black text-slate-700 dark:text-slate-300 num-font">${s.avgPrice.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}</p>
+                        </td>
+                        <td class="py-4 px-4 text-center">
+                            <p class="text-xs font-bold text-slate-500">${Math.round(s.avgDuration)} min</p>
+                        </td>
+                        <td class="py-4 px-4 text-right">
+                            <p class="text-sm font-black ${s.yield > 150 ? 'text-emerald-500' : s.yield > 100 ? 'text-amber-500' : 'text-red-500'} num-font">${Math.round(s.yield)}€/h</p>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // 8. Top Services Performance (Chart)
             const treatmentRevenueMap = {};
             incomeTransactions.forEach(t => {
                 const cat = t.category || 'Otros';
@@ -3768,9 +4058,6 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
 
         function calculatePeriodData(period) {
             const { start, end } = getPeriodDates(period);
-
-            // Normalize Date Objects to YYYY-MM-DD strings for comparison
-            // IMPORTANT: use local time construction to avoid UTC shifts
             const fmt = (d) => {
                 const year = d.getFullYear();
                 const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -3781,20 +4068,16 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             const startStr = fmt(start);
             const endStr = fmt(end);
 
-            // Filter Transactions
             const relevantTxs = APP_DATA.transactions.filter(t => {
-                // t.date is already YYYY-MM-DD string from convertToISODate
                 return t.date >= startStr && t.date <= endStr;
             });
 
-            // Calculate Totals
             let income = 0;
             let expenses = 0;
             const docStats = {};
 
-            // Init Doctors
             APP_DATA.doctors.forEach(d => {
-                docStats[d.id] = { ...d, generated: 0 };
+                docStats[d.id] = { ...d, generated: 0, duration: 0 };
             });
 
             relevantTxs.forEach(t => {
@@ -3802,25 +4085,30 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                     income += parseFloat(t.amount);
                     if (t.doctorId && docStats[t.doctorId]) {
                         docStats[t.doctorId].generated += parseFloat(t.amount);
+                        docStats[t.doctorId].duration += (parseInt(t.duration) || 0);
                     }
                 } else {
                     expenses += parseFloat(t.amount);
                 }
             });
 
-            // Sort Team
             const team = Object.values(docStats)
                 .sort((a, b) => b.generated - a.generated)
-                .map(d => ({
-                    ...d,
-                    amount: d.generated.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }), // Full Number
-                    percent: (d.generated / (income || 1)) * 100 // Avoid divide by zero
-                }));
+                .map(d => {
+                    const yieldPerHour = d.duration > 0 ? (d.generated / d.duration) * 60 : 0;
+                    return {
+                        ...d,
+                        amount: d.generated.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }),
+                        percent: (d.generated / (income || 1)) * 100,
+                        yield: yieldPerHour
+                    };
+                });
 
             return {
-                income: income, // Return raw numbers for later formatting
+                income: income,
                 expenses: expenses,
-                team: team
+                team: team,
+                totalMinutes: team.reduce((sum, d) => sum + d.duration, 0)
             };
         }
 
