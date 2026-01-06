@@ -329,116 +329,86 @@
                         </div>
                     </header>
 
-                    <!-- COMPACT CARDS 2x2 on Mobile -->
-                    <section class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
+                    <!-- STRATEGIC KPIS (Financial Health) -->
+                    <section class="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
                         <!-- Revenue -->
                         <div onclick="switchTab('finance')"
-                            class="cursor-pointer group flex flex-col justify-between gap-2 rounded-2xl bg-white dark:bg-dark-surface p-3 md:p-4 shadow-sm border border-slate-100 dark:border-white/5 hover:scale-[1.02] transition-all hover:shadow-md">
+                            class="card-elite cursor-pointer group flex flex-col justify-between gap-2 p-3 md:p-5 hover:scale-[1.02] transition-all border-0 shadow-md">
                             <div class="flex items-start justify-between">
                                 <div
-                                    class="rounded-full bg-green-50 dark:bg-green-900/20 p-2 md:p-3 text-green-600 dark:text-green-400 group-hover:bg-primary/20 transition-colors">
+                                    class="rounded-full bg-emerald-50 dark:bg-emerald-900/20 p-2 md:p-3 text-emerald-600 dark:text-emerald-400">
                                     <span
-                                        class="material-symbols-outlined filled text-[20px] md:text-[24px]">account_balance_wallet</span>
+                                        class="material-symbols-outlined filled text-[20px] md:text-[24px]">payments</span>
                                 </div>
-                                <span
-                                    class="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-[10px] md:text-xs font-bold text-green-700 dark:text-green-400">+12%</span>
+                                <span id="trend-revenue"
+                                    class="rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 text-[10px] md:text-xs font-bold text-emerald-700 dark:text-emerald-400">--%</span>
                             </div>
                             <div>
-                                <p class="text-slate-500 dark:text-slate-400 text-xs md:text-sm font-medium mb-0.5">
-                                    Ingresos
-                                    Totales
-                                </p>
-                                <p class="text-xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif"
-                                    id="kpi-income">
-                                    ---</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Ingresos
+                                    Mes</p>
+                                <p class="text-xl md:text-3xl font-medium text-slate-900 dark:text-white tracking-tight num-font"
+                                    id="kpi-income">---</p>
                             </div>
                         </div>
 
-                        <!-- Expenses -->
+                        <!-- Net Profit -->
                         <div onclick="switchTab('finance')"
-                            class="cursor-pointer group flex flex-col justify-between gap-2 rounded-2xl bg-white dark:bg-dark-surface p-3 md:p-4 shadow-sm border border-slate-100 dark:border-white/5 hover:scale-[1.02] transition-all hover:shadow-md">
+                            class="card-elite cursor-pointer group flex flex-col justify-between gap-2 p-3 md:p-5 hover:scale-[1.02] transition-all border-0 shadow-md">
                             <div class="flex items-start justify-between">
                                 <div
-                                    class="rounded-full bg-red-50 dark:bg-red-900/20 p-2 md:p-3 text-red-600 dark:text-red-400 group-hover:bg-primary/20 transition-colors">
+                                    class="rounded-full bg-blue-50 dark:bg-blue-900/20 p-2 md:p-3 text-blue-600 dark:text-blue-400">
                                     <span
-                                        class="material-symbols-outlined filled text-[20px] md:text-[24px]">credit_card</span>
+                                        class="material-symbols-outlined filled text-[20px] md:text-[24px]">account_balance</span>
                                 </div>
-                                <span
-                                    class="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-[10px] md:text-xs font-bold text-green-700 dark:text-green-400">-5%</span>
+                                <span id="trend-profit"
+                                    class="rounded-full bg-blue-100 dark:bg-blue-900/30 px-2 py-0.5 text-[10px] md:text-xs font-bold text-blue-700 dark:text-blue-400">--%</span>
                             </div>
                             <div>
-                                <p class="text-slate-500 dark:text-slate-400 text-xs md:text-sm font-medium mb-0.5">
-                                    Gastos
-                                    Operativos
-                                </p>
-                                <p class="text-xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-serif"
-                                    id="kpi-expenses">---</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Beneficio
+                                    Neto</p>
+                                <p class="text-xl md:text-3xl font-medium text-slate-900 dark:text-white tracking-tight num-font"
+                                    id="kpi-profit">---</p>
                             </div>
                         </div>
 
-                        <!-- Net Profit (Spans 2 cols on mobile to emphasize importance) -->
-                        <div onclick="switchTab('finance')"
-                            class="cursor-pointer col-span-2 md:col-span-1 flex flex-col justify-between gap-2 rounded-2xl bg-white dark:bg-dark-surface p-3 md:p-4 shadow-sm border border-slate-100 dark:border-white/5 relative overflow-hidden group hover:scale-[1.02] transition-all hover:shadow-md">
-                            <div
-                                class="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-primary/10 transition-transform group-hover:scale-125">
+                        <!-- Profit Margin (%) -->
+                        <div
+                            class="card-elite col-span-2 lg:col-span-1 flex flex-col justify-between gap-2 p-3 md:p-5 border-0 shadow-md relative overflow-hidden group">
+                            <div id="margin-indicator-bg" class="absolute right-0 top-0 h-full w-2 bg-emerald-500/30">
                             </div>
                             <div class="flex items-start justify-between relative z-10">
-                                <div class="rounded-full bg-primary/10 dark:bg-primary/20 p-2 md:p-3 text-primary">
+                                <div id="margin-icon-bg"
+                                    class="rounded-full bg-emerald-50 dark:bg-emerald-900/20 p-2 md:p-3 text-emerald-600 dark:text-emerald-400">
                                     <span
-                                        class="material-symbols-outlined filled text-[20px] md:text-[24px]">trending_up</span>
+                                        class="material-symbols-outlined filled text-[20px] md:text-[24px]">analytics</span>
                                 </div>
-                                <span
-                                    class="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-[10px] md:text-xs font-bold text-green-700 dark:text-green-400">+8%</span>
+                                <div id="margin-status-badge"
+                                    class="rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-[10px] font-black text-emerald-700 dark:text-emerald-400 uppercase">
+                                    Óptimo</div>
                             </div>
                             <div class="relative z-10">
-                                <p class="text-slate-500 dark:text-slate-400 text-xs md:text-sm font-medium mb-0.5">
-                                    Beneficio Neto
-                                </p>
-                                <p class="text-2xl md:text-3xl font-bold text-primary tracking-tight font-serif"
-                                    id="kpi-profit">---
-                                </p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Margen de
+                                    Beneficio</p>
+                                <p class="text-3xl md:text-4xl font-medium text-slate-900 dark:text-white num-font tracking-tight"
+                                    id="kpi-margin">--%</p>
                             </div>
                         </div>
                     </section>
 
-                    <!-- NEW: Comparison & Insights Cards -->
-                    <section class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
-                        <!-- Month vs Month Comparison -->
-                        <div class="card-elite p-3 md:p-5 relative overflow-hidden group">
-                            <div class="absolute left-0 top-0 w-1 h-full bg-blue-500/50"></div>
-                            <div class="flex items-center gap-2 mb-3">
-                                <span
-                                    class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-xl">compare_arrows</span>
-                                <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">vs
-                                    Mes Anterior</h3>
-                            </div>
-                            <div id="comparison-content">
-                                <div class="flex flex-col mb-3">
-                                    <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Ingresos</p>
-                                    <p id="comparison-income"
-                                        class="text-2xl font-medium text-slate-900 dark:text-white num-font tracking-tight">
-                                        --</p>
-                                </div>
-                                <div class="flex flex-col">
-                                    <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Beneficio</p>
-                                    <p id="comparison-profit"
-                                        class="text-2xl font-medium text-slate-900 dark:text-white num-font tracking-tight">
-                                        --</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Month Projection -->
-                        <div class="card-elite p-3 md:p-5 relative overflow-hidden group">
+                    <!-- STRATEGIC COCKPIT (Efficiency & Growth) -->
+                    <section class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
+                        <!-- Forecast -->
+                        <div class="card-elite p-3 md:p-5 relative overflow-hidden group border-0 shadow-md">
                             <div class="absolute left-0 top-0 w-1 h-full bg-purple-500/50"></div>
                             <div class="flex items-center gap-2 mb-3">
                                 <span
                                     class="material-symbols-outlined text-purple-600 dark:text-purple-400 text-xl">timeline</span>
                                 <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
-                                    Proyección Mes</h3>
+                                    Proyección Cierre</h3>
                             </div>
                             <div id="projection-content">
-                                <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Estimado al cierre</p>
+                                <p class="text-[10px] text-slate-400 uppercase font-bold mb-1 italic">Estimado a 30 días
+                                </p>
                                 <p id="projection-amount"
                                     class="text-2xl font-medium text-slate-900 dark:text-white num-font tracking-tight mb-3">
                                     --</p>
@@ -448,22 +418,54 @@
                                     </div>
                                 </div>
                                 <p id="projection-text"
-                                    class="text-[10px] text-slate-500 dark:text-slate-400 mt-2 font-medium">Cargando...
-                                </p>
+                                    class="text-[10px] text-slate-500 dark:text-slate-400 mt-2 font-medium">
+                                    Calculando...</p>
                             </div>
                         </div>
 
-                        <!-- Burn Rate -->
-                        <div class="card-elite p-3 md:p-5 relative overflow-hidden group">
+                        <!-- Fidelización (Nuevos vs Recurrentes) -->
+                        <div class="card-elite p-3 md:p-5 relative overflow-hidden group border-0 shadow-md">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-blue-500/50"></div>
+                            <div class="flex items-center gap-2 mb-3">
+                                <span
+                                    class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-xl">groups</span>
+                                <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
+                                    Fidelización</h3>
+                            </div>
+                            <div class="flex flex-col gap-3">
+                                <div class="flex items-end justify-between">
+                                    <div>
+                                        <p class="text-[10px] text-slate-400 uppercase font-bold">Nuevos</p>
+                                        <p id="stats-patients-new"
+                                            class="text-2xl font-medium text-slate-900 dark:text-white num-font">--</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[10px] text-slate-400 uppercase font-bold">Recurrentes</p>
+                                        <p id="stats-patients-recurring"
+                                            class="text-2xl font-medium text-slate-900 dark:text-white num-font">--</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex h-1.5 w-full bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
+                                    <div id="fidel-bar-new" class="h-full bg-blue-500" style="width: 50%"></div>
+                                    <div id="fidel-bar-rec" class="h-full bg-indigo-300 dark:bg-indigo-700"
+                                        style="width: 50%"></div>
+                                </div>
+                                <p id="fidel-insight" class="text-[10px] text-slate-500 italic font-medium">--</p>
+                            </div>
+                        </div>
+
+                        <!-- Burn Rate / Daily Efficiency -->
+                        <div class="card-elite p-3 md:p-5 relative overflow-hidden group border-0 shadow-md">
                             <div class="absolute left-0 top-0 w-1 h-full bg-amber-500/50"></div>
                             <div class="flex items-center gap-2 mb-3">
                                 <span
-                                    class="material-symbols-outlined text-amber-600 dark:text-amber-400 text-xl">local_fire_department</span>
+                                    class="material-symbols-outlined text-amber-600 dark:text-amber-400 text-xl">speed</span>
                                 <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
-                                    Burn Rate</h3>
+                                    Gasto Diario</h3>
                             </div>
                             <div id="burnrate-content">
-                                <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Gasto diario promedio</p>
+                                <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Mantenimiento local</p>
                                 <p id="burnrate-daily"
                                     class="text-2xl font-medium text-slate-900 dark:text-white num-font tracking-tight mb-2">
                                     --</p>
@@ -3404,30 +3406,53 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
             const data = calculatePeriodData(period);
             const income = data.income;
             const expenses = data.expenses;
+            const profit = income - expenses;
 
             const kpiIncome = document.getElementById('kpi-income');
-            const kpiExpenses = document.getElementById('kpi-expenses');
             const kpiProfit = document.getElementById('kpi-profit');
+            const kpiMargin = document.getElementById('kpi-margin');
 
             const fmt = (v) => v.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 
             if (kpiIncome) kpiIncome.innerText = fmt(income);
-            if (kpiExpenses) kpiExpenses.innerText = fmt(expenses);
             if (kpiProfit) {
-                const p = income - expenses;
-                kpiProfit.innerText = fmt(p);
-                kpiProfit.className = p >= 0 ? "text-2xl md:text-3xl font-bold text-primary tracking-tight font-serif" : "text-2xl md:text-3xl font-bold text-red-500 tracking-tight font-serif";
+                kpiProfit.innerText = fmt(profit);
+                kpiProfit.className = `text-xl md:text-3xl font-medium tracking-tight num-font ${profit >= 0 ? 'text-slate-900 dark:text-white' : 'text-red-500'}`;
             }
 
-            // NEW: Calculate insights for comparison, projection, and burn rate
+            // Margin Logic (Traffic Light)
+            if (kpiMargin) {
+                const margin = income > 0 ? (profit / income) * 100 : 0;
+                kpiMargin.innerText = `${margin.toFixed(1)}%`;
+
+                const statusBadge = document.getElementById('margin-status-badge');
+                const indicatorBg = document.getElementById('margin-indicator-bg');
+                const iconBg = document.getElementById('margin-icon-bg');
+
+                if (statusBadge && indicatorBg && iconBg) {
+                    if (margin >= 25) {
+                        statusBadge.innerText = 'Óptimo';
+                        statusBadge.className = 'rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-[10px] font-black text-emerald-700 dark:text-emerald-400 uppercase';
+                        indicatorBg.className = 'absolute right-0 top-0 h-full w-2 bg-emerald-500/30';
+                        iconBg.className = 'rounded-full bg-emerald-50 dark:bg-emerald-900/20 p-2 md:p-3 text-emerald-600 dark:text-emerald-400';
+                    } else if (margin >= 15) {
+                        statusBadge.innerText = 'Aceptable';
+                        statusBadge.className = 'rounded-full bg-amber-100 dark:bg-amber-900/30 px-3 py-1 text-[10px] font-black text-amber-700 dark:text-amber-400 uppercase';
+                        indicatorBg.className = 'absolute right-0 top-0 h-full w-2 bg-amber-500/30';
+                        iconBg.className = 'rounded-full bg-amber-50 dark:bg-amber-900/20 p-2 md:p-3 text-amber-600 dark:text-amber-400';
+                    } else {
+                        statusBadge.innerText = 'Crítico';
+                        statusBadge.className = 'rounded-full bg-red-100 dark:bg-red-900/30 px-3 py-1 text-[10px] font-black text-red-700 dark:text-red-400 uppercase';
+                        indicatorBg.className = 'absolute right-0 top-0 h-full w-2 bg-red-500/30';
+                        iconBg.className = 'rounded-full bg-red-50 dark:bg-red-900/20 p-2 md:p-3 text-red-600 dark:text-red-400';
+                    }
+                }
+            }
+
+            // Update Insights (Trends, Forecast, Fidelization)
             updateDashboardInsights(period);
 
-            // AI: Analyze financial anomalies automatically (DISABLED - migrated to OpenAI chat)
-            // if (APP_DATA.transactions.length > 0) {
-            //     analyzeFinancialAnomaly().catch(err => console.warn('AI analysis skipped:', err));
-            // }
-
-            // Update Team Ranking too
+            // Update Team Ranking
             renderTeamRanking(data.team);
         }
 
@@ -3450,67 +3475,116 @@ FORMATO DE RESPUESTA (JSON puro, sin markdown):
                 return d.getMonth() === prevMonth && d.getFullYear() === prevYear;
             });
 
-            // Calculate totals
+            // Calculate current totals
             const currentIncome = currentMonthData.filter(t => t.type === 'ingreso').reduce((sum, t) => sum + t.amount, 0);
             const currentExpenses = currentMonthData.filter(t => t.type === 'gasto').reduce((sum, t) => sum + t.amount, 0);
             const currentProfit = currentIncome - currentExpenses;
 
+            // Calculate previous totals for trends
             const prevIncome = prevMonthData.filter(t => t.type === 'ingreso').reduce((sum, t) => sum + t.amount, 0);
-            const prevProfit = prevMonthData.filter(t => t.type === 'ingreso').reduce((sum, t) => sum + t.amount, 0) -
-                prevMonthData.filter(t => t.type === 'gasto').reduce((sum, t) => sum + t.amount, 0);
+            const prevExpenses = prevMonthData.filter(t => t.type === 'gasto').reduce((sum, t) => sum + t.amount, 0);
+            const prevProfit = prevIncome - prevExpenses;
 
-            // Month Comparison
+            // TRENDS
             const incomeChange = prevIncome > 0 ? ((currentIncome - prevIncome) / prevIncome) * 100 : 0;
             const profitChange = prevProfit > 0 ? ((currentProfit - prevProfit) / prevProfit) * 100 : 0;
 
-            const comparisonIncome = document.getElementById('comparison-income');
-            const comparisonProfit = document.getElementById('comparison-profit');
+            const trendRevenue = document.getElementById('trend-revenue');
+            const trendProfit = document.getElementById('trend-profit');
 
-            if (comparisonIncome) {
-                const arrow = incomeChange >= 0 ? '↑' : '↓';
-                const color = incomeChange >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
-                comparisonIncome.innerHTML = `<span class="${color}">${arrow} ${Math.abs(incomeChange).toFixed(1)}%</span>`;
+            if (trendRevenue) {
+                trendRevenue.innerText = (incomeChange >= 0 ? '+' : '') + incomeChange.toFixed(0) + '%';
+                trendRevenue.className = `rounded-full px-2 py-0.5 text-[10px] md:text-xs font-bold ${incomeChange >= 0 ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'}`;
             }
-            if (comparisonProfit) {
-                const arrow = profitChange >= 0 ? '↑' : '↓';
-                const color = profitChange >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
-                comparisonProfit.innerHTML = `<span class="${color}">${arrow} ${Math.abs(profitChange).toFixed(1)}%</span>`;
+            if (trendProfit) {
+                trendProfit.innerText = (profitChange >= 0 ? '+' : '') + profitChange.toFixed(0) + '%';
+                trendProfit.className = `rounded-full px-2 py-0.5 text-[10px] md:text-xs font-bold ${profitChange >= 0 ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'}`;
             }
 
-            // Month Projection
+            // FORECAST
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             const daysPassed = now.getDate();
             const avgPerDay = daysPassed > 0 ? currentIncome / daysPassed : 0;
             const projected = avgPerDay * daysInMonth;
-            const progress = daysPassed > 0 ? (daysPassed / daysInMonth) * 100 : 0;
+            const progress = (daysPassed / daysInMonth) * 100;
 
             const projectionAmount = document.getElementById('projection-amount');
             const projectionProgress = document.getElementById('projection-progress');
             const projectionText = document.getElementById('projection-text');
 
-            if (projectionAmount) {
-                projectionAmount.innerText = projected.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
-            }
-            if (projectionProgress) {
-                projectionProgress.style.width = `${Math.min(progress, 100)}%`;
-            }
-            if (projectionText) {
-                projectionText.innerText = `Día ${daysPassed} de ${daysInMonth} • ${avgPerDay.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}/día`;
-            }
+            if (projectionAmount) projectionAmount.innerText = projected.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+            if (projectionProgress) projectionProgress.style.width = `${Math.min(progress, 100)}%`;
+            if (projectionText) projectionText.innerText = `Día ${daysPassed} de ${daysInMonth} • ${(avgPerDay / 1000).toFixed(1)}k€/día de media`;
 
-            // Burn Rate
-            const expensesThisMonth = currentExpenses;
-            const dailyBurn = daysPassed > 0 ? expensesThisMonth / daysPassed : 0;
+            // FIDELIZACIÓN (Nuevos vs Recurrentes)
+            analyzeFidelization(currentMonthData);
 
+            // BURN RATE
+            const dailyBurn = daysPassed > 0 ? currentExpenses / daysPassed : 0;
             const burnrateDaily = document.getElementById('burnrate-daily');
             const burnrateInsight = document.getElementById('burnrate-insight');
 
-            if (burnrateDaily) {
-                burnrateDaily.innerText = dailyBurn.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
-            }
+            if (burnrateDaily) burnrateDaily.innerText = dailyBurn.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
             if (burnrateInsight) {
                 const projectedMonthlyExpenses = dailyBurn * daysInMonth;
-                burnrateInsight.innerText = `Proyección mes: ${projectedMonthlyExpenses.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}`;
+                burnrateInsight.innerText = `Previsión mes: ${projectedMonthlyExpenses.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}`;
+            }
+        }
+
+        function analyzeFidelization(data) {
+            const incomeTx = data.filter(t => t.type === 'ingreso');
+            const patientMap = new Map();
+
+            // Get all unique patience names and count current month first
+            incomeTx.forEach(t => {
+                if (t.patient) {
+                    const name = t.patient.trim().toLowerCase();
+                    patientMap.set(name, (patientMap.get(name) || 0) + 1);
+                }
+            });
+
+            let newCount = 0;
+            let recurringCount = 0;
+
+            // Simple Logic: If patient appeared in ANY transaction before THIS month, they are recurring
+            // To be accurate, we need to check ALL transactions in APP_DATA
+            const now = new Date();
+            const firstDayOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+            patientMap.forEach((count, name) => {
+                const isRecurring = APP_DATA.transactions.some(t => {
+                    const tDate = new Date(t.date);
+                    return t.patient && t.patient.trim().toLowerCase() === name && tDate < firstDayOfThisMonth;
+                });
+
+                if (isRecurring) recurringCount++;
+                else newCount++;
+            });
+
+            // Update UI
+            const elNew = document.getElementById('stats-patients-new');
+            const elRec = document.getElementById('stats-patients-recurring');
+            const barNew = document.getElementById('fidel-bar-new');
+            const barRec = document.getElementById('fidel-bar-rec');
+            const insight = document.getElementById('fidel-insight');
+
+            if (elNew) elNew.innerText = newCount;
+            if (elRec) elRec.innerText = recurringCount;
+
+            const total = newCount + recurringCount;
+            if (total > 0) {
+                const pNew = (newCount / total) * 100;
+                const pRec = (recurringCount / total) * 100;
+                if (barNew) barNew.style.width = `${pNew}%`;
+                if (barRec) barRec.style.width = `${pRec}%`;
+
+                if (insight) {
+                    if (pNew > 50) insight.innerText = "¡Gran captación de pacientes! 🚀";
+                    else if (pRec > 50) insight.innerText = "Excelente fidelización 💎";
+                    else insight.innerText = "Equilibrio sano entre captación y recurrencia";
+                }
+            } else {
+                if (insight) insight.innerText = "Sin datos este mes";
             }
         }
 
